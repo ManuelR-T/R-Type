@@ -12,16 +12,17 @@
 
 namespace systems {
 
-void position(registry &reg, float dt) {
-  auto &positions = reg.get_components<component::position>();
-  auto &velocities = reg.get_components<component::velocity>();
+void position(registry &reg, float dt)
+{
+    auto &positions = reg.get_components<component::position>();
+    auto &velocities = reg.get_components<component::velocity>();
 
-  zipper<component::position, component::velocity> zip(positions, velocities);
+    zipper<component::position, component::velocity> zip(positions, velocities);
 
-  for (auto [pos, vel] : zip) {
-    pos.x += vel.vx * dt;
-    pos.y += vel.vy * dt;
-  }
+    for (auto [pos, vel] : zip) {
+        pos.x += vel.vx * dt;
+        pos.y += vel.vy * dt;
+    }
 }
 
 } // namespace systems

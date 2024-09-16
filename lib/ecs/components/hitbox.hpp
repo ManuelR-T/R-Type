@@ -10,8 +10,8 @@
 namespace component {
 
 struct hitbox {
-  float width = 0.0f;
-  float height = 0.0f;
+    float width = 0.0f;
+    float height = 0.0f;
 };
 
 } // namespace component

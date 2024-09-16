@@ -10,8 +10,8 @@
 namespace component {
 
 struct position {
-  float x = 0.0f;
-  float y = 0.0f;
+    float x = 0.0f;
+    float y = 0.0f;
 };
 
 } // namespace component

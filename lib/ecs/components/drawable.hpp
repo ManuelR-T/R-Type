@@ -12,7 +12,7 @@
 namespace component {
 
 struct drawable {
-  sf::RectangleShape shape;
+    sf::RectangleShape shape;
 };
 
 } // namespace component

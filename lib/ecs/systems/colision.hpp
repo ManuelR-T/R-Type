@@ -11,7 +11,6 @@
 
 namespace systems {
 
-
 void collision(registry &reg);
 
 } // namespace systems

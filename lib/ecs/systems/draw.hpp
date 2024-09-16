@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "../core/registry.hpp"
 #include <SFML/Graphics.hpp>
+#include "../core/registry.hpp"
 
 namespace systems {
 
