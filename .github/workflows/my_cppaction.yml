@@ -12,7 +12,7 @@ jobs:
     timeout-minutes: 15
 
     container:
-      image: epitechcontent/epitest-docker:latest
+      image: jameskarter/r-type:tagname
       volumes:
         - ${{ github.workspace }}:/app
 
@@ -35,11 +35,11 @@ jobs:
             fi
           }
 
-    - name: install clang-tidy
-      run: sudo dnf install -y clang-tools-extra
+    # - name: install clang-tidy
+    #   run: sudo dnf install -y clang-tools-extra
 
-    - name: install bear
-      run: sudo dnf install -y bear
+    # - name: install bear
+    #   run: sudo dnf install -y bear
 
     - name: code analyse
       run: |
