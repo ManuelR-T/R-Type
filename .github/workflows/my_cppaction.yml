@@ -19,6 +19,10 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+      - name: Run clang-tidy
+        run: |
+          clang-tidy src/*.cpp -- -Iinclude
+
     # - name: check compilation
     #   run: |
     #       echo "## 🚀 Compilation result" >> $GITHUB_STEP_SUMMARY
@@ -52,6 +56,3 @@ jobs:
     #       echo "::warning::$CLANG_TIDY_WARNING warning detected !"
     #     fi
 
-      - name: Run clang-tidy
-        run: |
-          clang-tidy src/*.cpp -- -Iinclude
