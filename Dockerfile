@@ -13,3 +13,4 @@ RUN dnf install -y clang-tools-extra bear
 # # Optionally, verify installation
 # RUN /usr/bin/clang-tidy --version || true
 # RUN /usr/bin/clang --version || true
+
