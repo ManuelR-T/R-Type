@@ -10,7 +10,8 @@ vgcore.*
 # ? executable
 *.out
 unit_tests
-r-type
+r-type_client
+r-type_server
 
 # ? coverage
 *.gcda
