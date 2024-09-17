@@ -9,3 +9,7 @@ FROM epitechcontent/epitest-docker:latest
 
 # Copy clang-tidy and bear from the builder stage
 COPY --from=builder /usr /usr
+
+# Optionally, verify installation
+RUN /usr/bin/clang-tidy --version || true
+RUN /usr/bin/clang --version || true
