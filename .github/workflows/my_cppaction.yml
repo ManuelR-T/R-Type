@@ -41,13 +41,17 @@ jobs:
     # - name: install bear
     #   run: sudo dnf install -y bear
 
-    - name: code analyse
-      run: |
-        make code_analyse 2>&1 | tee code_analyse_log.txt
-        {
-          set +e
-          CLANG_TIDY_WARNING=$(grep -c "warning: " code_analyse_log.txt)
-        }
-        if [ "$CLANG_TIDY_WARNING" -ne 0 ]; then
-          echo "::warning::$CLANG_TIDY_WARNING warning detected !"
-        fi
+    # - name: code analyse
+    #   run: |
+    #     make code_analyse 2>&1 | tee code_analyse_log.txt
+    #     {
+    #       set +e
+    #       CLANG_TIDY_WARNING=$(grep -c "warning: " code_analyse_log.txt)
+    #     }
+    #     if [ "$CLANG_TIDY_WARNING" -ne 0 ]; then
+    #       echo "::warning::$CLANG_TIDY_WARNING warning detected !"
+    #     fi
+
+      - name: Run clang-tidy
+        run: |
+          clang-tidy src/*.cpp -- -Iinclude
