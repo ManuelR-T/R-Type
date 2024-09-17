@@ -1,9 +1,10 @@
-# Stage 1: Build tools in Fedora
-FROM fedora:latest as builder
+# Step 1: Install packages in a Fedora-based image
+FROM fedora:latest as installer
+
 RUN dnf install -y clang-tools-extra bear
 
-# Stage 2: Use the epitechcontent/epitest-docker image
+# Step 2: Copy installed packages to the final image
 FROM epitechcontent/epitest-docker:latest
 
-COPY --from=builder /usr/bin/clang-tidy /usr/bin/clang-tidy
-COPY --from=builder /usr/bin/bear /usr/bin/bear
+COPY --from=installer /usr /usr
+COPY --from=installer /usr/bin /usr/bin
