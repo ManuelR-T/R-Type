@@ -1,11 +1,8 @@
-# Use the base image
+# Stage 1: Install clang-tidy and bear using Fedora
+FROM fedora:latest as builder
+
+# Install clang-tidy and bear
+RUN dnf install -y clang-tools-extra bear
+
+# Stage 2: Use the base image for the final build
 FROM epitechcontent/epitest-docker:latest
-
-# # Install clang-tidy and bear
-RUN sudo dnf install -y clang-tools-extra bear
-
-# Optional: Copy your code into the container if needed
-# COPY . .
-
-# Optional: Set a default command
-# CMD ["bash"]
