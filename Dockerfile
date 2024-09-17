@@ -6,3 +6,6 @@ RUN dnf install -y clang-tools-extra bear
 
 # Stage 2: Use the base image for the final build
 FROM epitechcontent/epitest-docker:latest
+
+# Copy clang-tidy and bear from the builder stage
+COPY --from=builder /usr /usr
