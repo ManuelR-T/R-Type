@@ -9,23 +9,18 @@ jobs:
     runs-on: ubuntu-latest
     permissions: write-all
 
-    container:
-      image: nicolasalexandredev/r-type:dependencies
-      volumes:
-        - ${{ github.workspace }}:/app
-
     steps:
     - uses: actions/checkout@v4
 
     - name: generate compilation database
-      run: cmake .; make
+      run: cmake . && make
 
     - uses: ZedThree/clang-tidy-review@v0.19.0
       id: review
       with:
         clang_tidy_version: 18
         config_file: ./.clang-tidy
-        lgtm_comment_body: ""
+        lgtm_comment_body: "No clang-tidy warning ! 👍"
         exclude: "tests/"
 
     - uses: ZedThree/clang-tidy-review/upload@v0.19.0
