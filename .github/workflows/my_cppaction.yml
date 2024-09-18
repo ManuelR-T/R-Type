@@ -35,8 +35,8 @@ jobs:
             fi
           }
 
-    - name: install clang-tidy
-      run: sudo apt install -y clang-tools-extra
+#    - name: install clang-tidy
+#      run: sudo dnf install -y clang-tools-extra
 
 #    - name: install bear
 #      run: sudo dnf install -y bear
