@@ -24,7 +24,7 @@ jobs:
       run: ls -la
 
     - name: Run clang-tidy with verbose output
-      run: clang-tidy-16 -p=. --config-file="./.clang-tidy" server/src/main.cpp --export-fixes=clang_tidy_review.yaml -vv
+      run: clang-tidy-16 -p=. --config-file="./.clang-tidy" server/src/main.cpp --export-fixes=clang_tidy_review.yaml
 
     - uses: ZedThree/clang-tidy-review@v0.14.0
       id: review
