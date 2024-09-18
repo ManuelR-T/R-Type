@@ -17,13 +17,10 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Install SFML
-      run: |
-        sudo apt-get update
-        sudo apt-get install libsfml-dev -y
-
     - name: Set base_dir
-      run: echo "base_dir=$(pwd)" >> $GITHUB_ENV
+      run: |
+        echo "base_dir=$(pwd)" >> $GITHUB_ENV
+        cmake .
 
     - uses: ZedThree/clang-tidy-review@v0.19.0
       id: review
@@ -32,7 +29,6 @@ jobs:
         config_file: ./.clang-tidy
         lgtm_comment_body: "No clang-tidy warning ! 👍"
         exclude: "tests/"
-        cmake_command: cmake . -DCMAKE_EXPORT_COMPILE_COMMANDS=on
         base_dir: ${{ env.base_dir }}
 
     - uses: ZedThree/clang-tidy-review/upload@v0.19.0

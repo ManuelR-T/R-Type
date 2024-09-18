@@ -35,12 +35,6 @@ jobs:
             fi
           }
 
-#    - name: install clang-tidy
-#      run: sudo dnf install -y clang-tools-extra
-
-#    - name: install bear
-#      run: sudo dnf install -y bear
-
     - name: code analyse
       run: |
         clang-tidy --config-file=.clang-tidy -header-filter=.* --use-color \
