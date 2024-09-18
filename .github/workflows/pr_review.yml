@@ -9,6 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     permissions: write
 
+    container:
+      image: nicolasalexandredev/r-type:dependencies
+      volumes:
+        - ${{ github.workspace }}:/app
+
     steps:
     - uses: actions/checkout@v4
 
