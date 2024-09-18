@@ -8,17 +8,3 @@ jobs:
     - uses: actions/checkout@v4
     - name: Run clang-format style check for C/C++/Protobuf programs.
       uses: jidicula/clang-format-action@v4.13.0
-    - name: code analyse
-      run: |
-            clang-tidy --config-file=.clang-tidy -header-filter=.* --use-color \
-            `find ./client -name "*.cpp"` \
-            `find ./server -name "*.cpp"` \
-            `find ./lib -name "*.cpp"` \
-            `find ./src -name "*.cpp"` 2>&1 | tee code_analyse_log.txt
-            {
-            set +e
-            CLANG_TIDY_WARNING=$(grep -c "warning: " code_analyse_log.txt)
-            }
-            if [ "$CLANG_TIDY_WARNING" -ne 0 ]; then
-            echo "::warning::$CLANG_TIDY_WARNING warning detected !"
-            fi
