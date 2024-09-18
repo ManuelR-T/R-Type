@@ -9,7 +9,7 @@
 
 #include "../core/registry.hpp"
 
-namespace systems {
+namespace ecs::systems {
 
 /**
  * @brief Handles collision detection and response for entities.
@@ -23,4 +23,4 @@ namespace systems {
  */
 void collision(registry &reg);
 
-} // namespace systems
+} // namespace ecs::systems

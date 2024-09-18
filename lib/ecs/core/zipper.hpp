@@ -12,6 +12,7 @@
 #include "sparse_array.hpp"
 #include "zipper_iterator.hpp"
 
+namespace ecs {
 /**
  * @brief Facilitates iteration over entities possessing all specified components.
  *
@@ -89,3 +90,4 @@ class zipper {
      */
     std::tuple<sparse_array<Components> &...> _arrays;
 };
+}  // namespace ecs

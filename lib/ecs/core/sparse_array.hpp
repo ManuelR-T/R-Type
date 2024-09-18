@@ -12,6 +12,7 @@
 #include <stdexcept>
 #include <vector>
 
+namespace ecs {
 /**
  * @brief A sparse array implementation for managing components in an ECS framework.
  *
@@ -68,7 +69,7 @@ class sparse_array {
      *
      * @param other The sparse array to move from.
      */
-    sparse_array(sparse_array &&) noexcept = default;
+    sparse_array(sparse_array &&other) noexcept = default;
 
     /**
      * @brief Default destructor.
@@ -85,7 +86,7 @@ class sparse_array {
      * @param other The sparse array to copy from.
      * @return Reference to this sparse array.
      */
-    sparse_array &operator=(const sparse_array &) = default;
+    sparse_array &operator=(const sparse_array &other) = default;
 
     /**
      * @brief Default move assignment operator.
@@ -95,7 +96,7 @@ class sparse_array {
      * @param other The sparse array to move from.
      * @return Reference to this sparse array.
      */
-    sparse_array &operator=(sparse_array &&) noexcept = default;
+    sparse_array &operator=(sparse_array &&other) noexcept = default;
 
     /**
      * @brief Accesses the component at the specified index.
@@ -320,3 +321,5 @@ class sparse_array {
 
     container_t _data; /**< The underlying container storing optional components. */
 };
+
+} // namespace ecs

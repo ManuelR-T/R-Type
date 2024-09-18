@@ -18,6 +18,8 @@
  */
 using entity_t = std::size_t;
 
+namespace ecs {
+
 /**
  * @class EntityManager
  * @brief Manages the creation and destruction of entities.
@@ -63,3 +65,5 @@ class EntityManager {
     entity_t next_entity_id = 0;        /**< The next available entity identifier */
     std::queue<entity_t> dead_entities; /**< Queue of identifiers from destroyed entities */
 };
+
+} // namespace ecs

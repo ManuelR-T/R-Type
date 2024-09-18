@@ -13,6 +13,7 @@
 #include <utility>
 #include "sparse_array.hpp"
 
+namespace ecs {
 /**
  * @brief An iterator that traverses entities possessing all specified components.
  *
@@ -162,3 +163,4 @@ class zipper_iterator {
     size_t _max_size;                                   /**< The maximum index to iterate up to. */
     std::tuple<sparse_array<Components> &...> &_arrays; /**< Tuple of references to component arrays. */
 };
+}

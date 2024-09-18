@@ -3,7 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include "../core/registry.hpp"
 
-namespace systems {
+namespace ecs::systems {
 
 /**
  * @brief Renders all drawable entities to the provided window.
@@ -16,4 +16,4 @@ namespace systems {
  */
 void draw(registry &reg, sf::RenderWindow &window);
 
-} // namespace systems
+} // namespace ecs::systems

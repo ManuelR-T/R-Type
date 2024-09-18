@@ -9,7 +9,7 @@
 
 #include "../core/registry.hpp"
 
-namespace systems {
+namespace ecs::systems {
 
 /**
  * @brief Handles entity control and input processing.
@@ -22,4 +22,4 @@ namespace systems {
  */
 void control(registry &reg);
 
-} // namespace systems
+} // namespace ecs::systems

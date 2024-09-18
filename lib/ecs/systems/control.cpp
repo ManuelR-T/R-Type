@@ -12,7 +12,7 @@
 #include "../core/registry.hpp"
 #include "../core/zipper.hpp"
 
-namespace systems {
+namespace ecs::systems {
 
 void control(registry &reg)
 {
@@ -43,4 +43,4 @@ void control(registry &reg)
     }
 }
 
-} // namespace systems
+} // namespace ecs::systems

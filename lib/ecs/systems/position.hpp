@@ -2,7 +2,7 @@
 
 #include "../core/registry.hpp"
 
-namespace systems {
+namespace ecs::systems {
 
 /**
  * @brief Updates the position of all entities based on their velocity.
@@ -16,4 +16,4 @@ namespace systems {
  */
 void position(registry &reg, float dt);
 
-} // namespace systems
+} // namespace ecs::systems

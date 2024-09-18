@@ -18,7 +18,7 @@
 
 #include <SFML/Graphics.hpp>
 
-static void register_components(registry &reg)
+static void register_components(ecs::registry &reg)
 {
     reg.register_component<ecs::component::position>();
     reg.register_component<ecs::component::velocity>();
@@ -27,19 +27,19 @@ static void register_components(registry &reg)
     reg.register_component<ecs::component::hitbox>();
 }
 
-static void register_systems(registry &reg, sf::RenderWindow &window, float &dt)
+static void register_systems(ecs::registry &reg, sf::RenderWindow &window, float &dt)
 {
-    reg.add_system([&reg]() { systems::control(reg); });
-    reg.add_system([&reg, &dt]() { systems::position(reg, dt); });
-    reg.add_system([&reg]() { systems::collision(reg); });
+    reg.add_system([&reg]() { ecs::systems::control(reg); });
+    reg.add_system([&reg, &dt]() { ecs::systems::position(reg, dt); });
+    reg.add_system([&reg]() { ecs::systems::collision(reg); });
     reg.add_system([&reg, &window]() {
         window.clear();
-        systems::draw(reg, window);
+        ecs::systems::draw(reg, window);
         window.display();
     });
 }
 
-static void create_player(registry &reg)
+static void create_player(ecs::registry &reg)
 {
     auto player = reg.spawn_entity();
     reg.add_component(player, ecs::component::position{400.f, 300.f});
@@ -54,7 +54,7 @@ static void create_player(registry &reg)
     reg.add_component(player, ecs::component::hitbox{50.f, 50.f});
 }
 
-static void create_static(registry &reg, float x, float y)
+static void create_static(ecs::registry &reg, float x, float y)
 {
     auto entity = reg.spawn_entity();
     reg.add_component(entity, ecs::component::position{x, y});
@@ -67,7 +67,7 @@ static void create_static(registry &reg, float x, float y)
     reg.add_component(entity, ecs::component::hitbox{50.f, 50.f});
 }
 
-static void run(registry &reg, sf::RenderWindow &window, float &dt)
+static void run(ecs::registry &reg, sf::RenderWindow &window, float &dt)
 {
     sf::Clock clock;
 
@@ -76,8 +76,9 @@ static void run(registry &reg, sf::RenderWindow &window, float &dt)
 
         sf::Event event;
         while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
+            if (event.type == sf::Event::Closed) {
                 window.close();
+            }
         }
         reg.run_systems();
     }
@@ -85,7 +86,7 @@ static void run(registry &reg, sf::RenderWindow &window, float &dt)
 
 int main()
 {
-    registry reg;
+    ecs::registry reg;
     float dt = 0.f;
     sf::RenderWindow window(sf::VideoMode(1280, 720), "R-Type");
 

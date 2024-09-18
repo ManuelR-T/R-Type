@@ -16,6 +16,7 @@
 #include <typeindex>
 #include <unordered_map>
 
+namespace ecs {
 /**
  * @class registry
  * @brief Manages entities, components, and systems within the ECS framework.
@@ -227,3 +228,5 @@ class registry {
     std::vector<entity_t> _entities_to_destroy;  /**< Queue of entities marked for destruction */
     std::size_t _next_entity_id = 0;             /**< The next available entity identifier */
 };
+
+} // namespace ecs

@@ -10,7 +10,7 @@
 #include "../core/registry.hpp"
 #include "../core/zipper.hpp"
 
-namespace systems {
+namespace ecs::systems {
 
 void position(registry &reg, float dt)
 {
@@ -25,4 +25,4 @@ void position(registry &reg, float dt)
     }
 }
 
-} // namespace systems
+} // namespace ecs::systems

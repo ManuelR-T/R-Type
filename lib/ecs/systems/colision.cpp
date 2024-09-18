@@ -16,7 +16,7 @@
 
 static void resolve_collision(
     ecs::component::position &pos,
-    sparse_array<ecs::component::velocity> &velocities,
+    ecs::sparse_array<ecs::component::velocity> &velocities,
     size_t entity,
     const sf::FloatRect &intersection,
     std::optional<ecs::component::velocity> &vel
@@ -43,7 +43,7 @@ static void resolve_collision(
     }
 }
 
-namespace systems {
+namespace ecs::systems {
 
 void collision(registry &reg)
 {
@@ -89,4 +89,4 @@ void collision(registry &reg)
     }
 }
 
-} // namespace systems
+} // namespace ecs::systems

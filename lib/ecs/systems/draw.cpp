@@ -11,7 +11,7 @@
 #include "../core/registry.hpp"
 #include "../core/zipper.hpp"
 
-namespace systems {
+namespace ecs::systems {
 
 void draw(registry &reg, sf::RenderWindow &window)
 {
@@ -26,4 +26,4 @@ void draw(registry &reg, sf::RenderWindow &window)
     }
 }
 
-} // namespace systems
+} // namespace ecs::systems
