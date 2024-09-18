@@ -125,7 +125,7 @@ class zipper_iterator {
      * @return `true` if all components are present, `false` otherwise.
      */
     template <std::size_t... Is>
-    bool all_present_impl(std::index_sequence<Is...>) const
+    bool all_present_impl(std::index_sequence<Is...> seq) const
     {
         return (... && is_present<Is>());
     }
@@ -154,7 +154,7 @@ class zipper_iterator {
      * @return A tuple containing references to the components of the current entity.
      */
     template <std::size_t... Is>
-    reference get_components(std::index_sequence<Is...>)
+    reference get_components(std::index_sequence<Is...> seq)
     {
         return std::tie(*std::get<Is>(_arrays)[_index]...);
     }
@@ -163,4 +163,4 @@ class zipper_iterator {
     size_t _max_size;                                   /**< The maximum index to iterate up to. */
     std::tuple<sparse_array<Components> &...> &_arrays; /**< Tuple of references to component arrays. */
 };
-}
+} // namespace ecs
