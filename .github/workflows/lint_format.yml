@@ -1,9 +1,13 @@
-name: clang-format & clang tidy Check
-on: [push, pull_request]
+name: clang-format Check
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 jobs:
   formatting-check:
     runs-on: ubuntu-latest
-    name: Formatting Check & Lint
+    name: Formatting Check
     strategy:
       matrix:
         path:
