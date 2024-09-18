@@ -11,7 +11,7 @@
 #include "components/position.hpp"
 #include "components/velocity.hpp"
 #include "core/registry.hpp"
-#include "systems/colision.hpp"
+#include "systems/collision.hpp"
 #include "systems/control.hpp"
 #include "systems/draw.hpp"
 #include "systems/position.hpp"
