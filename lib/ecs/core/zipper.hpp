@@ -90,4 +90,4 @@ class zipper {
      */
     std::tuple<sparse_array<Components> &...> _arrays;
 };
-}  // namespace ecs
+} // namespace ecs
