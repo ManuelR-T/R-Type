@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2024
+** Rtype
+** File description:
+** position
+*/
+
 #pragma once
 
 #include "../core/registry.hpp"
