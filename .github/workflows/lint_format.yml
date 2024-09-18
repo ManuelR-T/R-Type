@@ -4,7 +4,15 @@ jobs:
   formatting-check:
     runs-on: ubuntu-latest
     name: Formatting Check & Lint
+    strategy:
+      matrix:
+        path:
+          - 'client/src'
+          - 'lib/'
+          - 'server/src'
     steps:
     - uses: actions/checkout@v4
     - name: Run clang-format style check for C/C++/Protobuf programs.
       uses: jidicula/clang-format-action@v4.13.0
+      with:
+        check-path: ${{ matrix.path }}
