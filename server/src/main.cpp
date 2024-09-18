@@ -87,6 +87,7 @@ int main()
 {
     registry reg;
     float dt = 0.f;
+    int test;
     sf::RenderWindow window(sf::VideoMode(1280, 720), "R-Type");
 
     window.setFramerateLimit(60);
