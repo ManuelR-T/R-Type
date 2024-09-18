@@ -24,7 +24,7 @@ jobs:
           echo "## 🚀 Compilation result" >> $GITHUB_STEP_SUMMARY
           {
             set +e
-            make ADDITIONAL_FLAGS="-Werror"
+            cmake .; make
             if [ $? -ne 0 ]; then
               echo "- ### Compilation failed ❌" >> $GITHUB_STEP_SUMMARY
               echo "Compilation failed."
@@ -38,12 +38,16 @@ jobs:
     - name: install clang-tidy
       run: sudo dnf install -y clang-tools-extra
 
-    - name: install bear
-      run: sudo dnf install -y bear
+#    - name: install bear
+#      run: sudo dnf install -y bear
 
     - name: code analyse
       run: |
-        make code_analyse 2>&1 | tee code_analyse_log.txt
+        clang-tidy --config-file=.clang-tidy -header-filter=.* --use-color \
+          `find ./client -name "*.cpp"` \
+          `find ./server -name "*.cpp"` \
+          `find ./lib -name "*.cpp"` \
+          `find ./src -name "*.cpp"` 2>&1 | tee code_analyse_log.txt
         {
           set +e
           CLANG_TIDY_WARNING=$(grep -c "warning: " code_analyse_log.txt)
