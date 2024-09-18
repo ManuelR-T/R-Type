@@ -3,12 +3,6 @@ on: [push, pull_request]
 jobs:
   formatting-check:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
-
-    container:
-      image: nicolasalexandredev/r-type:dependencies
-      volumes:
-        - ${{ github.workspace }}:/app
     name: Formatting Check & Lint
     steps:
     - uses: actions/checkout@v4
