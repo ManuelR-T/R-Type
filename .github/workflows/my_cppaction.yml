@@ -1,5 +1,8 @@
 name: my_cppaction
 
+env:
+  MIRROR_URL: "https://github.com/EpitechPromo2027/B-CPP-500-PAR-5-1-rtype-thibaud.cathala.git"
+
 on:
   push:
     branches: [ "main" ]
@@ -12,7 +15,7 @@ jobs:
     timeout-minutes: 15
 
     container:
-      image: epitechcontent/epitest-docker:latest
+      image: nicolasalexandredev/r-type:dependencies
       volumes:
         - ${{ github.workspace }}:/app
 
@@ -35,12 +38,6 @@ jobs:
             fi
           }
 
-    - name: install clang-tidy
-      run: sudo dnf install -y clang-tools-extra
-
-#    - name: install bear
-#      run: sudo dnf install -y bear
-
     - name: code analyse
       run: |
         clang-tidy --config-file=.clang-tidy -header-filter=.* --use-color \
@@ -55,3 +52,16 @@ jobs:
         if [ "$CLANG_TIDY_WARNING" -ne 0 ]; then
           echo "::warning::$CLANG_TIDY_WARNING warning detected !"
         fi
+
+    - name: checkout the repo
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        clean: true
+
+    - name: mirror repo
+      if: success()
+      uses: pixta-dev/repository-mirroring-action@v1
+      with:
+        target_repo_url: ${{ env.MIRROR_URL }}
+        ssh_private_key: ${{ secrets.SSH_KEY }}
