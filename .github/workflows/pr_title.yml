@@ -9,14 +9,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check PR title
+        id: match
         uses: actions-ecosystem/action-regex-match@v1
         with:
           text: ${{ github.event.pull_request.title }}
           regex: '^(add|fix|doc|style|refactor|test|chore)(\([a-zA-Z0-9_-]+\))?: .{1,72}$'
 
-
       - name: Fail if title does not match
-        if: ${{ !steps.match.outputs.result }}
+        if: ${{ steps.match.outputs.result == 'false' }}
         run: |
           echo "PR title does not follow the conventional commits format!"
           exit 1
