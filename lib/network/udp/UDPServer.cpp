@@ -11,7 +11,7 @@
 #include <iostream>
 #include <vector>
 
-void server::UDPServer::UDPServer::handle_recv(asio::error_code ec, std::size_t bytes)
+void server::UDPServer::handle_recv(asio::error_code ec, std::size_t bytes)
 {
     std::cout << "Received: [";
     std::cout.write(buff_, bytes - 1);
@@ -40,25 +40,25 @@ void server::UDPServer::UDPServer::handle_recv(asio::error_code ec, std::size_t 
     asio_run();
 }
 
-void server::UDPServer::UDPServer::handle_send(
-    const std::vector<char> &vect
-)
+void server::UDPServer::handle_send(const std::vector<char> &vect)
 {
     sock_.async_send_to(
         asio::buffer(vect),
         endpoint_,
-        [] (asio::error_code, std::size_t bytes) { std::cout << "I sent " << bytes << " Bytes\n"; }
+        [] (asio::error_code, std::size_t bytes) {
+            std::cout << "I sent " << bytes << " Bytes\n";
+        }
     );
 }
 
-void server::UDPServer::UDPServer::register_command(
+void server::UDPServer::register_command(
     char const *name,
     std::function<void (char *, std::size_t)> func)
 {
     handlers_[name] = func;
 }
 
-void server::UDPServer::UDPServer::asio_run()
+void server::UDPServer::asio_run()
 {
     std::cout << "Start Receive !\n";
     sock_.async_receive_from(
@@ -66,13 +66,13 @@ void server::UDPServer::UDPServer::asio_run()
         std::bind(
             &UDPServer::handle_recv,
             this,
-            asio::placeholders::error,
-            asio::placeholders::bytes_transferred
+            std::placeholders::_1,
+            std::placeholders::_2
         )
     );
 }
 
-void server::UDPServer::UDPServer::run()
+void server::UDPServer::run()
 {
     asio_run();
     io_.run();

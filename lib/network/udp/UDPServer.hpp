@@ -14,6 +14,7 @@
 #include <asio/ip/udp.hpp>
 #include <cstring>
 #include <map>
+#include <iostream>
 
 using asio::ip::udp;
 

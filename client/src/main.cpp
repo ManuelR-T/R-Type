@@ -15,6 +15,7 @@
 #include "systems/control.hpp"
 #include "systems/draw.hpp"
 #include "systems/position.hpp"
+#include "UDPClient.hpp"
 
 #include <SFML/Graphics.hpp>
 
@@ -88,6 +89,19 @@ static void run(registry &reg, sf::RenderWindow &window, float &dt)
 
 int main()
 {
+    /*    PART TO IMPLEMENT CLIENT UDP    */
+    // client::UDPClient udpClient("127.0.0.1", 8080);
+    // std::thread receiveThread([&udpClient]() {
+    //     udpClient.run();
+    // });
+    // while (true) {
+    //     std::string userInput;
+    //     std::getline(std::cin, userInput);
+    //     udpClient.send(userInput.c_str(), userInput.size() + 1);
+    //     std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    // }
+    // receiveThread.join();
+    /*  END PART TO IMPLEMENT CLIENT UDP    */
 
     try {
         throw my::tracked_exception("R-TYPE !!!!!!!!!!!!!");

@@ -16,6 +16,8 @@
 #include "systems/draw.hpp"
 #include "systems/position.hpp"
 
+#include "UDPServer.hpp"
+
 #include <SFML/Graphics.hpp>
 
 static void register_components(registry &reg)
@@ -85,6 +87,20 @@ static void run(registry &reg, sf::RenderWindow &window, float &dt)
 
 int main()
 {
+    /*    PART TO IMPLEMENT SERVER UDP    */
+    // try {
+    //     int port = 8080;
+    //     server::UDPServer udp_server(port);
+    //     udp_server.register_command("echo", [](char *data, std::size_t size) {
+    //         std::cout << "Echo command received: " << std::string(data, size - 1) << std::endl;
+    //     });
+    //     udp_server.run();
+    // } catch (std::exception &e) {
+    //     std::cerr << "Server error: " << e.what() << std::endl;
+    //     return 1;
+    // }
+    /*    END PART TO IMPLEMENT SERVER UDP    */
+
     registry reg;
     float dt = 0.f;
     sf::RenderWindow window(sf::VideoMode(1280, 720), "R-Type");
