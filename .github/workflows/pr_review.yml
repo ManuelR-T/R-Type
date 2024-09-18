@@ -12,7 +12,7 @@ jobs:
     container:
       image: nicolasalexandredev/r-type:dependencies
       volumes:
-        - ${{ github.workspace }}:/app
+        - ${{ github.workspace }}:/app:rw
 
     steps:
     - uses: actions/checkout@v4
