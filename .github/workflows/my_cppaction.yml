@@ -59,9 +59,9 @@ jobs:
             echo "::warning::$CLANG_TIDY_WARNING warning detected !"
             fi
 
-    - name: mirror repo
-      if: success()
-      uses: pixta-dev/repository-mirroring-action@v1
-      with:
-        target_repo_url: ${{ env.MIRROR_URL }}
-        ssh_private_key: ${{ secrets.SSH_KEY }}
+  miror:
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      needs: [check_all]
+      uses: ./.github/workflows/mirror.yml
+      secrets:
+          SSH_KEY: ${{ secrets.SSH_KEY }}
