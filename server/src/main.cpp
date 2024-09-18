@@ -8,6 +8,7 @@
 #include "components/controllable.hpp"
 #include "components/drawable.hpp"
 #include "components/hitbox.hpp"
+#include "components/missile.hpp"
 #include "components/position.hpp"
 #include "components/velocity.hpp"
 #include "core/registry.hpp"
@@ -15,6 +16,7 @@
 #include "systems/control.hpp"
 #include "systems/draw.hpp"
 #include "systems/position.hpp"
+#include "systems/missiles_stop.hpp"
 
 #include <SFML/Graphics.hpp>
 
@@ -25,6 +27,7 @@ static void register_components(registry &reg)
     reg.register_component<component::drawable>();
     reg.register_component<component::controllable>();
     reg.register_component<component::hitbox>();
+    reg.register_component<component::missile>();
 }
 
 static void register_systems(registry &reg, sf::RenderWindow &window, float &dt)
@@ -37,6 +40,7 @@ static void register_systems(registry &reg, sf::RenderWindow &window, float &dt)
         systems::draw(reg, window);
         window.display();
     });
+    reg.add_system([&reg] () { systems::missiles_stop(reg); });
 }
 
 static void create_player(registry &reg)

@@ -3,6 +3,7 @@ add_library(ECS STATIC
     systems/control.cpp
     systems/draw.cpp
     systems/position.cpp
+    systems/missiles_stop.cpp
 )
 
 target_include_directories(ECS PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
