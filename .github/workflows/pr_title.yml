@@ -1,0 +1,21 @@
+name: Check PR Title
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+
+jobs:
+  check-pr-title:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check PR title
+        uses: actions-ecosystem/action-regex-match@v1
+        with:
+          text: ${{ github.event.pull_request.title }}
+          regex: '^(add|fix|doc|style|refactor|test|chore)\(.*\): .{1,50}$'
+
+      - name: Fail if title does not match
+        if: ${{ !steps.match.outputs.result }}
+        run: |
+          echo "PR title does not follow the conventional commits format!"
+          exit 1
