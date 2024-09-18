@@ -8,12 +8,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions: write-all
+    
+    container:
+      image: nicolasalexandredev/r-type:dependencies
+      volumes:
+        - ${{ github.workspace }}:/app
 
     steps:
     - uses: actions/checkout@v4
-
-#    - name: install bear
-#      run: sudo apt-get install bear
 
     - name: generate compilation database
       run: cmake .; make
