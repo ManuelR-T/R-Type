@@ -12,7 +12,7 @@ jobs:
     timeout-minutes: 15
 
     container:
-      image: epitechcontent/epitest-docker:latest
+      image: nicolasalexandredev/r-type:dependencies
       volumes:
         - ${{ github.workspace }}:/app
 
