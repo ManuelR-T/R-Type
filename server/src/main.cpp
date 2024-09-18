@@ -20,11 +20,11 @@
 
 static void register_components(registry &reg)
 {
-    reg.register_component<component::position>();
-    reg.register_component<component::velocity>();
-    reg.register_component<component::drawable>();
-    reg.register_component<component::controllable>();
-    reg.register_component<component::hitbox>();
+    reg.register_component<ecs::component::position>();
+    reg.register_component<ecs::component::velocity>();
+    reg.register_component<ecs::component::drawable>();
+    reg.register_component<ecs::component::controllable>();
+    reg.register_component<ecs::component::hitbox>();
 }
 
 static void register_systems(registry &reg, sf::RenderWindow &window, float &dt)
@@ -42,29 +42,29 @@ static void register_systems(registry &reg, sf::RenderWindow &window, float &dt)
 static void create_player(registry &reg)
 {
     auto player = reg.spawn_entity();
-    reg.add_component(player, component::position{400.f, 300.f});
+    reg.add_component(player, ecs::component::position{400.f, 300.f});
 
-    reg.add_component(player, component::velocity{0.f, 0.f});
-    reg.add_component(player, component::controllable{});
-    component::drawable playerDrawable;
+    reg.add_component(player, ecs::component::velocity{0.f, 0.f});
+    reg.add_component(player, ecs::component::controllable{});
+    ecs::component::drawable playerDrawable;
     playerDrawable.shape.setSize(sf::Vector2f(50.f, 50.f));
     playerDrawable.shape.setFillColor(sf::Color::Green);
     reg.add_component(player, std::move(playerDrawable));
 
-    reg.add_component(player, component::hitbox{50.f, 50.f});
+    reg.add_component(player, ecs::component::hitbox{50.f, 50.f});
 }
 
 static void create_static(registry &reg, float x, float y)
 {
     auto entity = reg.spawn_entity();
-    reg.add_component(entity, component::position{x, y});
+    reg.add_component(entity, ecs::component::position{x, y});
 
-    component::drawable entityDrawable;
+    ecs::component::drawable entityDrawable;
     entityDrawable.shape.setSize(sf::Vector2f(50.f, 50.f));
     entityDrawable.shape.setFillColor(sf::Color::Red);
     reg.add_component(entity, std::move(entityDrawable));
 
-    reg.add_component(entity, component::hitbox{50.f, 50.f});
+    reg.add_component(entity, ecs::component::hitbox{50.f, 50.f});
 }
 
 static void run(registry &reg, sf::RenderWindow &window, float &dt)

@@ -16,8 +16,8 @@ namespace systems {
 
 void control(registry &reg)
 {
-    auto &velocities = reg.get_components<component::velocity>();
-    auto &controllables = reg.get_components<component::controllable>();
+    auto &velocities = reg.get_components<ecs::component::velocity>();
+    auto &controllables = reg.get_components<ecs::component::controllable>();
 
     sf::Vector2f direction(0.f, 0.f);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
@@ -35,7 +35,7 @@ void control(registry &reg)
 
     float speed = 100.0f;
 
-    zipper<component::velocity, component::controllable> zip(velocities, controllables);
+    zipper<ecs::component::velocity, ecs::component::controllable> zip(velocities, controllables);
 
     for (auto [vel, _] : zip) {
         vel.vx = direction.x * speed;

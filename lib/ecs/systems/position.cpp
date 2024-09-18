@@ -14,10 +14,10 @@ namespace systems {
 
 void position(registry &reg, float dt)
 {
-    auto &positions = reg.get_components<component::position>();
-    auto &velocities = reg.get_components<component::velocity>();
+    auto &positions = reg.get_components<ecs::component::position>();
+    auto &velocities = reg.get_components<ecs::component::velocity>();
 
-    zipper<component::position, component::velocity> zip(positions, velocities);
+    zipper<ecs::component::position, ecs::component::velocity> zip(positions, velocities);
 
     for (auto [pos, vel] : zip) {
         pos.x += vel.vx * dt;
