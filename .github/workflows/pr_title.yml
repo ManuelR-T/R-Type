@@ -1,22 +1,15 @@
 name: Check PR Title
 
 on:
-  pull_request:
-    types: [opened, edited, synchronize]
+    pull_request:
+        types: [opened, edited, synchronize]
 
 jobs:
-  check-pr-title:
+  check-for-cc:
     runs-on: ubuntu-latest
     steps:
-      - name: Check PR title
-        id: match
-        uses: actions-ecosystem/action-regex-match@v1
+      - name: check-for-cc
+        id: check-for-cc
+        uses: agenthunt/conventional-commit-checker-action@v1.0.0
         with:
-          text: ${{ github.event.pull_request.title }}
-          regex: '^(add|fix|doc|style|refactor|test|chore)(\([a-zA-Z0-9_-]+\))?: .{1,72}$'
-
-      - name: Fail if title does not match
-        if: ${{ steps.match.outputs.result == 'false' }}
-        run: |
-          echo "PR title does not follow the conventional commits format!"
-          exit 1
+          pr-title-regex: '^(add|fix|doc|style|refactor|test|chore)(\([a-zA-Z0-9_-]+\))?: .{1,72}$'
