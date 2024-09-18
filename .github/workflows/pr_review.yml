@@ -7,16 +7,16 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions: write-all
+    permissions: write
 
     steps:
     - uses: actions/checkout@v4
 
-#    - name: install bear
-#      run: sudo apt-get install bear
-
     - name: generate compilation database
       run: cmake .; make
+
+    - name: check compilation db
+      run: ls -la
 
     - uses: ZedThree/clang-tidy-review@v0.14.0
       id: review
