@@ -12,11 +12,11 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: install bear
-      run: sudo apt-get install bear
+#    - name: install bear
+#      run: sudo apt-get install bear
 
     - name: generate compilation database
-      run: make compilation_database
+      run: cmake .; make
 
     - uses: ZedThree/clang-tidy-review@v0.14.0
       id: review

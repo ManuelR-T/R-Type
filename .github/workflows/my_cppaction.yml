@@ -17,37 +17,41 @@ jobs:
         - ${{ github.workspace }}:/app
 
     steps:
-      - uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
-      - name: check compilation
-        run: |
-            echo "## 🚀 Compilation result" >> $GITHUB_STEP_SUMMARY
-            {
-              set +e
-              make ADDITIONAL_FLAGS="-Werror"
-              if [ $? -ne 0 ]; then
-                echo "- ### Compilation failed ❌" >> $GITHUB_STEP_SUMMARY
-                echo "Compilation failed."
-                exit 1
-              else
-                echo "- ### Compilation succeed ✅" >> $GITHUB_STEP_SUMMARY
-                exit 0
-              fi
-            }
+    - name: check compilation
+      run: |
+          echo "## 🚀 Compilation result" >> $GITHUB_STEP_SUMMARY
+          {
+            set +e
+            cmake .; make
+            if [ $? -ne 0 ]; then
+              echo "- ### Compilation failed ❌" >> $GITHUB_STEP_SUMMARY
+              echo "Compilation failed."
+              exit 1
+            else
+              echo "- ### Compilation succeed ✅" >> $GITHUB_STEP_SUMMARY
+              exit 0
+            fi
+          }
 
-    # Check correctly the warning with clang-tidy and bear
-      - name: Run clang-tidy
-        run: |
-          clang-tidy srcTMP/*.cpp -- -Iinclude
+    - name: install clang-tidy
+      run: sudo dnf install -y clang-tools-extra
 
-    # - name: code analyse
-    #   run: |
-    #     make code_analyse 2>&1 | tee code_analyse_log.txt
-    #     {
-    #       set +e
-    #       CLANG_TIDY_WARNING=$(grep -c "warning: " code_analyse_log.txt)
-    #     }
-    #     if [ "$CLANG_TIDY_WARNING" -ne 0 ]; then
-    #       echo "::warning::$CLANG_TIDY_WARNING warning detected !"
-    #     fi
+#    - name: install bear
+#      run: sudo dnf install -y bear
 
+    - name: code analyse
+      run: |
+        clang-tidy --config-file=.clang-tidy -header-filter=.* --use-color \
+          `find ./client -name "*.cpp"` \
+          `find ./server -name "*.cpp"` \
+          `find ./lib -name "*.cpp"` \
+          `find ./src -name "*.cpp"` 2>&1 | tee code_analyse_log.txt
+        {
+          set +e
+          CLANG_TIDY_WARNING=$(grep -c "warning: " code_analyse_log.txt)
+        }
+        if [ "$CLANG_TIDY_WARNING" -ne 0 ]; then
+          echo "::warning::$CLANG_TIDY_WARNING warning detected !"
+        fi
