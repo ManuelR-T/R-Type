@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** R-type
 ** File description:
-** colision
+** collision
 */
 
 #include <SFML/Graphics.hpp>

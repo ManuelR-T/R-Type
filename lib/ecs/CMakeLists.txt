@@ -1,5 +1,5 @@
 add_library(ECS STATIC
-    systems/colision.cpp
+    systems/collision.cpp
     systems/control.cpp
     systems/draw.cpp
     systems/position.cpp
