@@ -20,9 +20,6 @@ jobs:
     - name: install asio
       run: sudo apt-get install -y libasio-dev
 
-    - name: install sfml
-      run: sudo apt install -y libsfml-dev
-
     - name: Set base_dir
       run: |
         echo "base_dir=$(pwd)" >> $GITHUB_ENV
@@ -33,7 +30,7 @@ jobs:
       with:
         clang_tidy_version: 18
         config_file: ./.clang-tidy
-        lgtm_comment_body: "No clang-tidy warning ! 👍"
+        lgtm_comment_body: ""
         exclude: "tests/"
         base_dir: ${{ env.base_dir }}
 
