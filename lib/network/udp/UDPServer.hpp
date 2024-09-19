@@ -32,10 +32,7 @@ namespace server {
 
         void run() override;
 
-        void register_command(
-            char const *name,
-            std::function<void (char *, std::size_t)> func
-        ) override;
+        void register_command(std::function<void (char *, std::size_t)> func) override;
 
         udp::socket &socket() { return sock_; };
         udp::endpoint &endpoint() { return endpoint_; };
@@ -50,6 +47,6 @@ namespace server {
         udp::endpoint endpoint_;
         udp::socket sock_;
         char buff_[BUFF_SIZE];
-        std::map<std::string, std::function<void (char *, std::size_t)>> handlers_;
+        std::function<void (char *, std::size_t)> handler_;
     };
 }

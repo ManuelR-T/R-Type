@@ -45,10 +45,10 @@ void client::UDPClient::handle_recv(asio::error_code ec, std::size_t bytes)
     asio_run();
 }
 
-void client::UDPClient::handle_send(const std::vector<char> &vect)
+void client::UDPClient::send(const char *data, std::size_t size)
 {
     sock_.async_send_to(
-        asio::buffer(vect),
+        asio::buffer(data, size),
         endpoint_,
         [] (asio::error_code ec, std::size_t bytes) {
             if (!ec) {
@@ -58,12 +58,6 @@ void client::UDPClient::handle_send(const std::vector<char> &vect)
             }
         }
     );
-}
-
-void client::UDPClient::send(const char *message, std::size_t size)
-{
-    std::vector<char> data(message, message + size);
-    handle_send(data);
 }
 
 void client::UDPClient::run()

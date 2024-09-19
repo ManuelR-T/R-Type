@@ -14,7 +14,7 @@
 void server::UDPServer::handle_recv(asio::error_code ec, std::size_t bytes)
 {
     std::cout << "Received: [";
-    std::cout.write(buff_, bytes - 1);
+    std::cout.write(buff_, bytes);
     std::cout << "]\n";
 
     if (ec) {
@@ -22,19 +22,20 @@ void server::UDPServer::handle_recv(asio::error_code ec, std::size_t bytes)
         return;
     }
     if (bytes) {
-        try {
-            auto func = handlers_.find(std::string(buff_, bytes - 1));
-
-            if (func == handlers_.end()) {
-                throw std::runtime_error("No such command");
-            }
-
-            func->second(buff_, bytes);
-        } catch (std::exception &err) {
-            std::cerr << "No such command: [";
-            std::cerr.write(buff_, bytes);
-            std::cerr << "]\n";
-        }
+        handler_(buff_, bytes);
+//        try {
+//            auto func = handlers_.find(std::string(buff_, bytes - 1));
+//
+//            if (func == handlers_.end()) {
+//                throw std::runtime_error("No such command");
+//            }
+//
+//            func->second(buff_, bytes);
+//        } catch (std::exception &err) {
+//            std::cerr << "No such command: [";
+//            std::cerr.write(buff_, bytes);
+//            std::cerr << "]\n";
+//        }
     }
 
     asio_run();
@@ -52,10 +53,9 @@ void server::UDPServer::handle_send(const std::vector<char> &vect)
 }
 
 void server::UDPServer::register_command(
-    char const *name,
     std::function<void (char *, std::size_t)> func)
 {
-    handlers_[name] = func;
+    handler_ = func;
 }
 
 void server::UDPServer::asio_run()

@@ -20,9 +20,6 @@ namespace server {
 
         virtual void run() = 0;
 
-        virtual void register_command(
-            char const *name,
-            std::function<void (char *, std::size_t)> func
-        ) = 0;
+        virtual void register_command(std::function<void (char *, std::size_t)> func) = 0;
     };
 }

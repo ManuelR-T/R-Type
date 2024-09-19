@@ -24,12 +24,11 @@ namespace client {
         ~UDPClient() override = default;
 
         void run() override;
-        void send(const char *message, std::size_t size) override;
+        void send(const char *data, std::size_t size) override;
 
     private:
         void asio_run() override;
         void handle_recv(asio::error_code ec, std::size_t bytes);
-        void handle_send(const std::vector<char> &vect);
 
         udp::endpoint endpoint_;
         udp::socket sock_;

@@ -29,16 +29,11 @@ static void register_components(ecs::registry &reg)
     reg.register_component<ecs::component::hitbox>();
 }
 
-static void register_systems(ecs::registry &reg, sf::RenderWindow &window, float &dt)
+static void register_systems(ecs::registry &reg, float &dt)
 {
     reg.add_system([&reg]() { ecs::systems::control(reg); });
     reg.add_system([&reg, &dt]() { ecs::systems::position(reg, dt); });
     reg.add_system([&reg]() { ecs::systems::collision(reg); });
-    reg.add_system([&reg, &window]() {
-        window.clear();
-        ecs::systems::draw(reg, window);
-        window.display();
-    });
 }
 
 static void create_player(ecs::registry &reg)
@@ -69,19 +64,13 @@ static void create_static(ecs::registry &reg, float x, float y)
     reg.add_component(entity, ecs::component::hitbox{50.f, 50.f});
 }
 
-static void run(ecs::registry &reg, sf::RenderWindow &window, float &dt)
+static void run(ecs::registry &reg, float &dt)
 {
     sf::Clock clock;
 
-    while (window.isOpen()) {
+    while (true) {
         dt = clock.restart().asSeconds();
 
-        sf::Event event;
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed) {
-                window.close();
-            }
-        }
         reg.run_systems();
     }
 }
@@ -89,33 +78,31 @@ static void run(ecs::registry &reg, sf::RenderWindow &window, float &dt)
 int main()
 {
     /*    PART TO IMPLEMENT SERVER UDP    */
-    // try {
-    //     int port = 8080;
-    //     server::UDPServer udp_server(port);
-    //     udp_server.register_command("echo", [](char *data, std::size_t size) {
-    //         std::cout << "Echo command received: " << std::string(data, size - 1) << std::endl;
-    //     });
-    //     udp_server.run();
-    // } catch (std::exception &e) {
-    //     std::cerr << "Server error: " << e.what() << std::endl;
-    //     return 1;
-    // }
+    try {
+        int port = 8080;
+        server::UDPServer udp_server(port);
+        udp_server.register_command([](void *data, std::size_t size) {
+            std::cout << "command received" << std::endl;
+        });
+        udp_server.run();
+    } catch (std::exception &e) {
+        std::cerr << "Server error: " << e.what() << std::endl;
+        return 1;
+    }
     /*    END PART TO IMPLEMENT SERVER UDP    */
 
     ecs::registry reg;
     float dt = 0.f;
-    sf::RenderWindow window(sf::VideoMode(1280, 720), "R-Type");
 
-    window.setFramerateLimit(60);
     register_components(reg);
-    register_systems(reg, window, dt);
+    register_systems(reg, dt);
 
     create_player(reg);
     for (int i = 0; i < 1000; ++i) {
         create_static(reg, 100.f * i, 100.f * i);
     }
 
-    run(reg, window, dt);
+    run(reg, dt);
 
     return 0;
 }

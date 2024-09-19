@@ -21,6 +21,7 @@
 
 #include "my_log.hpp"
 #include "my_tracked_exception.hpp"
+#include "GameProtocol.hpp"
 
 static void register_components(ecs::registry &reg)
 {
@@ -91,29 +92,32 @@ static void run(ecs::registry &reg, sf::RenderWindow &window, float &dt)
 int main()
 {
     /*    PART TO IMPLEMENT CLIENT UDP    */
-    // client::UDPClient udpClient("127.0.0.1", 8080);
-    // std::thread receiveThread([&udpClient]() {
-    //     udpClient.run();
-    // });
-    // while (true) {
-    //     std::string userInput;
-    //     std::getline(std::cin, userInput);
-    //     udpClient.send(userInput.c_str(), userInput.size() + 1);
-    //     std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    // }
-    // receiveThread.join();
+    client::UDPClient udpClient("127.0.0.1", 8080);
+    std::thread receiveThread([&udpClient]() {
+        udpClient.run();
+    });
+    while (true) {
+        ecs::protocol msg = {
+            .action = ecs::ntw_action::NEW_ENTITY,
+            .size = 0,
+            .data = 0
+        };
+        udpClient.send(reinterpret_cast<const char *>(&msg), sizeof(msg));
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    }
+    receiveThread.join();
     /*  END PART TO IMPLEMENT CLIENT UDP    */
 
-    try {
-        throw my::tracked_exception("R-TYPE !!!!!!!!!!!!!");
-    } catch (const std::exception &exception) {
-        my::log::error(exception.what());
-        return 84;
-    } catch (...) {
-        my::log::error("Unknow error.");
-        return 84;
-    }
-    return 0;
+//    try {
+//        throw my::tracked_exception("R-TYPE !!!!!!!!!!!!!");
+//    } catch (const std::exception &exception) {
+//        my::log::error(exception.what());
+//        return 84;
+//    } catch (...) {
+//        my::log::error("Unknow error.");
+//        return 84;
+//    }
+//    return 0;
 
     ecs::registry reg;
     float dt = 0.f;

@@ -19,6 +19,6 @@ namespace client {
         virtual ~IClient() = default;
 
         virtual void run() = 0;
-        virtual void send(const char *message, std::size_t size) = 0;
+        virtual void send(const char *data, std::size_t size) = 0;
     };
 }
