@@ -8,7 +8,7 @@
 #pragma once
 
 #include "IClient.hpp"
-#include <asio.hpp>
+#include <asio/io_context.hpp>
 
 namespace client {
 
