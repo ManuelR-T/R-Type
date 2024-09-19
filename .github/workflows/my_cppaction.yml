@@ -22,6 +22,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: install asio
+      run: sudo dnf install -y asio-devel
+
     - name: check compilation
       run: |
           echo "## 🚀 Compilation result" >> $GITHUB_STEP_SUMMARY
@@ -38,12 +41,6 @@ jobs:
             fi
           }
 
-    - name: checkout the repo
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-        clean: true
-
     - name: code analyse
       run: |
             clang-tidy --config-file=.clang-tidy -header-filter=.* --use-color \
@@ -58,6 +55,12 @@ jobs:
             if [ "$CLANG_TIDY_WARNING" -ne 0 ]; then
             echo "::warning::$CLANG_TIDY_WARNING warning detected !"
             fi
+
+    - name: checkout the repo
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        clean: true
 
   miror:
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
