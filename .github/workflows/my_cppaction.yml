@@ -23,7 +23,7 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: install asio
-      run: sudo dnf install -y asio-devel
+      run: sudo apt-get install -y libasio-dev
 
     - name: check compilation
       run: |

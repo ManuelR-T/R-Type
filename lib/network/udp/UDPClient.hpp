@@ -42,12 +42,12 @@ namespace client {
         void run() override;
 
         /**
-         * @brief Send a message specified in @param message of size @param size
+         * @brief Send a data specified in @param data of size @param size
          *        to the endpoint variable member.
-         * @param message Message to send.
-         * @param size Number of bytes of the message.
+         * @param data data to send.
+         * @param size Number of bytes of the data.
         */
-        void send(const char *message, std::size_t size) override;
+        void send(const char *data, std::size_t size) override;
 
     private:
         /**
