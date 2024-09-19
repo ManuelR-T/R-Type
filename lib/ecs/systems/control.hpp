@@ -9,8 +9,17 @@
 
 #include "../core/registry.hpp"
 
-namespace systems {
+namespace ecs::systems {
 
+/**
+ * @brief Handles entity control and input processing.
+ *
+ * The `control` function processes player input and updates the relevant
+ * components of entities accordingly. This may involve modifying
+ * position, velocity, or other components based on input actions.
+ *
+ * @param reg Reference to the registry managing entities and their components.
+ */
 void control(registry &reg);
 
-} // namespace systems
+} // namespace ecs::systems

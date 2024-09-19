@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** R-type
 ** File description:
-** colision
+** collision
 */
 
 #include <SFML/Graphics.hpp>
@@ -15,11 +15,11 @@
 #include "../core/sparse_array.hpp"
 
 static void resolve_collision(
-    component::position &pos,
-    sparse_array<component::velocity> &velocities,
+    ecs::component::position &pos,
+    ecs::sparse_array<ecs::component::velocity> &velocities,
     size_t entity,
     const sf::FloatRect &intersection,
-    std::optional<component::velocity> &vel
+    std::optional<ecs::component::velocity> &vel
 )
 {
     if (!vel) {
@@ -43,14 +43,14 @@ static void resolve_collision(
     }
 }
 
-namespace systems {
+namespace ecs::systems {
 
 void collision(registry &reg)
 {
-    auto &positions = reg.get_components<component::position>();
-    auto &hitboxes = reg.get_components<component::hitbox>();
-    auto &velocities = reg.get_components<component::velocity>();
-    auto &controllables = reg.get_components<component::controllable>();
+    auto &positions = reg.get_components<ecs::component::position>();
+    auto &hitboxes = reg.get_components<ecs::component::hitbox>();
+    auto &velocities = reg.get_components<ecs::component::velocity>();
+    auto &controllables = reg.get_components<ecs::component::controllable>();
 
     std::vector<size_t> entities;
 
@@ -89,4 +89,4 @@ void collision(registry &reg)
     }
 }
 
-} // namespace systems
+} // namespace ecs::systems
