@@ -13,7 +13,6 @@
 #include <asio/ip/address_v6.hpp>
 #include <asio/ip/udp.hpp>
 #include <cstring>
-#include <map>
 
 using asio::ip::udp;
 
@@ -30,7 +29,7 @@ namespace server {
     public:
 
         /**
-         * @brief Contructor takes the port that the server listens,
+         * @brief Contructor takes the @param port that the server listens,
          *        and construct the asyncronous udp server.
          * @param port Port the server listens.
         */

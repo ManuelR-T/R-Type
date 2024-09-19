@@ -19,6 +19,7 @@
 #include "UDPServer.hpp"
 
 #include <SFML/Graphics.hpp>
+#include <iostream>
 
 static void register_components(ecs::registry &reg)
 {

@@ -11,7 +11,6 @@
 
 #include <asio/io_context.hpp>
 #include <asio/ip/tcp.hpp>
-#include <map>
 
 using asio::ip::tcp;
 
@@ -25,14 +24,14 @@ namespace server {
 
         virtual ~Session() = default;
 
-        void handle_client(const std::map<std::string, std::function<void (char *, std::size_t)>> &handler);
+        void handle_client(std::function<void (char *, std::size_t)> &handler);
         tcp::socket &socket() { return sock_; }
 
     private:
         void handle_read(
             asio::error_code ec,
             std::size_t bytes,
-            const std::map<std::string, std::function<void (char *, std::size_t)>> &handler
+            std::function<void (char *, std::size_t)> &handler
         );
 
         tcp::socket sock_;
@@ -44,12 +43,12 @@ namespace server {
         TCPServer(int port);
         ~TCPServer() override = default;
 
-         void run() override;
+        void run() override;
 
-         void register_command(
+        void register_command(
             char const *name,
             std::function<void (char *, std::size_t)> func
-        ) override;
+        );
 
         void sock_write(tcp::socket &sock_, std::string str);
 
@@ -59,6 +58,6 @@ namespace server {
         void handle_accept(asio::error_code ec, std::shared_ptr<Session> session);
 
         tcp::acceptor acc_;
-        std::map<std::string, std::function<void (char *, std::size_t)>> handlers_;
+        std::function<void (char *, std::size_t)> handlers_;
     };
 }

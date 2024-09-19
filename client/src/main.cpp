@@ -18,10 +18,12 @@
 #include "UDPClient.hpp"
 
 #include <SFML/Graphics.hpp>
+#include <thread>
 
 #include "my_log.hpp"
 #include "my_tracked_exception.hpp"
 #include "GameProtocol.hpp"
+#include <iostream>
 
 static void register_components(ecs::registry &reg)
 {

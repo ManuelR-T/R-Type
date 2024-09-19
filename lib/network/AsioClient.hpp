@@ -11,10 +11,17 @@
 #include <asio/io_context.hpp>
 
 namespace client {
+
+    /**
+     *  @class AsioClient
+     *  @brief AsioClient is a abstract class client that handle network with asio.
+     *
+     *  NOTE: This class initialize the `io_context` for the asynchronous operations.
+    */
     class AsioClient: public IClient {
     public:
         AsioClient() = default;
-        virtual ~AsioClient() = default;
+        ~AsioClient() override = default;
 
     protected:
         virtual void asio_run() = 0;
