@@ -8,6 +8,7 @@
 #pragma once
 
 #include "AsioClient.hpp"
+
 #include <asio/ip/udp.hpp>
 
 using asio::ip::udp;
@@ -70,6 +71,6 @@ namespace client {
 
         udp::endpoint endpoint_;
         udp::socket sock_;
-        char buff_[BUFF_SIZE];
+        std::array<char, BUFF_SIZE> buff_;
     };
 }

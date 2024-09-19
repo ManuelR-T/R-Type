@@ -14,7 +14,7 @@
 void server::UDPServer::handle_recv(asio::error_code ec, std::size_t bytes)
 {
     std::cout << "Received: [";
-    std::cout.write(buff_, bytes);
+    std::cout.write(buff_.data(), bytes);
     std::cout << "]\n";
 
     if (ec) {
@@ -22,7 +22,7 @@ void server::UDPServer::handle_recv(asio::error_code ec, std::size_t bytes)
         return;
     }
     if (bytes) {
-        handler_(buff_, bytes);
+        handler_(buff_.data(), bytes);
 //        try {
 //            auto func = handlers_.find(std::string(buff_, bytes - 1));
 //

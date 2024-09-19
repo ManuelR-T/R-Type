@@ -35,7 +35,7 @@ namespace server {
         );
 
         tcp::socket sock_;
-        char buff_[BUFF_SIZE];
+        std::array<char, BUFF_SIZE> buff_;
     };
 
     class TCPServer: public server::AsioServer {

@@ -32,10 +32,10 @@ void server::Session::Session::handle_read(
     }
     if (bytes) {
         try {
-            handler(buff_, bytes);
+            handler(buff_.data(), bytes);
         } catch (std::exception &err) {
             std::cerr << "No such command: ";
-            std::cerr.write(buff_, bytes);
+            std::cerr.write(buff_.data(), bytes);
             std::cerr << std::endl;
         }
     }

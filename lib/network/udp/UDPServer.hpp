@@ -11,6 +11,7 @@
 
 #include <asio/error_code.hpp>
 #include <asio/ip/address_v6.hpp>
+#include <array>
 #include <asio/ip/udp.hpp>
 #include <cstring>
 
@@ -95,7 +96,7 @@ namespace server {
 
         udp::endpoint endpoint_;
         udp::socket sock_;
-        char buff_[BUFF_SIZE];
+        std::array<char, BUFF_SIZE> buff_;
         std::function<void (char *, std::size_t)> handler_;
     };
 }

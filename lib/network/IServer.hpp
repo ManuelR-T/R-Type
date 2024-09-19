@@ -10,9 +10,8 @@
 #include <cstddef>
 #include <functional>
 
-#define BUFF_SIZE 256
-
 namespace server {
+    constexpr size_t BUFF_SIZE = 4096;
     class IServer {
     public:
         IServer() = default;

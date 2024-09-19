@@ -9,9 +9,8 @@
 
 #include <cstddef>
 
-#define BUFF_SIZE 256
-
 namespace client {
+    constexpr size_t BUFF_SIZE = 4096;
     class IClient {
     public:
         IClient() = default;
