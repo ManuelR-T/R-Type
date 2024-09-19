@@ -1,5 +1,8 @@
 name: my_cppaction
 
+env:
+  MIRROR_URL: "git@github.com:EpitechPromo2027/B-CPP-500-PAR-5-1-rtype-thibaud.cathala.git"
+
 on:
   push:
     branches: [ "main" ]
@@ -12,7 +15,7 @@ jobs:
     timeout-minutes: 15
 
     container:
-      image: epitechcontent/epitest-docker:latest
+      image: nicolasalexandredev/r-type:dependencies
       volumes:
         - ${{ github.workspace }}:/app
 
@@ -24,7 +27,7 @@ jobs:
           echo "## 🚀 Compilation result" >> $GITHUB_STEP_SUMMARY
           {
             set +e
-            make ADDITIONAL_FLAGS="-Werror"
+            cmake .; make
             if [ $? -ne 0 ]; then
               echo "- ### Compilation failed ❌" >> $GITHUB_STEP_SUMMARY
               echo "Compilation failed."
@@ -35,19 +38,30 @@ jobs:
             fi
           }
 
-    - name: install clang-tidy
-      run: sudo dnf install -y clang-tools-extra
-
-    - name: install bear
-      run: sudo dnf install -y bear
+    - name: checkout the repo
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        clean: true
 
     - name: code analyse
       run: |
-        make code_analyse 2>&1 | tee code_analyse_log.txt
-        {
-          set +e
-          CLANG_TIDY_WARNING=$(grep -c "warning: " code_analyse_log.txt)
-        }
-        if [ "$CLANG_TIDY_WARNING" -ne 0 ]; then
-          echo "::warning::$CLANG_TIDY_WARNING warning detected !"
-        fi
+            clang-tidy --config-file=.clang-tidy -header-filter=.* --use-color \
+            `find ./client -name "*.cpp"` \
+            `find ./server -name "*.cpp"` \
+            `find ./lib -name "*.cpp"` \
+            `find ./src -name "*.cpp"` 2>&1 | tee code_analyse_log.txt
+            {
+            set +e
+            CLANG_TIDY_WARNING=$(grep -c "warning: " code_analyse_log.txt)
+            }
+            if [ "$CLANG_TIDY_WARNING" -ne 0 ]; then
+            echo "::warning::$CLANG_TIDY_WARNING warning detected !"
+            fi
+
+  miror:
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      needs: [check_all]
+      uses: ./.github/workflows/mirror.yml
+      secrets:
+          SSH_KEY: ${{ secrets.SSH_KEY }}
