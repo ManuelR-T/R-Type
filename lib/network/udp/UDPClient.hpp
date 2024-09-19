@@ -63,12 +63,6 @@ namespace client {
         */
         void handle_recv(asio::error_code ec, std::size_t bytes);
 
-        /**
-         * @brief Send a message specified in @param vect to the endpoint variable member.
-         * @param vect Vector of string with the message to send.
-        */
-        void handle_send(const std::vector<char> &vect);
-
         udp::endpoint endpoint_;
         udp::socket sock_;
         std::array<char, BUFF_SIZE> buff_;
