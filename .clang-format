@@ -62,3 +62,6 @@ IndentCaseLabels: true
 
 # templates
 AlwaysBreakTemplateDeclarations: true
+
+# enum
+AllowShortEnumsOnASingleLine: false
