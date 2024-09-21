@@ -174,6 +174,27 @@ class registry {
         return array.emplace_at(static_cast<size_t>(entity), std::forward<Params>(params)...);
     }
 
+    template <typename Component>
+    typename sparse_array<Component>::reference_type get_component(const entity_t &entity)
+    {
+        auto &array = get_components<Component>(); // Get the sparse array of the component type
+        if (!array.has(static_cast<size_t>(entity))) { // Check if the component exists for the entity
+            throw std::runtime_error("Component not found for this entity.");
+        }
+        return array[static_cast<size_t>(entity)]; // Return reference to the component
+    }
+
+    // Const version of the method
+    template <typename Component>
+    typename sparse_array<Component>::const_reference_type get_component(const entity_t &entity) const
+    {
+        const auto &array = get_components<Component>(); // Get the sparse array of the component type
+        if (!array.has(static_cast<size_t>(entity))) { // Check if the component exists for the entity
+            throw std::runtime_error("Component not found for this entity.");
+        }
+        return array[static_cast<size_t>(entity)]; // Return const reference to the component
+    }
+
     /**
      * @brief Removes a component from an entity.
      *

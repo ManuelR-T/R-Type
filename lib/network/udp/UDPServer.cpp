@@ -41,13 +41,13 @@ void server::UDPServer::handle_recv(asio::error_code ec, std::size_t bytes)
     asio_run();
 }
 
-void server::UDPServer::handle_send(const std::vector<char> &vect)
+void server::UDPServer::handle_send(const char *data, std::size_t size)
 {
     sock_.async_send_to(
-        asio::buffer(vect),
+        asio::buffer(data, size),
         endpoint_,
         [] (asio::error_code, std::size_t bytes) {
-            std::cout << "I sent " << bytes << " Bytes\n";
+            std::cout << "I sent data Bytes\n";
         }
     );
 }
