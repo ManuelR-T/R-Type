@@ -74,7 +74,7 @@ static void create_static(ecs::registry &reg, float x, float y)
     reg.add_component(entity, ecs::component::hitbox{50.f, 50.f});
 }
 
-static void run(ecs::registry &reg, sf::RenderWindow &window, float &dt)
+static void run(ecs::registry &reg, sf::RenderWindow &window, float &dt, client::UDPClient &udpClient)
 {
     sf::Clock clock;
 
@@ -87,54 +87,46 @@ static void run(ecs::registry &reg, sf::RenderWindow &window, float &dt)
                 window.close();
             }
         }
-        reg.run_systems();
+        // reg.run_systems();
+        // ecs::protocol msg = {
+        //     .action = ecs::ntw_action::NEW_ENTITY,
+        //     .size = 0,
+        //     .data = nullptr
+        // };
+        // udpClient.send(reinterpret_cast<const char *>(&msg), sizeof(msg));
     }
 }
 
 int main()
 {
-    /*    PART TO IMPLEMENT CLIENT UDP    */
-    client::UDPClient udpClient("127.0.0.1", 8080);
-    std::thread receiveThread([&udpClient]() {
-        udpClient.run();
-    });
-    while (true) {
-        ecs::protocol msg = {
-            .action = ecs::ntw_action::NEW_ENTITY,
-            .size = 0,
-            .data = 0
-        };
-        udpClient.send(reinterpret_cast<const char *>(&msg), sizeof(msg));
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+   try {
+        client::UDPClient udpClient("127.0.0.1", 8080);
+        std::thread receiveThread([&udpClient]() {
+            udpClient.run();
+        });
+
+        ecs::registry reg;
+        float dt = 0.f;
+        sf::RenderWindow window(sf::VideoMode(1280, 720), "R-Type");
+
+        window.setFramerateLimit(60);
+        register_components(reg);
+        register_systems(reg, window, dt);
+
+        create_player(reg);
+        for (int i = 0; i < 1000; ++i) {
+            create_static(reg, 100.f * i, 100.f * i);
+        }
+
+        run(reg, window, dt, udpClient);
+
+        receiveThread.join();
+    } catch (const std::exception &exception) {
+        my::log::error(exception.what());
+        return 84;
+    } catch (...) {
+        my::log::error("Unknow error.");
+        return 84;
     }
-    receiveThread.join();
-    /*  END PART TO IMPLEMENT CLIENT UDP    */
-
-//    try {
-//        throw my::tracked_exception("R-TYPE !!!!!!!!!!!!!");
-//    } catch (const std::exception &exception) {
-//        my::log::error(exception.what());
-//        return 84;
-//    } catch (...) {
-//        my::log::error("Unknow error.");
-//        return 84;
-//    }
-//    return 0;
-
-    ecs::registry reg;
-    float dt = 0.f;
-    sf::RenderWindow window(sf::VideoMode(1280, 720), "R-Type");
-
-    window.setFramerateLimit(60);
-    register_components(reg);
-    register_systems(reg, window, dt);
-
-    create_player(reg);
-    for (int i = 0; i < 1000; ++i) {
-        create_static(reg, 100.f * i, 100.f * i);
-    }
-
-    run(reg, window, dt);
-
     return 0;
 }
