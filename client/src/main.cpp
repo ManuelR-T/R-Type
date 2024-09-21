@@ -87,7 +87,7 @@ static void run(ecs::registry &reg, sf::RenderWindow &window, float &dt, client:
                 window.close();
             }
         }
-        // reg.run_systems();
+        reg.run_systems();
         // ecs::protocol msg = {
         //     .action = ecs::ntw_action::NEW_ENTITY,
         //     .size = 0,
