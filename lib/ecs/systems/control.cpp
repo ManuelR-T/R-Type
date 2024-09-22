@@ -11,25 +11,26 @@
 #include "../components/velocity.hpp"
 #include "../core/registry.hpp"
 #include "../core/zipper.hpp"
+#include "control.hpp"
 
 namespace ecs::systems {
 
-void control(registry &reg)
+void control(registry &reg, ecs::input_manager &input)
 {
     auto &velocities = reg.get_components<ecs::component::velocity>();
     auto &controllables = reg.get_components<ecs::component::controllable>();
 
     sf::Vector2f direction(0.f, 0.f);
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+    if (input.is_key_pressed(sf::Keyboard::Up)) {
         direction.y -= 1.f;
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+    if (input.is_key_pressed(sf::Keyboard::Down)) {
         direction.y += 1.f;
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+    if (input.is_key_pressed(sf::Keyboard::Left)) {
         direction.x -= 1.f;
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+    if (input.is_key_pressed(sf::Keyboard::Right)) {
         direction.x += 1.f;
     }
 

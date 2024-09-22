@@ -36,7 +36,7 @@ static void register_components(ecs::registry &reg)
 
 static void register_systems(ecs::registry &reg, sf::RenderWindow &window, float &dt)
 {
-    reg.add_system([&reg]() { ecs::systems::control(reg); });
+//    reg.add_system([&reg]() { ecs::systems::control(reg); });
     reg.add_system([&reg, &dt]() { ecs::systems::position(reg, dt); });
     reg.add_system([&reg]() { ecs::systems::collision(reg); });
     reg.add_system([&reg, &window]() {

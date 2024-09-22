@@ -14,6 +14,7 @@
 #include "components/shared_entity.hpp"
 #include "core/registry.hpp"
 #include "core/shared_entity.hpp"
+#include "core/input_manager.hpp"
 #include "systems/collision.hpp"
 #include "systems/control.hpp"
 #include "systems/draw.hpp"
@@ -40,9 +41,10 @@ static void register_components(ecs::registry &reg)
     reg.register_component<ecs::component::shared_entity>();
 }
 
-static void register_systems(ecs::registry &reg, sf::RenderWindow &window, float &dt, client::UDPClient &udpClient)
+static void register_systems(ecs::registry &reg, sf::RenderWindow &window,
+    float &dt, client::UDPClient &udpClient, ecs::input_manager &input)
 {
-    reg.add_system([&reg]() { ecs::systems::control(reg); });
+    reg.add_system([&reg, &input]() { ecs::systems::control(reg, input); });
     reg.add_system([&reg, &dt]() { ecs::systems::position(reg, dt); });
     reg.add_system([&reg]() { ecs::systems::collision(reg); });
     reg.add_system([&reg, &window]() {
@@ -92,7 +94,8 @@ static void create_static(ecs::registry &reg, float x, float y)
     reg.add_component(entity, ecs::component::hitbox{50.f, 50.f});
 }
 
-static void run(ecs::registry &reg, sf::RenderWindow &window, float &dt, client::UDPClient &udpClient)
+static void run(ecs::registry &reg, sf::RenderWindow &window,
+    float &dt, client::UDPClient &udpClient, ecs::input_manager &input)
 {
     sf::Clock clock;
 
@@ -104,6 +107,7 @@ static void run(ecs::registry &reg, sf::RenderWindow &window, float &dt, client:
             if (event.type == sf::Event::Closed) {
                 window.close();
             }
+            input.update(event);
         }
         reg.run_systems();
     }
@@ -120,18 +124,19 @@ int main()
         ecs::registry reg;
         float dt = 0.f;
         sf::RenderWindow window(sf::VideoMode(1280, 720), "R-Type");
+        ecs::input_manager input_manager;
 
         window.setFramerateLimit(30);
         register_components(reg);
-        register_systems(reg, window, dt, udpClient);
+        register_systems(reg, window, dt, udpClient, input_manager);
 
         create_player(reg, udpClient);
 
         for (int i = 0; i < 1000; ++i) {
-            create_static(reg, 100.f * i, 100.f);
+            create_static(reg, 100.f * i, 100.f * i);
         }
 
-        run(reg, window, dt, udpClient);
+        run(reg, window, dt, udpClient, input_manager);
 
         receiveThread.join();
     } catch (const std::exception &exception) {

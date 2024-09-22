@@ -8,6 +8,8 @@
 #pragma once
 
 #include "../core/registry.hpp"
+#include <SFML/Window/Event.hpp>
+#include "../core/input_manager.hpp"
 
 namespace ecs::systems {
 
@@ -20,6 +22,6 @@ namespace ecs::systems {
  *
  * @param reg Reference to the registry managing entities and their components.
  */
-void control(registry &reg);
+void control(registry &reg, ecs::input_manager &input);
 
 } // namespace ecs::systems
