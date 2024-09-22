@@ -3,7 +3,8 @@ add_library(ECS STATIC
     systems/control.cpp
     systems/draw.cpp
     systems/position.cpp
-    systems/share_position.cpp
+    systems/share_movement.cpp
+    core/shared_entity.cpp
 )
 
 target_include_directories(ECS PUBLIC

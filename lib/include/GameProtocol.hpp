@@ -22,14 +22,22 @@ namespace ecs
         DEL_ENTITY
     };
 
+    namespace ntw
+    {
+        struct movement
+        {
+            ecs::component::position pos;
+            ecs::component::velocity vel;
+        };
+    }
+
     struct protocol
     {
-        ntw_action action = ntw_action::NONE;
-        entity_t entity = 0;
+        ntw_action action;
+        shared_entity_t shared_entity_id;
         std::variant<
             std::monostate,
-            ecs::component::position
-        > data;
+            ntw::movement> data;
     };
 }
 

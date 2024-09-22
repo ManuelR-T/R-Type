@@ -10,13 +10,15 @@
 #include "components/hitbox.hpp"
 #include "components/position.hpp"
 #include "components/velocity.hpp"
-#include "components/share_position.hpp"
+#include "components/share_movement.hpp"
+#include "components/shared_entity.hpp"
 #include "core/registry.hpp"
+#include "core/shared_entity.hpp"
 #include "systems/collision.hpp"
 #include "systems/control.hpp"
 #include "systems/draw.hpp"
 #include "systems/position.hpp"
-#include "systems/share_position.hpp"
+#include "systems/share_movement.hpp"
 #include "UDPClient.hpp"
 
 #include <SFML/Graphics.hpp>
@@ -34,7 +36,8 @@ static void register_components(ecs::registry &reg)
     reg.register_component<ecs::component::drawable>();
     reg.register_component<ecs::component::controllable>();
     reg.register_component<ecs::component::hitbox>();
-    reg.register_component<ecs::component::share_position>();
+    reg.register_component<ecs::component::share_movement>();
+    reg.register_component<ecs::component::shared_entity>();
 }
 
 static void register_systems(ecs::registry &reg, sf::RenderWindow &window, float &dt, client::UDPClient &udpClient)
@@ -48,13 +51,13 @@ static void register_systems(ecs::registry &reg, sf::RenderWindow &window, float
         window.display();
     });
     reg.add_system([&reg, &udpClient]() {
-        ecs::systems::share_position(reg, udpClient);
+        ecs::systems::share_movement(reg, udpClient);
     });
 }
 
-static entity_t create_player(ecs::registry &reg)
+static void create_player(ecs::registry &reg, client::UDPClient &udpClient)
 {
-    auto player = reg.spawn_entity();
+    auto player = reg.spawn_shared_entity(ecs::generate_shared_entity_id());
     reg.add_component(player, ecs::component::position{400.f, 300.f});
 
     reg.add_component(player, ecs::component::velocity{0.f, 0.f});
@@ -65,9 +68,15 @@ static entity_t create_player(ecs::registry &reg)
     reg.add_component(player, std::move(playerDrawable));
 
     reg.add_component(player, ecs::component::hitbox{50.f, 50.f});
-    reg.add_component(player, ecs::component::share_position{});
+    reg.add_component(player, ecs::component::share_movement{});
 
-    return player;
+    // ! will be changed with lobby
+    ecs::protocol msg = {
+        .action = ecs::ntw_action::NEW_PLAYER,
+        .shared_entity_id = reg.get_component<ecs::component::shared_entity>(player).value().shared_entity_id
+    };
+    udpClient.send(reinterpret_cast<const char *>(&msg), sizeof(msg));
+    // ! will be changed with lobby
 }
 
 static void create_static(ecs::registry &reg, float x, float y)
@@ -116,15 +125,10 @@ int main()
         register_components(reg);
         register_systems(reg, window, dt, udpClient);
 
-        entity_t player = create_player(reg);
-
-        ecs::protocol msg = {
-            .action = ecs::ntw_action::NEW_PLAYER
-        };
-        udpClient.send(reinterpret_cast<const char *>(&msg), sizeof(msg));
+        create_player(reg, udpClient);
 
         for (int i = 0; i < 1000; ++i) {
-            create_static(reg, 100.f * i, 100.f * i);
+            create_static(reg, 100.f * i, 100.f);
         }
 
         run(reg, window, dt, udpClient);

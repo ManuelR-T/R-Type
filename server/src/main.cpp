@@ -10,6 +10,7 @@
 #include "components/hitbox.hpp"
 #include "components/position.hpp"
 #include "components/velocity.hpp"
+#include "components/shared_entity.hpp"
 #include "core/registry.hpp"
 #include "systems/collision.hpp"
 #include "systems/control.hpp"
@@ -30,6 +31,7 @@ static void register_components(ecs::registry &reg)
     reg.register_component<ecs::component::drawable>();
     reg.register_component<ecs::component::controllable>();
     reg.register_component<ecs::component::hitbox>();
+    reg.register_component<ecs::component::shared_entity>();
 }
 
 static void register_systems(ecs::registry &reg, sf::RenderWindow &window, float &dt)
@@ -44,9 +46,9 @@ static void register_systems(ecs::registry &reg, sf::RenderWindow &window, float
     });
 }
 
-static void create_player(ecs::registry &reg)
+static void create_player(ecs::registry &reg, shared_entity_t shared_entity_id)
 {
-    auto player = reg.spawn_entity();
+    auto player = reg.spawn_shared_entity(shared_entity_id);
     reg.add_component(player, ecs::component::position{400.f, 300.f});
 
     reg.add_component(player, ecs::component::velocity{0.f, 0.f});
@@ -106,12 +108,14 @@ int main()
         switch (msg.action)
         {
         case ecs::ntw_action::NEW_PLAYER:
-            create_player(reg);
+            create_player(reg, msg.shared_entity_id);
             break;
         case ecs::ntw_action::MOD_ENTITY:
-            if (std::holds_alternative<ecs::component::position>(msg.data)) {
-                reg.get_component<ecs::component::position>(msg.entity).value()
-                    = std::get<ecs::component::position>(msg.data);
+            if (std::holds_alternative<ecs::ntw::movement>(msg.data)) {
+                reg.get_component<ecs::component::position>(reg.get_local_entity().at(msg.shared_entity_id)).value()
+                    = std::get<ecs::ntw::movement>(msg.data).pos;
+                reg.get_component<ecs::component::velocity>(reg.get_local_entity().at(msg.shared_entity_id)).value()
+                    = std::get<ecs::ntw::movement>(msg.data).vel;
             }
             break;
         }

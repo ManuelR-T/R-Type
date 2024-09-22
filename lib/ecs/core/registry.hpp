@@ -8,7 +8,9 @@
 #pragma once
 
 #include "entity.hpp"
+#include "shared_entity.hpp"
 #include "sparse_array.hpp"
+#include "../components/shared_entity.hpp"
 
 #include <any>
 #include <functional>
@@ -122,6 +124,31 @@ class registry {
     }
 
     /**
+     * @brief Spawns a new shared_entity within the registry.
+     *
+     * Creates a new sharedentity identifier, adds it to the list of active entities, and returns
+     * the identifier.
+     *
+     * @param shared_entity_id The id of the shared_entity.
+     * @return The identifier (`shared_entity_t`) of the newly spawned sharedentity.
+     */
+    entity_t spawn_shared_entity(shared_entity_t shared_entity_id)
+    {
+        entity_t entity(_next_entity_id++);
+        _entities.push_back(entity);
+
+        _shared_entity_tracker[shared_entity_id] = entity;
+        this->add_component(entity, ecs::component::shared_entity{shared_entity_id});
+
+        return entity;
+    }
+
+    const std::unordered_map<shared_entity_t, entity_t> &get_local_entity() const
+    {
+        return _shared_entity_tracker;
+    }
+
+    /**
      * @brief Marks an entity for destruction.
      *
      * Removes all components associated with the specified entity and queues the entity
@@ -177,22 +204,21 @@ class registry {
     template <typename Component>
     typename sparse_array<Component>::reference_type get_component(const entity_t &entity)
     {
-        auto &array = get_components<Component>(); // Get the sparse array of the component type
-        if (!array.has(static_cast<size_t>(entity))) { // Check if the component exists for the entity
+        auto &array = get_components<Component>();
+        if (!array.has(static_cast<size_t>(entity))) {
             throw std::runtime_error("Component not found for this entity.");
         }
-        return array[static_cast<size_t>(entity)]; // Return reference to the component
+        return array[static_cast<size_t>(entity)];
     }
 
-    // Const version of the method
     template <typename Component>
     typename sparse_array<Component>::const_reference_type get_component(const entity_t &entity) const
     {
-        const auto &array = get_components<Component>(); // Get the sparse array of the component type
-        if (!array.has(static_cast<size_t>(entity))) { // Check if the component exists for the entity
+        const auto &array = get_components<Component>();
+        if (!array.has(static_cast<size_t>(entity))) {
             throw std::runtime_error("Component not found for this entity.");
         }
-        return array[static_cast<size_t>(entity)]; // Return const reference to the component
+        return array[static_cast<size_t>(entity)];
     }
 
     /**
@@ -248,6 +274,8 @@ class registry {
     std::vector<entity_t> _entities;             /**< List of active entities */
     std::vector<entity_t> _entities_to_destroy;  /**< Queue of entities marked for destruction */
     std::size_t _next_entity_id = 0;             /**< The next available entity identifier */
+
+    std::unordered_map<shared_entity_t, entity_t> _shared_entity_tracker;
 };
 
 } // namespace ecs

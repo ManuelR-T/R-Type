@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** R-type
 ** File description:
-** share_position
+** share_movement
 */
 
 #pragma once
@@ -10,11 +10,11 @@
 namespace ecs::component {
 
 /**
- * @struct share_position
+ * @struct share_movement
  * @brief Component that send the position and velocity data.
  *
- * The `share_position` component marks an entity as shared position to the server.
+ * The `share_movement` component marks an entity as shared movement to the server.
  */
-struct share_position {};
+struct share_movement {};
 
 } // namespace ecs::component
