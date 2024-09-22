@@ -36,10 +36,9 @@ static void register_components(ecs::registry &reg)
 
 static void register_systems(ecs::registry &reg, sf::RenderWindow &window, float &dt)
 {
-//    reg.add_system([&reg]() { ecs::systems::control(reg); });
     reg.add_system([&reg, &dt]() { ecs::systems::position(reg, dt); });
     reg.add_system([&reg]() { ecs::systems::collision(reg); });
-    reg.add_system([&reg, &window]() {
+    reg.add_system([&reg, &window]() { // ! for debug
         window.clear();
         ecs::systems::draw(reg, window);
         window.display();
@@ -52,7 +51,6 @@ static void create_player(ecs::registry &reg, shared_entity_t shared_entity_id)
     reg.add_component(player, ecs::component::position{400.f, 300.f});
 
     reg.add_component(player, ecs::component::velocity{0.f, 0.f});
-//    reg.add_component(player, ecs::component::controllable{});
     ecs::component::drawable playerDrawable;
     playerDrawable.shape.setSize(sf::Vector2f(50.f, 50.f));
     playerDrawable.shape.setFillColor(sf::Color::Blue);
@@ -78,15 +76,17 @@ static void run(ecs::registry &reg, sf::RenderWindow &window, float &dt)
 {
     sf::Clock clock;
 
-    while (true) {
+    while (window.isOpen()) {
         dt = clock.restart().asSeconds();
 
+        // ! for debug
         sf::Event event;
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
                 window.close();
             }
         }
+        // ! for debug
         reg.run_systems();
     }
 }
@@ -121,13 +121,13 @@ int main()
         }
     });
     float dt = 0.f;
-    sf::RenderWindow window(sf::VideoMode(1280, 720), "R-Type");
+    sf::RenderWindow window(sf::VideoMode(1280, 720), "R-Type"); // ! for deebug
 
+    window.setFramerateLimit(30); // ! for debug
     register_components(reg);
     register_systems(reg, window, dt);
 
-//    create_player(reg);
-    for (int i = 0; i < 1000; ++i) {
+    for (int i = 0; i < 10; ++i) {
         create_static(reg, 100.f * i, 100.f * i);
     }
 

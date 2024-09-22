@@ -15,6 +15,8 @@
 #include "core/registry.hpp"
 #include "core/shared_entity.hpp"
 #include "core/input_manager.hpp"
+#include "core/constants.hpp"
+#include "core/tick_rate_manager.hpp"
 #include "systems/collision.hpp"
 #include "systems/control.hpp"
 #include "systems/draw.hpp"
@@ -42,8 +44,11 @@ static void register_components(ecs::registry &reg)
 }
 
 static void register_systems(ecs::registry &reg, sf::RenderWindow &window,
-    float &dt, client::UDPClient &udpClient, ecs::input_manager &input)
+    float &dt, client::UDPClient &udpClient, ecs::input_manager &input,
+    ecs::tick_rate_manager &tick_rate_manager)
 {
+    tick_rate_manager.add_tick_rate(ecs::constants::movement_tick_rate);
+
     reg.add_system([&reg, &input]() { ecs::systems::control(reg, input); });
     reg.add_system([&reg, &dt]() { ecs::systems::position(reg, dt); });
     reg.add_system([&reg]() { ecs::systems::collision(reg); });
@@ -52,8 +57,10 @@ static void register_systems(ecs::registry &reg, sf::RenderWindow &window,
         ecs::systems::draw(reg, window);
         window.display();
     });
-    reg.add_system([&reg, &udpClient]() {
-        ecs::systems::share_movement(reg, udpClient);
+    reg.add_system([&reg, &udpClient, &tick_rate_manager, &dt]() {
+        if (tick_rate_manager.need_update(ecs::constants::movement_tick_rate, dt)) {
+            ecs::systems::share_movement(reg, udpClient);
+        }
     });
 }
 
@@ -125,14 +132,15 @@ int main()
         float dt = 0.f;
         sf::RenderWindow window(sf::VideoMode(1280, 720), "R-Type");
         ecs::input_manager input_manager;
+        ecs::tick_rate_manager tick_rate_manager;
 
-        window.setFramerateLimit(30);
+        window.setFramerateLimit(ecs::constants::fps_limit);
         register_components(reg);
-        register_systems(reg, window, dt, udpClient, input_manager);
+        register_systems(reg, window, dt, udpClient, input_manager, tick_rate_manager);
 
         create_player(reg, udpClient);
 
-        for (int i = 0; i < 1000; ++i) {
+        for (int i = 0; i < 10; ++i) {
             create_static(reg, 100.f * i, 100.f * i);
         }
 

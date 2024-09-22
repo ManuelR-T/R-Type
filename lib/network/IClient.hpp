@@ -10,7 +10,7 @@
 #include <cstddef>
 
 namespace client {
-    constexpr size_t BUFF_SIZE = 4096;
+    constexpr std::size_t BUFF_SIZE = 4096;
     class IClient {
     public:
         IClient() = default;
