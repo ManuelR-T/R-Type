@@ -7,11 +7,12 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
-#include "../components/controllable.hpp"
-#include "../components/velocity.hpp"
-#include "../core/registry.hpp"
-#include "../core/zipper.hpp"
+
 #include "control.hpp"
+#include "components/controllable.hpp"
+#include "components/velocity.hpp"
+#include "core/registry.hpp"
+#include "core/zipper.hpp"
 
 namespace ecs::systems {
 

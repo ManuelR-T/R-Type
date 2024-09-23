@@ -1,8 +1,10 @@
 add_library(ECS STATIC
     systems/collision.cpp
     systems/control.cpp
+    systems/control_special.cpp
     systems/draw.cpp
     systems/position.cpp
+    systems/missiles_stop.cpp
     systems/share_movement.cpp
     core/shared_entity.cpp
 )

@@ -11,8 +11,8 @@
 #include "components/position.hpp"
 #include "components/velocity.hpp"
 #include "components/shared_entity.hpp"
+#include "components/missile.hpp"
 #include "core/registry.hpp"
-#include "systems/collision.hpp"
 #include "systems/control.hpp"
 #include "systems/draw.hpp"
 #include "systems/position.hpp"
@@ -51,4 +51,26 @@ void create_static(ecs::registry &reg, float x, float y)
     reg.add_component(entity, std::move(entityDrawable));
 
     reg.add_component(entity, ecs::component::hitbox{50.f, 50.f});
+}
+
+void create_missile(
+    ecs::registry &reg,
+    ecs::protocol &msg
+)
+{
+    auto missile = reg.spawn_shared_entity(msg.shared_entity_id);
+
+    const auto &pos = std::get<ecs::ntw::movement>(msg.data).pos;
+    const auto &vel = std::get<ecs::ntw::movement>(msg.data).vel;
+
+    reg.add_component(missile, ecs::component::position{pos.x, pos.y});
+    reg.add_component(missile, ecs::component::velocity{vel.vx, vel.vy});
+
+    ecs::component::drawable playerDrawable;
+    playerDrawable.shape.setSize(sf::Vector2f(20.f, 20.f));
+    playerDrawable.shape.setFillColor(sf::Color::Yellow);
+    reg.add_component(missile, std::move(playerDrawable));
+
+    // reg.add_component(player, component::hitbox{50.f, 50.f});
+    reg.add_component(missile, ecs::component::missile{700.0, 700.0});
 }

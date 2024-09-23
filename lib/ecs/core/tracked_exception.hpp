@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <algorithm>
 #include <exception>
 #include <string>
 #include <source_location>

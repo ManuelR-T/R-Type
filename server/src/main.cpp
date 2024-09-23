@@ -5,25 +5,12 @@
 ** main
 */
 
-#include "components/controllable.hpp"
-#include "components/drawable.hpp"
-#include "components/hitbox.hpp"
-#include "components/position.hpp"
-#include "components/velocity.hpp"
-#include "components/shared_entity.hpp"
 #include "core/registry.hpp"
 #include "core/response_handler.hpp"
-#include "systems/collision.hpp"
-#include "systems/control.hpp"
-#include "systems/draw.hpp"
-#include "systems/position.hpp"
-
 #include "rtype_server.hpp"
 
-#include "GameProtocol.hpp"
 #include "UDPServer.hpp"
 #include <SFML/Graphics.hpp>
-#include <iostream>
 #include <thread>
 #include <cstring>
 
@@ -63,7 +50,7 @@ int main()
         response_handler.handle_response(data, size);});
 
     float dt = 0.f;
-    sf::RenderWindow window(sf::VideoMode(1280, 720), "R-Type"); // ! for deebug
+    sf::RenderWindow window(sf::VideoMode(1000, 700), "R-Type"); // ! for deebug
 
     window.setFramerateLimit(60); // ! for debug
     register_components(reg);
