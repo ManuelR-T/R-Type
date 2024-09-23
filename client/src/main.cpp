@@ -130,7 +130,9 @@ int main()
 
         ecs::registry reg;
         float dt = 0.f;
-        sf::RenderWindow window(sf::VideoMode(1280, 720), "R-Type");
+        sf::RenderWindow window(sf::VideoMode(
+            ecs::constants::screen_width,
+            ecs::constants::screen_height), "R-Type");
         ecs::input_manager input_manager;
         ecs::tick_rate_manager tick_rate_manager;
 
