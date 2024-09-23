@@ -5,6 +5,8 @@
 ** shared_entity
 */
 
+#pragma once
+
 #include <random>
 
 /**

@@ -1,19 +1,17 @@
 /*
 ** EPITECH PROJECT, 2024
-** my_cpplib
+** R-Type
 ** File description:
-** my_tracked_exception
+** tracked_exception
 */
 
-#ifndef MY_TRACKED_EXCEPTION_HPP_
-#define MY_TRACKED_EXCEPTION_HPP_
+#pragma once
 
-#include <algorithm>
 #include <exception>
 #include <string>
 #include <source_location>
 
-namespace my {
+namespace ecs {
 class tracked_exception : public std::exception {
     private:
     std::string message_;
@@ -65,6 +63,4 @@ class tracked_exception : public std::exception {
         return message_.c_str();
     }
 };
-} // namespace my
-
-#endif /* !MY_TRACKED_EXCEPTION_HPP_ */
+} // namespace ecs
