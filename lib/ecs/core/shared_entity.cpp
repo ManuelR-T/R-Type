@@ -6,6 +6,7 @@
 */
 
 #include "shared_entity.hpp"
+#include <random>
 
 shared_entity_t ecs::generate_shared_entity_id()
 {

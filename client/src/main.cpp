@@ -8,6 +8,7 @@
 #include "components/controllable.hpp"
 #include "components/drawable.hpp"
 #include "components/hitbox.hpp"
+#include "components/missile.hpp"
 #include "components/position.hpp"
 #include "components/velocity.hpp"
 #include "components/share_movement.hpp"
@@ -21,16 +22,16 @@
 #include "systems/control.hpp"
 #include "systems/draw.hpp"
 #include "systems/position.hpp"
+#include "systems/control_special.hpp"
 #include "systems/share_movement.hpp"
+#include "systems/missiles_stop.hpp"
 #include "UDPClient.hpp"
 
 #include <SFML/Graphics.hpp>
 #include <thread>
 
 #include "my_log.hpp"
-#include "my_tracked_exception.hpp"
 #include "GameProtocol.hpp"
-#include <iostream>
 
 static void register_components(ecs::registry &reg)
 {
@@ -41,6 +42,7 @@ static void register_components(ecs::registry &reg)
     reg.register_component<ecs::component::hitbox>();
     reg.register_component<ecs::component::share_movement>();
     reg.register_component<ecs::component::shared_entity>();
+    reg.register_component<ecs::component::missile>();
 }
 
 static void register_systems(ecs::registry &reg, sf::RenderWindow &window,
@@ -49,7 +51,8 @@ static void register_systems(ecs::registry &reg, sf::RenderWindow &window,
 {
     tick_rate_manager.add_tick_rate(ecs::constants::movement_tick_rate);
 
-    reg.add_system([&reg, &input]() { ecs::systems::control(reg, input); });
+    reg.add_system([&reg, &input, &udpClient]() { ecs::systems::control(reg, input); });
+    reg.add_system([&reg, &input, &udpClient]() { ecs::systems::control_special(reg, input, udpClient); });
     reg.add_system([&reg, &dt]() { ecs::systems::position(reg, dt); });
     reg.add_system([&reg]() { ecs::systems::collision(reg); });
     reg.add_system([&reg, &window]() {
@@ -62,6 +65,7 @@ static void register_systems(ecs::registry &reg, sf::RenderWindow &window,
             ecs::systems::share_movement(reg, udpClient);
         }
     });
+    reg.add_system([&reg] () { ecs::systems::missiles_stop(reg); });
 }
 
 static void create_player(ecs::registry &reg, client::UDPClient &udpClient)

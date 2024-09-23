@@ -9,7 +9,7 @@
 
 #include "../core/registry.hpp"
 
-namespace systems {
+namespace ecs::systems {
 
 void missiles_stop(ecs::registry &reg);
 

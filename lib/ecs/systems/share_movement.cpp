@@ -29,9 +29,6 @@ void share_movement(registry &reg, client::UDPClient &udpClient)
         ecs::component::shared_entity> zip(shared_mov, positions, velocitys, shared_entity);
 
     for (auto [_, pos, vel, shared_entity] : zip) {
-        pos.x;
-        pos.y;
-
         ecs::protocol msg = {
             .action = ecs::ntw_action::MOD_ENTITY,
             .shared_entity_id = shared_entity.shared_entity_id,

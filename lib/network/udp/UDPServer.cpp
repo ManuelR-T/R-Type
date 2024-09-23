@@ -13,9 +13,9 @@
 
 void server::UDPServer::handle_recv(asio::error_code ec, std::size_t bytes)
 {
-    std::cout << "Received: [";
-    std::cout.write(buff_.data(), bytes);
-    std::cout << "]\n";
+    // std::cout << "Received: [";
+    // std::cout.write(buff_.data(), bytes);
+    // std::cout << "]\n";
 
     if (ec) {
         std::cout << ec << std::endl;

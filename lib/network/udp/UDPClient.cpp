@@ -38,9 +38,9 @@ void client::UDPClient::handle_recv(asio::error_code ec, std::size_t bytes)
         return;
     }
 
-    std::cout << "Received: ";
-    std::cout.write(buff_.data(), bytes);
-    std::cout << std::endl;
+    // std::cout << "Received: ";
+    // std::cout.write(buff_.data(), bytes);
+    // std::cout << std::endl;
 
     asio_run();
 }

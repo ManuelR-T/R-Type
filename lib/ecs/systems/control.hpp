@@ -7,20 +7,20 @@
 
 #pragma once
 
-#include "../core/registry.hpp"
 #include <SFML/Window/Event.hpp>
-#include "../core/input_manager.hpp"
+#include "core/registry.hpp"
+#include "core/input_manager.hpp"
 
 namespace ecs::systems {
 
 /**
  * @brief Handles entity control and input processing.
  *
- * The `control` function processes player input and updates the relevant
- * components of entities accordingly. This may involve modifying
- * position, velocity, or other components based on input actions.
+ * The `control` function processes player input with the object @param input
+ * and retrieve its keyboard states.
  *
  * @param reg Reference to the registry managing entities and their components.
+ * @param input Input manager object that contains states of keyboard values.
  */
 void control(registry &reg, ecs::input_manager &input);
 

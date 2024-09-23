@@ -10,7 +10,7 @@
 #include "components/position.hpp"
 #include "core/zipper.hpp"
 
-void systems::missiles_stop(ecs::registry &reg)
+void ecs::systems::missiles_stop(ecs::registry &reg)
 {
     auto &missiles = reg.get_components<ecs::component::missile>();
     auto &positions = reg.get_components<ecs::component::position>();

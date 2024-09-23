@@ -5,7 +5,7 @@
 ** shared_entity
 */
 
-#include <random>
+#include <cstddef>
 
 /**
  * @typedef shared_entity_t

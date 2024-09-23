@@ -11,6 +11,7 @@
 #include "components/missile.hpp"
 #include "components/position.hpp"
 #include "components/velocity.hpp"
+#include "components/share_movement.hpp"
 #include "components/shared_entity.hpp"
 #include "core/registry.hpp"
 #include "systems/collision.hpp"
@@ -46,7 +47,7 @@ static void register_systems(ecs::registry &reg, sf::RenderWindow &window, float
         ecs::systems::draw(reg, window);
         window.display();
     });
-    reg.add_system([&reg] () { systems::missiles_stop(reg); });
+    reg.add_system([&reg] () { ecs::systems::missiles_stop(reg); });
 }
 
 static void create_player(ecs::registry &reg, shared_entity_t shared_entity_id)
@@ -61,6 +62,29 @@ static void create_player(ecs::registry &reg, shared_entity_t shared_entity_id)
     reg.add_component(player, std::move(playerDrawable));
 
     reg.add_component(player, ecs::component::hitbox{50.f, 50.f});
+}
+
+static void create_missile(
+    ecs::registry &reg,
+    shared_entity_t shared_entity_id,
+    ecs::protocol &msg
+)
+{
+    auto missile = reg.spawn_shared_entity(shared_entity_id);
+
+    const auto &pos = std::get<ecs::ntw::movement>(msg.data).pos;
+    const auto &vel = std::get<ecs::ntw::movement>(msg.data).vel;
+
+    reg.add_component(missile, ecs::component::position{pos.x, pos.y});
+    reg.add_component(missile, ecs::component::velocity{vel.vx, vel.vy});
+
+    ecs::component::drawable playerDrawable;
+    playerDrawable.shape.setSize(sf::Vector2f(20.f, 20.f));
+    playerDrawable.shape.setFillColor(sf::Color::Blue);
+    reg.add_component(missile, std::move(playerDrawable));
+
+    // reg.add_component(player, component::hitbox{50.f, 50.f});
+    reg.add_component(missile, ecs::component::missile{700.0, 700.0});
 }
 
 static void create_static(ecs::registry &reg, float x, float y)
@@ -122,10 +146,16 @@ int main()
                     = std::get<ecs::ntw::movement>(msg.data).vel;
             }
             break;
+        case ecs::ntw_action::NONE:
+        case ecs::ntw_action::NEW_ENTITY:
+            create_missile(reg, msg.shared_entity_id, msg);
+            break;
+        case ecs::ntw_action::DEL_ENTITY:
+            break;
         }
     });
     float dt = 0.f;
-    sf::RenderWindow window(sf::VideoMode(1280, 720), "R-Type"); // ! for deebug
+    sf::RenderWindow window(sf::VideoMode(1000, 700), "R-Type"); // ! for deebug
 
     window.setFramerateLimit(30); // ! for debug
     register_components(reg);
