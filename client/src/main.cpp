@@ -27,11 +27,12 @@
 #include <SFML/Graphics.hpp>
 #include <thread>
 
-#include <iostream>
-#include "GameProtocol.hpp"
 #include "argParser.hpp"
 #include "my_log.hpp"
 #include "my_tracked_exception.hpp"
+#include "core/tracked_exception.hpp"
+#include "GameProtocol.hpp"
+#include <iostream>
 
 static void register_components(ecs::registry &reg)
 {
@@ -156,7 +157,9 @@ int main(int ac, char **av)
 
         ecs::registry reg;
         float dt = 0.f;
-        sf::RenderWindow window(sf::VideoMode(1280, 720), "R-Type");
+        sf::RenderWindow window(sf::VideoMode(
+            ecs::constants::screen_width,
+            ecs::constants::screen_height), "R-Type");
         ecs::input_manager input_manager;
         ecs::tick_rate_manager tick_rate_manager;
 
