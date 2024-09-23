@@ -11,8 +11,8 @@ jobs:
     strategy:
       matrix:
         path:
-          - 'client/src'
           - 'lib'
+          - 'client/src'
           - 'server/src'
     steps:
     - uses: actions/checkout@v4
