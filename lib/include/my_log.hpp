@@ -10,7 +10,6 @@
 
 #include <format>
 #include <iostream>
-#include <stdexcept>
 #include <string>
 #include <source_location>
 
