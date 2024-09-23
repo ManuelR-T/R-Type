@@ -51,7 +51,6 @@ int main()
     int port = 8080;
     server::UDPServer udp_server(port);
 
-
     std::thread receiveThread([&udp_server]() {
         udp_server.run();
     });
