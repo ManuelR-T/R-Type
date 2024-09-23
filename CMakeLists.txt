@@ -9,9 +9,7 @@ add_subdirectory(lib)
 add_subdirectory(client)
 add_subdirectory(server)
 
-find_package(
-                Doxygen
-            )
+find_package( Doxygen )
 
 if (DOXYGEN_FOUND)
     set(DOXYGEN_IN ${CMAKE_CURRENT_SOURCE_DIR}/doxy.conf)
