@@ -5,59 +5,58 @@
 ** TCPServer
 */
 
-// #pragma once
+#pragma once
 
-// #include "../AsioServer.hpp"
+#include "../AsioServer.hpp"
 
-// #include <asio.hpp>
-// #include <asio/ip/tcp.hpp>
+#include <asio.hpp>
+#include <asio/ip/tcp.hpp>
 
-// using asio::ip::tcp;
+using asio::ip::tcp;
 
-// namespace server {
+namespace server {
 
-//     class Session : public std::enable_shared_from_this<Session> {
-//     public:
-//         Session(tcp::socket &sock): sock_(std::move(sock)) {}
-//         Session(asio::io_context &io): sock_(io) {}
-//         Session(tcp::socket &&sock): sock_(std::move(sock)) {}
+class Session : public std::enable_shared_from_this<Session> {
+    public:
+    Session(tcp::socket &sock) : sock_(std::move(sock)) {}
 
-//         virtual ~Session() = default;
+    Session(asio::io_context &io) : sock_(io) {}
 
-//         void handle_client(std::function<void (char *, std::size_t)> &handler);
-//         tcp::socket &socket() { return sock_; }
+    Session(tcp::socket &&sock) : sock_(std::move(sock)) {}
 
-//     private:
-//         void handle_read(
-//             asio::error_code ec,
-//             std::size_t bytes,
-//             std::function<void (char *, std::size_t)> &handler
-//         );
+    virtual ~Session() = default;
 
-//         tcp::socket sock_;
-//         std::array<char, BUFF_SIZE> buff_;
-//     };
+    void handle_client(std::function<void(char *, std::size_t)> &handler);
 
-//     class TCPServer: public server::AsioServer {
-//     public:
-//         TCPServer(int port);
-//         ~TCPServer() override = default;
+    tcp::socket &socket()
+    {
+        return sock_;
+    }
 
-//         void run() override;
+    private:
+    void handle_read(asio::error_code ec, std::size_t bytes, std::function<void(char *, std::size_t)> &handler);
 
-//         void register_command(
-//             char const *name,
-//             std::function<void (char *, std::size_t)> func
-//         );
+    tcp::socket sock_;
+    std::array<char, BUFF_SIZE> buff_;
+};
 
-//         void sock_write(tcp::socket &sock_, std::string str);
+class TCPServer : public server::AsioServer {
+    public:
+    TCPServer(int port);
+    ~TCPServer() override = default;
 
-//     private:
-//         void asio_run() override;
+    void run() override;
 
-//         void handle_accept(asio::error_code ec, std::shared_ptr<Session> session);
+    void register_command(char const *name, std::function<void(char *, std::size_t)> func);
 
-//         tcp::acceptor acc_;
-//         std::function<void (char *, std::size_t)> handlers_;
-//     };
-// }
+    void sock_write(tcp::socket &sock_, std::string str);
+
+    private:
+    void asio_run() override;
+
+    void handle_accept(asio::error_code ec, std::shared_ptr<Session> session);
+
+    tcp::acceptor acc_;
+    std::function<void(char *, std::size_t)> handler_;
+};
+} // namespace server
