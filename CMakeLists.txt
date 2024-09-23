@@ -11,7 +11,6 @@ add_subdirectory(server)
 
 find_package(
                 Doxygen
-                REQUIRED dot
             )
 
 if (DOXYGEN_FOUND)
