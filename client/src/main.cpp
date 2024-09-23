@@ -134,9 +134,9 @@ static void run(
 int main(int ac, char **av)
 {
     ArgParser argParser;
-    argParser.addArgument("ip", ArgParser::ArgType::STRING, true, "i", "Server IP address");
-    argParser.addArgument("port", ArgParser::ArgType::INT, true, "p", "Server port");
-    argParser.addArgument("help", ArgParser::ArgType::BOOL, false, "h", "Print this help message");
+    argParser.addArgument("ip", "i", ArgParser::ArgType::STRING, true, "Server IP address");
+    argParser.addArgument("port", "p", ArgParser::ArgType::INT, true, "Server port");
+    argParser.addArgument("help", "h", ArgParser::ArgType::BOOL, false, "Print this help message");
 
     if (!argParser.parse(ac, av)) {
         argParser.printHelp();

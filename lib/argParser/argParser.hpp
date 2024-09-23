@@ -39,10 +39,10 @@ class ArgParser {
 
     void addArgument(
         const std::string &long_name,
+        std::optional<std::string> short_name = std::nullopt,
         ArgType type = ArgType::STRING,
         bool required = true,
         const std::string &description = "",
-        std::optional<std::string> short_name = std::nullopt,
         std::optional<std::function<bool(const std::string &)>> validator = std::nullopt
     );
 

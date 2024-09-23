@@ -9,10 +9,10 @@
 
 void ArgParser::addArgument(
     const std::string &long_name,
+    std::optional<std::string> short_name,
     ArgType type,
     bool required,
     const std::string &description,
-    std::optional<std::string> short_name,
     std::optional<std::function<bool(const std::string &)>> validator
 )
 {
