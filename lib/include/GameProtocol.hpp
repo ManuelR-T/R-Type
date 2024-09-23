@@ -6,10 +6,14 @@
 */
 
 #ifndef GAMEPROTOCOL_HPP_
-    #define GAMEPROTOCOL_HPP_
+#define GAMEPROTOCOL_HPP_
 
     #include <cstddef>
     #include <variant>
+    #include "components/position.hpp"
+    #include "components/velocity.hpp"
+    #include "components/shared_entity.hpp"
+
 
 namespace ecs
 {
