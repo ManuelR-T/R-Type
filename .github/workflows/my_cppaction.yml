@@ -22,6 +22,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: install asio
+      run: sudo apt-get install -y libasio-dev
+
     - name: check compilation
       run: |
           echo "## 🚀 Compilation result" >> $GITHUB_STEP_SUMMARY
@@ -40,18 +43,18 @@ jobs:
 
     - name: code analyse
       run: |
-        clang-tidy --config-file=.clang-tidy -header-filter=.* --use-color \
-          `find ./client -name "*.cpp"` \
-          `find ./server -name "*.cpp"` \
-          `find ./lib -name "*.cpp"` \
-          `find ./src -name "*.cpp"` 2>&1 | tee code_analyse_log.txt
-        {
-          set +e
-          CLANG_TIDY_WARNING=$(grep -c "warning: " code_analyse_log.txt)
-        }
-        if [ "$CLANG_TIDY_WARNING" -ne 0 ]; then
-          echo "::warning::$CLANG_TIDY_WARNING warning detected !"
-        fi
+            clang-tidy --config-file=.clang-tidy -header-filter=.* --use-color \
+            `find ./client -name "*.cpp"` \
+            `find ./server -name "*.cpp"` \
+            `find ./lib -name "*.cpp"` \
+            `find ./src -name "*.cpp"` 2>&1 | tee code_analyse_log.txt
+            {
+            set +e
+            CLANG_TIDY_WARNING=$(grep -c "warning: " code_analyse_log.txt)
+            }
+            if [ "$CLANG_TIDY_WARNING" -ne 0 ]; then
+            echo "::warning::$CLANG_TIDY_WARNING warning detected !"
+            fi
 
     - name: checkout the repo
       uses: actions/checkout@v4
@@ -59,9 +62,9 @@ jobs:
         fetch-depth: 0
         clean: true
 
-    - name: mirror repo
-      if: success()
-      uses: pixta-dev/repository-mirroring-action@v1
-      with:
-        target_repo_url: ${{ env.MIRROR_URL }}
-        ssh_private_key: ${{ secrets.SSH_KEY }}
+  miror:
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      needs: [check_all]
+      uses: ./.github/workflows/mirror.yml
+      secrets:
+          SSH_KEY: ${{ secrets.SSH_KEY }}

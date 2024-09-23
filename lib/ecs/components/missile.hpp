@@ -7,7 +7,7 @@
 
 #pragma once
 
-namespace component {
+namespace ecs::component {
 
 struct missile {
     float endx;

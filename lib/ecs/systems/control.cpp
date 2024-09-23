@@ -15,47 +15,48 @@
 #include "../core/zipper.hpp"
 #include "components/missile.hpp"
 #include "components/position.hpp"
+#include "control.hpp"
 
-static void spawn_missile(registry &reg)
+static void spawn_missile(ecs::registry &reg)
 {
     auto missile = reg.spawn_entity();
-    reg.add_component(missile, component::position{0.f, 100.f});
+    reg.add_component(missile, ecs::component::position{0.f, 100.f});
 
-    reg.add_component(missile, component::velocity{50.f, 50.f});
-    component::drawable playerDrawable;
+    reg.add_component(missile, ecs::component::velocity{50.f, 50.f});
+    ecs::component::drawable playerDrawable;
     playerDrawable.shape.setSize(sf::Vector2f(50.f, 50.f));
     playerDrawable.shape.setFillColor(sf::Color::Green);
     reg.add_component(missile, std::move(playerDrawable));
     // reg.add_component(player, component::hitbox{50.f, 50.f});
-    reg.add_component(missile, component::missile{400.0, 400.0});
+    reg.add_component(missile, ecs::component::missile{400.0, 400.0});
 }
 
-namespace systems {
+namespace ecs::systems {
 
-void control(registry &reg)
+void control(registry &reg, ecs::input_manager &input)
 {
-    auto &velocities = reg.get_components<component::velocity>();
-    auto &controllables = reg.get_components<component::controllable>();
+    auto &velocities = reg.get_components<ecs::component::velocity>();
+    auto &controllables = reg.get_components<ecs::component::controllable>();
 
     sf::Vector2f direction(0.f, 0.f);
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+    if (input.is_key_pressed(sf::Keyboard::Up)) {
         direction.y -= 1.f;
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+    if (input.is_key_pressed(sf::Keyboard::Down)) {
         direction.y += 1.f;
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+    if (input.is_key_pressed(sf::Keyboard::Left)) {
         direction.x -= 1.f;
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+    if (input.is_key_pressed(sf::Keyboard::Right)) {
         direction.x += 1.f;
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+    if (input.is_key_pressed(sf::Keyboard::Space)) {
         spawn_missile(reg);
     }
     float speed = 100.0f;
 
-    zipper<component::velocity, component::controllable> zip(velocities, controllables);
+    zipper<ecs::component::velocity, ecs::component::controllable> zip(velocities, controllables);
 
     for (auto [vel, _] : zip) {
         vel.vx = direction.x * speed;
@@ -63,4 +64,4 @@ void control(registry &reg)
     }
 }
 
-} // namespace systems
+} // namespace ecs::systems
