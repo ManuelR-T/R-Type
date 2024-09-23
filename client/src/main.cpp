@@ -5,24 +5,24 @@
 ** main
 */
 
+#include "UDPClient.hpp"
 #include "components/controllable.hpp"
 #include "components/drawable.hpp"
 #include "components/hitbox.hpp"
 #include "components/position.hpp"
 #include "components/velocity.hpp"
-#include "components/share_movement.hpp"
-#include "components/shared_entity.hpp"
-#include "core/registry.hpp"
-#include "core/shared_entity.hpp"
-#include "core/input_manager.hpp"
 #include "core/constants.hpp"
-#include "core/tick_rate_manager.hpp"
+#include "core/registry.hpp"
 #include "systems/collision.hpp"
 #include "systems/control.hpp"
 #include "systems/draw.hpp"
 #include "systems/position.hpp"
+#include "components/share_movement.hpp"
+#include "components/shared_entity.hpp"
+#include "core/input_manager.hpp"
+#include "core/shared_entity.hpp"
+#include "core/tick_rate_manager.hpp"
 #include "systems/share_movement.hpp"
-#include "UDPClient.hpp"
 
 #include <SFML/Graphics.hpp>
 #include <thread>
@@ -44,9 +44,14 @@ static void register_components(ecs::registry &reg)
     reg.register_component<ecs::component::shared_entity>();
 }
 
-static void register_systems(ecs::registry &reg, sf::RenderWindow &window,
-    float &dt, client::UDPClient &udpClient, ecs::input_manager &input,
-    ecs::tick_rate_manager &tick_rate_manager)
+static void register_systems(
+    ecs::registry &reg,
+    sf::RenderWindow &window,
+    float &dt,
+    client::UDPClient &udpClient,
+    ecs::input_manager &input,
+    ecs::tick_rate_manager &tick_rate_manager
+)
 {
     tick_rate_manager.add_tick_rate(ecs::constants::movement_tick_rate);
 
@@ -102,8 +107,13 @@ static void create_static(ecs::registry &reg, float x, float y)
     reg.add_component(entity, ecs::component::hitbox{50.f, 50.f});
 }
 
-static void run(ecs::registry &reg, sf::RenderWindow &window,
-    float &dt, client::UDPClient &udpClient, ecs::input_manager &input)
+static void run(
+    ecs::registry &reg,
+    sf::RenderWindow &window,
+    float &dt,
+    client::UDPClient &udpClient,
+    ecs::input_manager &input
+)
 {
     sf::Clock clock;
 
@@ -124,24 +134,25 @@ static void run(ecs::registry &reg, sf::RenderWindow &window,
 int main(int ac, char **av)
 {
     ArgParser argParser;
-    argParser.addArgument("ip", ArgParser::ArgType::STRING, true, "Server IP address");
-    argParser.addArgument("port", ArgParser::ArgType::INT, true, "Server port");
-    argParser.addArgument("tickrate", ArgParser::ArgType::UNSIGNED_INT, false, "Tickrate");
+    argParser.addArgument("ip", ArgParser::ArgType::STRING, true, "i", "Server IP address");
+    argParser.addArgument("port", ArgParser::ArgType::INT, true, "p", "Server port");
+    argParser.addArgument("help", ArgParser::ArgType::BOOL, false, "h", "Print this help message");
 
     if (!argParser.parse(ac, av)) {
         argParser.printHelp();
         return 84;
     }
+    if (argParser.getValue<bool>("help")) {
+        argParser.printHelp();
+        return 0;
+    }
 
     auto ip = argParser.getValue<std::string>("ip");
     auto port = argParser.getValue<int>("port");
 
-
-   try {
+    try {
         client::UDPClient udpClient(ip, port);
-        std::thread receiveThread([&udpClient]() {
-            udpClient.run();
-        });
+        std::thread receiveThread([&udpClient]() { udpClient.run(); });
 
         ecs::registry reg;
         float dt = 0.f;
