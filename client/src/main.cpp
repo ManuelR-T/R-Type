@@ -123,6 +123,42 @@ static void run(ecs::registry &reg, sf::RenderWindow &window,
 int main()
 {
    try {
+        sf::RenderWindow window(sf::VideoMode(1280, 720), "R-Type");
+        window.setFramerateLimit(ecs::constants::fps_limit);
+
+        std::vector<sf::RectangleShape> boxesList;
+
+        // rectangle.setSize(sf::Vector2f{200, 200});
+        // rectangle.setFillColor(sf::Color{112, 122, 122});
+        // while (window.isOpen()) {
+        //     sf::Event event;
+        //     while (window.pollEvent(event)) {
+        //         if (event.type == sf::Event::Closed ||
+        //             (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)) {
+        //             window.close();
+        //         }
+        //     }
+
+        //     window.clear(sf::Color::Black);
+
+        //     window.draw(rectangle);
+
+        //     window.display();
+        // }
+
+    return 0;
+        // Setup assets menu (RectangleShape)
+        // Loop menu
+
+        // Affichage Tableau
+            // 1) Create New Room
+            // 2) Can scrollate
+            // 3) Room X / Nb players / Delete
+
+        // Join room
+        // Status des joueurs -> "Waiting" or "Ready"
+        // Screen with "Starting in X seconds" -> After leave infinite loop
+
         client::UDPClient udpClient("127.0.0.1", 8080);
         std::thread receiveThread([&udpClient]() {
             udpClient.run();
@@ -130,11 +166,9 @@ int main()
 
         ecs::registry reg;
         float dt = 0.f;
-        sf::RenderWindow window(sf::VideoMode(1280, 720), "R-Type");
         ecs::input_manager input_manager;
         ecs::tick_rate_manager tick_rate_manager;
 
-        window.setFramerateLimit(ecs::constants::fps_limit);
         register_components(reg);
         register_systems(reg, window, dt, udpClient, input_manager, tick_rate_manager);
 
