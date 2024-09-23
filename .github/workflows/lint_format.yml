@@ -12,7 +12,7 @@ jobs:
       matrix:
         path:
           - 'client/src'
-          - 'lib/'
+          - 'lib'
           - 'server/src'
     steps:
     - uses: actions/checkout@v4
