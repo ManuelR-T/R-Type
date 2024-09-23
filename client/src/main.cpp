@@ -27,10 +27,11 @@
 #include <SFML/Graphics.hpp>
 #include <thread>
 
+#include <iostream>
+#include "GameProtocol.hpp"
+#include "argParser.hpp"
 #include "my_log.hpp"
 #include "my_tracked_exception.hpp"
-#include "GameProtocol.hpp"
-#include <iostream>
 
 static void register_components(ecs::registry &reg)
 {
@@ -120,10 +121,24 @@ static void run(ecs::registry &reg, sf::RenderWindow &window,
     }
 }
 
-int main()
+int main(int ac, char **av)
 {
+    ArgParser argParser;
+    argParser.addArgument("ip", ArgParser::ArgType::STRING, true, "Server IP address");
+    argParser.addArgument("port", ArgParser::ArgType::INT, true, "Server port");
+    argParser.addArgument("tickrate", ArgParser::ArgType::UNSIGNED_INT, false, "Tickrate");
+
+    if (!argParser.parse(ac, av)) {
+        argParser.printHelp();
+        return 84;
+    }
+
+    auto ip = argParser.getValue<std::string>("ip");
+    auto port = argParser.getValue<int>("port");
+
+
    try {
-        client::UDPClient udpClient("127.0.0.1", 8080);
+        client::UDPClient udpClient(ip, port);
         std::thread receiveThread([&udpClient]() {
             udpClient.run();
         });
