@@ -39,7 +39,7 @@ static void spawn_missile(
     ecs::protocol msg = {
         .action = ecs::ntw_action::NEW_ENTITY,
         .shared_entity_id = reg.get_component<ecs::component::shared_entity>(missile).value().shared_entity_id,
-        .data = ecs::ntw::movement{.pos = {playerPos.x, playerPos.y}, .vel = {.vx = 50.f, .vy = 0}}
+        .data = ecs::ntw::movement{.pos = {playerPos.x + 10, playerPos.y + 10}, .vel = {.vx = 50.f, .vy = 0}}
     };
     udp.send(reinterpret_cast<const char *>(&msg), sizeof(msg));
 }

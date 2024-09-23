@@ -5,100 +5,14 @@
 ** main
 */
 
-#include "components/controllable.hpp"
-#include "components/drawable.hpp"
-#include "components/hitbox.hpp"
-#include "components/missile.hpp"
-#include "components/position.hpp"
-#include "components/velocity.hpp"
-#include "components/share_movement.hpp"
-#include "components/shared_entity.hpp"
 #include "core/registry.hpp"
-#include "systems/collision.hpp"
-#include "systems/control.hpp"
-#include "systems/draw.hpp"
-#include "systems/position.hpp"
-#include "systems/missiles_stop.hpp"
+#include "core/response_handler.hpp"
+#include "rtype_server.hpp"
 
-#include "GameProtocol.hpp"
 #include "UDPServer.hpp"
 #include <SFML/Graphics.hpp>
-#include <iostream>
 #include <thread>
 #include <cstring>
-
-static void register_components(ecs::registry &reg)
-{
-    reg.register_component<ecs::component::position>();
-    reg.register_component<ecs::component::velocity>();
-    reg.register_component<ecs::component::drawable>();
-    reg.register_component<ecs::component::controllable>();
-    reg.register_component<ecs::component::hitbox>();
-    reg.register_component<ecs::component::shared_entity>();
-    reg.register_component<ecs::component::missile>();
-}
-
-static void register_systems(ecs::registry &reg, sf::RenderWindow &window, float &dt)
-{
-    reg.add_system([&reg, &dt]() { ecs::systems::position(reg, dt); });
-    reg.add_system([&reg]() { ecs::systems::collision(reg); });
-    reg.add_system([&reg, &window]() { // ! for debug
-        window.clear();
-        ecs::systems::draw(reg, window);
-        window.display();
-    });
-    reg.add_system([&reg] () { ecs::systems::missiles_stop(reg); });
-}
-
-static void create_player(ecs::registry &reg, shared_entity_t shared_entity_id)
-{
-    auto player = reg.spawn_shared_entity(shared_entity_id);
-    reg.add_component(player, ecs::component::position{400.f, 300.f});
-
-    reg.add_component(player, ecs::component::velocity{0.f, 0.f});
-    ecs::component::drawable playerDrawable;
-    playerDrawable.shape.setSize(sf::Vector2f(50.f, 50.f));
-    playerDrawable.shape.setFillColor(sf::Color::Blue);
-    reg.add_component(player, std::move(playerDrawable));
-
-    reg.add_component(player, ecs::component::hitbox{50.f, 50.f});
-}
-
-static void create_missile(
-    ecs::registry &reg,
-    shared_entity_t shared_entity_id,
-    ecs::protocol &msg
-)
-{
-    auto missile = reg.spawn_shared_entity(shared_entity_id);
-
-    const auto &pos = std::get<ecs::ntw::movement>(msg.data).pos;
-    const auto &vel = std::get<ecs::ntw::movement>(msg.data).vel;
-
-    reg.add_component(missile, ecs::component::position{pos.x, pos.y});
-    reg.add_component(missile, ecs::component::velocity{vel.vx, vel.vy});
-
-    ecs::component::drawable playerDrawable;
-    playerDrawable.shape.setSize(sf::Vector2f(20.f, 20.f));
-    playerDrawable.shape.setFillColor(sf::Color::Blue);
-    reg.add_component(missile, std::move(playerDrawable));
-
-    // reg.add_component(player, component::hitbox{50.f, 50.f});
-    reg.add_component(missile, ecs::component::missile{700.0, 700.0});
-}
-
-static void create_static(ecs::registry &reg, float x, float y)
-{
-    auto entity = reg.spawn_entity();
-    reg.add_component(entity, ecs::component::position{x, y});
-
-    ecs::component::drawable entityDrawable;
-    entityDrawable.shape.setSize(sf::Vector2f(50.f, 50.f));
-    entityDrawable.shape.setFillColor(sf::Color::Red);
-    reg.add_component(entity, std::move(entityDrawable));
-
-    reg.add_component(entity, ecs::component::hitbox{50.f, 50.f});
-}
 
 static void run(ecs::registry &reg, sf::RenderWindow &window, float &dt)
 {
@@ -124,40 +38,21 @@ int main()
     int port = 8080;
     server::UDPServer udp_server(port);
 
-
     std::thread receiveThread([&udp_server]() {
         udp_server.run();
     });
 
     ecs::registry reg;
-    udp_server.register_command([&](char *data, std::size_t size) {
-        ecs::protocol msg{};
-        std::memcpy(&msg, data, sizeof(msg));
-        switch (msg.action)
-        {
-        case ecs::ntw_action::NEW_PLAYER:
-            create_player(reg, msg.shared_entity_id);
-            break;
-        case ecs::ntw_action::MOD_ENTITY:
-            if (std::holds_alternative<ecs::ntw::movement>(msg.data)) {
-                reg.get_component<ecs::component::position>(reg.get_local_entity().at(msg.shared_entity_id)).value()
-                    = std::get<ecs::ntw::movement>(msg.data).pos;
-                reg.get_component<ecs::component::velocity>(reg.get_local_entity().at(msg.shared_entity_id)).value()
-                    = std::get<ecs::ntw::movement>(msg.data).vel;
-            }
-            break;
-        case ecs::ntw_action::NONE:
-        case ecs::ntw_action::NEW_ENTITY:
-            create_missile(reg, msg.shared_entity_id, msg);
-            break;
-        case ecs::ntw_action::DEL_ENTITY:
-            break;
-        }
-    });
+    ecs::response_handler response_handler;
+
+    register_response(reg, response_handler);
+    udp_server.register_command([&response_handler](char *data, std::size_t size) {
+        response_handler.handle_response(data, size);});
+
     float dt = 0.f;
     sf::RenderWindow window(sf::VideoMode(1000, 700), "R-Type"); // ! for deebug
 
-    window.setFramerateLimit(30); // ! for debug
+    window.setFramerateLimit(60); // ! for debug
     register_components(reg);
     register_systems(reg, window, dt);
 
