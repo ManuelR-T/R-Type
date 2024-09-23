@@ -10,13 +10,14 @@
 #include <cstddef>
 
 namespace client {
-    constexpr size_t BUFF_SIZE = 4096;
-    class IClient {
-    public:
-        IClient() = default;
-        virtual ~IClient() = default;
+constexpr size_t BUFF_SIZE = 4096;
 
-        virtual void run() = 0;
-        virtual void send(const char *data, std::size_t size) = 0;
-    };
-}
+class IClient {
+    public:
+    IClient() = default;
+    virtual ~IClient() = default;
+
+    virtual void run() = 0;
+    virtual void send(const char *data, std::size_t size) = 0;
+};
+} // namespace client
