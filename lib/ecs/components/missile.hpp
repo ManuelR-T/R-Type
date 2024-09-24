@@ -14,4 +14,4 @@ struct missile {
     float endy;
 };
 
-} // namespace component
+} // namespace ecs::component

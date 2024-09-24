@@ -13,4 +13,4 @@ namespace ecs::systems {
 
 void missiles_stop(ecs::registry &reg);
 
-} // namespace systems
+} // namespace ecs::systems
