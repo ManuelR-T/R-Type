@@ -23,10 +23,11 @@
 #include <iostream>
 #include <thread>
 #include <cstring>
+#include "rtype_server.hpp"
 
 // ! It's a temporary file that will be delete when factory are setup
 
-void create_player(ecs::registry &reg, shared_entity_t shared_entity_id)
+void rts::create_player(ecs::registry &reg, shared_entity_t shared_entity_id)
 {
     auto player = reg.spawn_shared_entity(shared_entity_id);
     reg.add_component(player, ecs::component::position{400.f, 300.f});
@@ -40,7 +41,7 @@ void create_player(ecs::registry &reg, shared_entity_t shared_entity_id)
     reg.add_component(player, ecs::component::hitbox{50.f, 50.f});
 }
 
-void create_static(ecs::registry &reg, float x, float y)
+void rts::create_static(ecs::registry &reg, float x, float y)
 {
     auto entity = reg.spawn_entity();
     reg.add_component(entity, ecs::component::position{x, y});
@@ -53,7 +54,7 @@ void create_static(ecs::registry &reg, float x, float y)
     reg.add_component(entity, ecs::component::hitbox{50.f, 50.f});
 }
 
-void create_missile(
+void rts::create_missile(
     ecs::registry &reg,
     ecs::protocol &msg
 )

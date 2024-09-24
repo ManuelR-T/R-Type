@@ -10,6 +10,7 @@
 #include "AsioClient.hpp"
 
 #include <asio/ip/udp.hpp>
+#include <thread>
 
 using asio::ip::udp;
 
@@ -33,7 +34,13 @@ class UDPClient : public AsioClient {
     /**
      * @brief Destructor of the UDPClient Object
      */
-    ~UDPClient() override = default;
+    ~UDPClient() override
+    {
+         if (recv_thread_.joinable()) {
+            io_.stop();
+            recv_thread_.join();
+        }
+    }
 
     /**
      * @brief Run the `io_context` variable member of this class and
@@ -66,5 +73,6 @@ class UDPClient : public AsioClient {
     udp::endpoint endpoint_;
     udp::socket sock_;
     std::array<char, BUFF_SIZE> buff_;
+    std::thread recv_thread_;
 };
 } // namespace client

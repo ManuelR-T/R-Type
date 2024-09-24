@@ -23,7 +23,7 @@
 #include "rtype_server.hpp"
 #include "systems/missiles_stop.hpp"
 
-void register_components(ecs::registry &reg)
+void rts::register_components(ecs::registry &reg)
 {
     reg.register_component<ecs::component::position>();
     reg.register_component<ecs::component::velocity>();
@@ -34,7 +34,7 @@ void register_components(ecs::registry &reg)
     reg.register_component<ecs::component::missile>();
 }
 
-void register_systems(ecs::registry &reg, sf::RenderWindow &window, float &dt)
+void rts::register_systems(ecs::registry &reg, sf::RenderWindow &window, float &dt)
 {
     reg.add_system([&reg, &dt]() { ecs::systems::position(reg, dt); });
     reg.add_system([&reg]() { ecs::systems::collision(reg); });
@@ -46,10 +46,10 @@ void register_systems(ecs::registry &reg, sf::RenderWindow &window, float &dt)
     reg.add_system([&reg]() { ecs::systems::missiles_stop(reg); });
 }
 
-void register_response(ecs::registry &reg, ecs::response_handler &response_handler)
+void rts::register_response(ecs::registry &reg, ecs::response_handler &response_handler)
 {
     response_handler.register_handler(ecs::ntw_action::NEW_PLAYER, [&reg](ecs::protocol &msg) {
-        create_player(reg, msg.shared_entity_id);
+        rts::create_player(reg, msg.shared_entity_id);
     });
 
     response_handler.register_handler(ecs::ntw_action::MOD_ENTITY, [&reg](ecs::protocol &msg) {
@@ -61,6 +61,6 @@ void register_response(ecs::registry &reg, ecs::response_handler &response_handl
         }
     });
     response_handler.register_handler(ecs::ntw_action::NEW_ENTITY, [&reg](ecs::protocol &msg) {
-        create_missile(reg, msg);
+        rts::create_missile(reg, msg);
     });
 }

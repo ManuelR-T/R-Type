@@ -8,6 +8,7 @@
 #include "core/registry.hpp"
 #include "core/response_handler.hpp"
 #include "rtype_server.hpp"
+#include "game_runner.hpp"
 
 #include "UDPServer.hpp"
 #include <SFML/Graphics.hpp>
@@ -35,33 +36,16 @@ static void run(ecs::registry &reg, sf::RenderWindow &window, float &dt)
 
 int main()
 {
-    int port = 8080;
-    server::UDPServer udp_server(port);
+    constexpr std::size_t nb_game = 3;
+    std::vector<std::thread> game_list;
 
-    std::thread receiveThread([&udp_server]() {
-        udp_server.run();
-    });
-
-    ecs::registry reg;
-    ecs::response_handler response_handler;
-
-    register_response(reg, response_handler);
-    udp_server.register_command([&response_handler](char *data, std::size_t size) {
-        response_handler.handle_response(data, size);});
-
-    float dt = 0.f;
-    sf::RenderWindow window(sf::VideoMode(1000, 700), "R-Type"); // ! for deebug
-
-    window.setFramerateLimit(60); // ! for debug
-    register_components(reg);
-    register_systems(reg, window, dt);
-
-    for (int i = 0; i < 10; ++i) {
-        create_static(reg, 100.f * i, 100.f * i);
+    for (std::size_t i = 0; i < nb_game; ++i) {
+        game_list.push_back(std::thread([i](){ rts::game_runner game_runner(8080 + i); game_runner.run_game(); }));
     }
 
-    run(reg, window, dt);
+    for (std::size_t i = 0; i < nb_game; ++i) {
+        game_list[i].join();
+    }
 
-    receiveThread.join();
     return 0;
 }

@@ -157,7 +157,7 @@ int main(int ac, char **av)
 
     try {
         client::UDPClient udpClient(ip, port);
-        std::thread receiveThread([&udpClient]() { udpClient.run(); });
+        udpClient.run();
 
         ecs::registry reg;
         float dt = 0.f;
@@ -178,8 +178,6 @@ int main(int ac, char **av)
         }
 
         run(reg, window, dt, udpClient, input_manager);
-
-        receiveThread.join();
     } catch (const std::exception &exception) {
         my::log::error(exception.what());
         return 84;
