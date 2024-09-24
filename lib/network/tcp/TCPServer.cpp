@@ -47,7 +47,7 @@ void server::Session::Session::handle_client(std::function<void(tcp::socket &, c
     std::cout << "Session start !\n";
     sock_.async_receive(
         asio::buffer(buff_, BUFF_SIZE),
-        [that = this->shared_from_this(), &handler] (asio::error_code ec, std::size_t bytes) {
+        [that = this->shared_from_this(), &handler](asio::error_code ec, std::size_t bytes) {
             that->handle_read(ec, bytes, handler);
         }
     );
@@ -94,12 +94,10 @@ void server::TCPServer::TCPServer::asio_run()
 {
     auto session = std::make_shared<Session>(io_);
 
-    acc_.async_accept(
-        session->socket(), [this, session] (asio::error_code ec) {
-            std::cout << "Accepted\n";
-            handle_accept(ec, session);
-        }
-    );
+    acc_.async_accept(session->socket(), [this, session](asio::error_code ec) {
+        std::cout << "Accepted\n";
+        handle_accept(ec, session);
+    });
 }
 
 void server::TCPServer::TCPServer::run()

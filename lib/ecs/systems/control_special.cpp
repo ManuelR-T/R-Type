@@ -10,17 +10,13 @@
 
 #include "components/controllable.hpp"
 #include "components/drawable.hpp"
+#include "components/missile.hpp"
 #include "components/position.hpp"
 #include "components/velocity.hpp"
-#include "components/missile.hpp"
-#include "components/share_movement.hpp"
 #include "core/zipper.hpp"
+#include "components/share_movement.hpp"
 
-static void spawn_missile(
-    ecs::registry &reg,
-    client::UDPClient &udp,
-    ecs::component::position playerPos
-)
+static void spawn_missile(ecs::registry &reg, client::UDPClient &udp, ecs::component::position playerPos)
 {
     auto missile = reg.spawn_shared_entity(ecs::generate_shared_entity_id());
 

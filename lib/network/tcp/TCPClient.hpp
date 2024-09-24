@@ -41,7 +41,6 @@ class TCPClient : public client::AsioClient {
     void send(const char *data, std::size_t size) override;
 
     private:
-
     /**
      * @brief Recursive loop of asynchronous operations (read, write),
      *        handling the read and write on udp server.
@@ -55,4 +54,4 @@ class TCPClient : public client::AsioClient {
     std::array<char, BUFF_SIZE> buff_;
 };
 
-} // namespace server
+} // namespace client

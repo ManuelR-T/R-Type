@@ -5,14 +5,14 @@
 ** position
 */
 
+#include "../components/share_movement.hpp"
 #include "../components/position.hpp"
 #include "../components/velocity.hpp"
-#include "../components/share_movement.hpp"
-#include "../components/shared_entity.hpp"
 #include "../core/registry.hpp"
 #include "../core/zipper.hpp"
-#include "../systems/share_movement.hpp"
 #include "GameProtocol.hpp"
+#include "../components/shared_entity.hpp"
+#include "../systems/share_movement.hpp"
 
 namespace ecs::systems {
 
@@ -23,10 +23,12 @@ void share_movement(registry &reg, client::UDPClient &udpClient)
     auto &velocitys = reg.get_components<ecs::component::velocity>();
     auto &shared_entity = reg.get_components<ecs::component::shared_entity>();
 
-    zipper<ecs::component::share_movement,
+    zipper<
+        ecs::component::share_movement,
         ecs::component::position,
         ecs::component::velocity,
-        ecs::component::shared_entity> zip(shared_mov, positions, velocitys, shared_entity);
+        ecs::component::shared_entity>
+        zip(shared_mov, positions, velocitys, shared_entity);
 
     for (auto [_, pos, vel, shared_entity] : zip) {
         ecs::protocol msg = {

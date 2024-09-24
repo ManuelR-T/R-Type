@@ -8,7 +8,6 @@
 #include "missiles_stop.hpp"
 #include "components/missile.hpp"
 #include "components/position.hpp"
-#include "core/zipper.hpp"
 
 void ecs::systems::missiles_stop(ecs::registry &reg)
 {

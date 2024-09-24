@@ -34,7 +34,11 @@ class Session : public std::enable_shared_from_this<Session> {
     }
 
     private:
-    void handle_read(asio::error_code ec, std::size_t bytes, std::function<void(tcp::socket &, char *, std::size_t)> &handler);
+    void handle_read(
+        asio::error_code ec,
+        std::size_t bytes,
+        std::function<void(tcp::socket &, char *, std::size_t)> &handler
+    );
 
     tcp::socket sock_;
     std::array<char, BUFF_SIZE> buff_;

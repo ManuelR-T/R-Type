@@ -17,11 +17,8 @@ client::UDPClient::UDPClient(const std::string &host, int port)
 
 void client::UDPClient::asio_run()
 {
-    sock_.async_receive_from(
-        asio::buffer(buff_),
-        endpoint_,
-        [this](auto &&PH1, auto &&PH2) {
-            handle_recv(std::forward<decltype(PH1)>(PH1), std::forward<decltype(PH2)>(PH2));
+    sock_.async_receive_from(asio::buffer(buff_), endpoint_, [this](auto &&PH1, auto &&PH2) {
+        handle_recv(std::forward<decltype(PH1)>(PH1), std::forward<decltype(PH2)>(PH2));
     });
 }
 
