@@ -46,7 +46,8 @@ void Cli::Lobby::moveLeftRooms(const std::size_t &startIdxRoom)
 {
     for (int i = startIdxRoom + 1; i < _movableBoxes.size(); ++i) {
         sf::Vector2f pos = _movableBoxes.at(i).rectangle.getPosition();
-        _movableBoxes.at(i).rectangle.setPosition(sf::Vector2f{pos.x, pos.y - int(ecs::constants::screen_height * 0.1)});
+        _movableBoxes.at(i).rectangle.setPosition(sf::Vector2f{pos.x, pos.y - int(ecs::constants::screen_height * 0.1)}
+        );
         updateBoxesPosition(_movableBoxes.at(i), _movableBoxes.at(i).rectangle.getPosition());
     }
 }
