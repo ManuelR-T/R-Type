@@ -5,24 +5,16 @@
 ** create_entity
 */
 
-#include "components/controllable.hpp"
 #include "components/drawable.hpp"
 #include "components/hitbox.hpp"
+#include "components/missile.hpp"
 #include "components/position.hpp"
 #include "components/velocity.hpp"
-#include "components/shared_entity.hpp"
-#include "components/missile.hpp"
 #include "core/registry.hpp"
-#include "systems/control.hpp"
-#include "systems/draw.hpp"
-#include "systems/position.hpp"
 
-#include "GameProtocol.hpp"
-#include "UDPServer.hpp"
 #include <SFML/Graphics.hpp>
-#include <iostream>
-#include <thread>
 #include <cstring>
+#include "GameProtocol.hpp"
 
 // ! It's a temporary file that will be delete when factory are setup
 
@@ -53,10 +45,7 @@ void create_static(ecs::registry &reg, float x, float y)
     reg.add_component(entity, ecs::component::hitbox{50.f, 50.f});
 }
 
-void create_missile(
-    ecs::registry &reg,
-    ecs::protocol &msg
-)
+void create_missile(ecs::registry &reg, ecs::protocol &msg)
 {
     auto missile = reg.spawn_shared_entity(msg.shared_entity_id);
 
