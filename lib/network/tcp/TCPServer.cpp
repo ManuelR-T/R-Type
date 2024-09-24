@@ -47,13 +47,9 @@ void server::Session::Session::handle_client(std::function<void(tcp::socket &, c
     std::cout << "Session start !\n";
     sock_.async_receive(
         asio::buffer(buff_, BUFF_SIZE),
-        std::bind(
-            &Session::handle_read,
-            this->shared_from_this(),
-            asio::placeholders::error,
-            asio::placeholders::bytes_transferred,
-            std::ref(handler)
-        )
+        [that = this->shared_from_this(), &handler] (asio::error_code ec, std::size_t bytes) {
+            that->handle_read(ec, bytes, handler);
+        }
     );
 }
 

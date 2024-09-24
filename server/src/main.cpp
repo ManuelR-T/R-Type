@@ -9,10 +9,11 @@
 #include "core/response_handler.hpp"
 #include "rtype_server.hpp"
 
-#include "UDPServer.hpp"
 #include <SFML/Graphics.hpp>
-#include <thread>
+#include <cstddef>
 #include <cstring>
+#include <thread>
+#include "UDPServer.hpp"
 
 static void run(ecs::registry &reg, sf::RenderWindow &window, float &dt)
 {
@@ -38,16 +39,15 @@ int main()
     int port = 8080;
     server::UDPServer udp_server(port);
 
-    std::thread receiveThread([&udp_server]() {
-        udp_server.run();
-    });
+    std::thread receiveThread([&udp_server]() { udp_server.run(); });
 
     ecs::registry reg;
     ecs::response_handler response_handler;
 
     register_response(reg, response_handler);
     udp_server.register_command([&response_handler](char *data, std::size_t size) {
-        response_handler.handle_response(data, size);});
+        response_handler.handle_response(data, size);
+    });
 
     float dt = 0.f;
     sf::RenderWindow window(sf::VideoMode(1000, 700), "R-Type"); // ! for deebug
