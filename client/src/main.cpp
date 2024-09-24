@@ -5,32 +5,33 @@
 ** main
 */
 
+#include "UDPClient.hpp"
 #include "components/controllable.hpp"
 #include "components/drawable.hpp"
 #include "components/hitbox.hpp"
 #include "components/position.hpp"
 #include "components/velocity.hpp"
-#include "components/share_movement.hpp"
-#include "components/shared_entity.hpp"
-#include "core/registry.hpp"
-#include "core/shared_entity.hpp"
-#include "core/input_manager.hpp"
 #include "core/constants.hpp"
-#include "core/tick_rate_manager.hpp"
+#include "core/registry.hpp"
 #include "systems/collision.hpp"
 #include "systems/control.hpp"
 #include "systems/draw.hpp"
 #include "systems/position.hpp"
+#include "components/share_movement.hpp"
+#include "components/shared_entity.hpp"
+#include "core/input_manager.hpp"
+#include "core/shared_entity.hpp"
+#include "core/tick_rate_manager.hpp"
 #include "systems/share_movement.hpp"
-#include "UDPClient.hpp"
 
-#include <SFML/Graphics.hpp>
+#include "lobby.hpp"
+
 #include <thread>
 
+#include <iostream>
+#include "GameProtocol.hpp"
 #include "my_log.hpp"
 #include "my_tracked_exception.hpp"
-#include "GameProtocol.hpp"
-#include <iostream>
 
 static void register_components(ecs::registry &reg)
 {
@@ -43,9 +44,14 @@ static void register_components(ecs::registry &reg)
     reg.register_component<ecs::component::shared_entity>();
 }
 
-static void register_systems(ecs::registry &reg, sf::RenderWindow &window,
-    float &dt, client::UDPClient &udpClient, ecs::input_manager &input,
-    ecs::tick_rate_manager &tick_rate_manager)
+static void register_systems(
+    ecs::registry &reg,
+    sf::RenderWindow &window,
+    float &dt,
+    client::UDPClient &udpClient,
+    ecs::input_manager &input,
+    ecs::tick_rate_manager &tick_rate_manager
+)
 {
     tick_rate_manager.add_tick_rate(ecs::constants::movement_tick_rate);
 
@@ -101,8 +107,13 @@ static void create_static(ecs::registry &reg, float x, float y)
     reg.add_component(entity, ecs::component::hitbox{50.f, 50.f});
 }
 
-static void run(ecs::registry &reg, sf::RenderWindow &window,
-    float &dt, client::UDPClient &udpClient, ecs::input_manager &input)
+static void run(
+    ecs::registry &reg,
+    sf::RenderWindow &window,
+    float &dt,
+    client::UDPClient &udpClient,
+    ecs::input_manager &input
+)
 {
     sf::Clock clock;
 
@@ -122,69 +133,41 @@ static void run(ecs::registry &reg, sf::RenderWindow &window,
 
 int main()
 {
-   try {
-        sf::RenderWindow window(sf::VideoMode(
-            ecs::constants::screen_width,
-            ecs::constants::screen_height), "R-Type");
+    try {
+        sf::RenderWindow window(sf::VideoMode(ecs::constants::screen_width, ecs::constants::screen_height), "R-Type");
 
         window.setFramerateLimit(ecs::constants::fps_limit);
 
-        std::vector<sf::RectangleShape> boxesList;
+        Cli::Lobby lobby;
 
-        // rectangle.setSize(sf::Vector2f{200, 200});
-        // rectangle.setFillColor(sf::Color{112, 122, 122});
-        // while (window.isOpen()) {
-        //     sf::Event event;
-        //     while (window.pollEvent(event)) {
-        //         if (event.type == sf::Event::Closed ||
-        //             (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)) {
-        //             window.close();
-        //         }
-        //     }
-
-        //     window.clear(sf::Color::Black);
-
-        //     window.draw(rectangle);
-
-        //     window.display();
-        // }
-
-    return 0;
-        // Setup assets menu (RectangleShape)
-        // Loop menu
-
-        // Affichage Tableau
-            // 1) Create New Room
-            // 2) Can scrollate
-            // 3) Room X / Nb players / Delete
+        lobby.initLobby();
+        lobby.runLobby(window);
 
         // Join room
         // Status des joueurs -> "Waiting" or "Ready"
         // Screen with "Starting in X seconds" -> After leave infinite loop
 
-        client::UDPClient udpClient("127.0.0.1", 8080);
-        std::thread receiveThread([&udpClient]() {
-            udpClient.run();
-        });
+        //     client::UDPClient udpClient("127.0.0.1", 8080);
+        //     std::thread receiveThread([&udpClient]() { udpClient.run(); });
 
-        ecs::registry reg;
-        float dt = 0.f;
+        //     ecs::registry reg;
+        //     float dt = 0.f;
 
-        ecs::input_manager input_manager;
-        ecs::tick_rate_manager tick_rate_manager;
+        //     ecs::input_manager input_manager;
+        //     ecs::tick_rate_manager tick_rate_manager;
 
-        register_components(reg);
-        register_systems(reg, window, dt, udpClient, input_manager, tick_rate_manager);
+        //     register_components(reg);
+        //     register_systems(reg, window, dt, udpClient, input_manager, tick_rate_manager);
 
-        create_player(reg, udpClient);
+        //     create_player(reg, udpClient);
 
-        for (int i = 0; i < 10; ++i) {
-            create_static(reg, 100.f * i, 100.f * i);
-        }
+        //     for (int i = 0; i < 10; ++i) {
+        //         create_static(reg, 100.f * i, 100.f * i);
+        //     }
 
-        run(reg, window, dt, udpClient, input_manager);
+        //     run(reg, window, dt, udpClient, input_manager);
 
-        receiveThread.join();
+        //     receiveThread.join();
     } catch (const std::exception &exception) {
         my::log::error(exception.what());
         return 84;
