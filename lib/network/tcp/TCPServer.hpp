@@ -26,7 +26,7 @@ class Session : public std::enable_shared_from_this<Session> {
 
     virtual ~Session() = default;
 
-    void handle_client(std::function<void(char *, std::size_t)> &handler);
+    void handle_client(std::function<void(tcp::socket &, char *, std::size_t)> &handler);
 
     tcp::socket &socket()
     {
@@ -34,7 +34,7 @@ class Session : public std::enable_shared_from_this<Session> {
     }
 
     private:
-    void handle_read(asio::error_code ec, std::size_t bytes, std::function<void(char *, std::size_t)> &handler);
+    void handle_read(asio::error_code ec, std::size_t bytes, std::function<void(tcp::socket &, char *, std::size_t)> &handler);
 
     tcp::socket sock_;
     std::array<char, BUFF_SIZE> buff_;
@@ -43,11 +43,11 @@ class Session : public std::enable_shared_from_this<Session> {
 class TCPServer : public server::AsioServer {
     public:
     TCPServer(int port);
-    ~TCPServer() override = default;
+    ~TCPServer() override;
 
     void run() override;
 
-    void register_command(char const *name, std::function<void(char *, std::size_t)> func);
+    void register_command(std::function<void(tcp::socket &, char *, std::size_t)> func);
 
     void sock_write(tcp::socket &sock_, std::string str);
 
@@ -56,7 +56,8 @@ class TCPServer : public server::AsioServer {
 
     void handle_accept(asio::error_code ec, std::shared_ptr<Session> session);
 
+    std::thread thread_;
     tcp::acceptor acc_;
-    std::function<void(char *, std::size_t)> handler_;
+    std::function<void(tcp::socket &, char *, std::size_t)> handler_;
 };
 } // namespace server

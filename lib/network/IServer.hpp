@@ -18,7 +18,5 @@ namespace server {
     virtual ~IServer() = default;
 
     virtual void run() = 0;
-
-    virtual void register_command(std::function<void(char *, std::size_t)> func) = 0;
 };
 } // namespace server

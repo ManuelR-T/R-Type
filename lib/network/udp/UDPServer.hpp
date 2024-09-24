@@ -51,7 +51,7 @@ class UDPServer : public server::AsioServer {
      * @param func The function that handle the command that MUST have the following signature:
      *             `std::function<void (char *, std::size_t)>`
      */
-    void register_command(std::function<void(char *, std::size_t)> func) override;
+    void register_command(std::function<void(char *, std::size_t)> func);
 
     /**
      * @brief Return the udp socket used for asynchronous operations.

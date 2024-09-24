@@ -23,7 +23,7 @@
 void server::Session::Session::handle_read(
     asio::error_code ec,
     std::size_t bytes,
-    std::function<void(char *, std::size_t)> &handler
+    std::function<void(tcp::socket &, char *, std::size_t)> &handler
 )
 {
     if (ec) {
@@ -32,7 +32,7 @@ void server::Session::Session::handle_read(
     }
     if (bytes) {
         try {
-            handler(buff_.data(), bytes);
+            handler(sock_, buff_.data(), bytes);
         } catch (std::exception &err) {
             std::cerr << "No such command: ";
             std::cerr.write(buff_.data(), bytes);
@@ -42,9 +42,10 @@ void server::Session::Session::handle_read(
     handle_client(handler);
 }
 
-void server::Session::Session::handle_client(std::function<void(char *, std::size_t)> &handler)
+void server::Session::Session::handle_client(std::function<void(tcp::socket &, char *, std::size_t)> &handler)
 {
-    sock_.async_read_some(
+    std::cout << "Session start !\n";
+    sock_.async_receive(
         asio::buffer(buff_, BUFF_SIZE),
         std::bind(
             &Session::handle_read,
@@ -62,6 +63,14 @@ void server::Session::Session::handle_client(std::function<void(char *, std::siz
 
 server::TCPServer::TCPServer(int port) : acc_(io_, tcp::endpoint(tcp::v4(), port)) {}
 
+server::TCPServer::~TCPServer()
+{
+    if (thread_.joinable()) {
+        io_.stop();
+        thread_.join();
+    }
+}
+
 void server::TCPServer::sock_write(tcp::socket &sock_, std::string str)
 {
     sock_.async_write_some(asio::buffer(str), [](asio::error_code ec, size_t) {
@@ -71,7 +80,7 @@ void server::TCPServer::sock_write(tcp::socket &sock_, std::string str)
     });
 }
 
-void server::TCPServer::TCPServer::register_command(char const *name, std::function<void(char *, std::size_t)> func)
+void server::TCPServer::TCPServer::register_command(std::function<void(tcp::socket &, char *, std::size_t)> func)
 {
     handler_ = std::move(func);
 }
@@ -90,12 +99,17 @@ void server::TCPServer::TCPServer::asio_run()
     auto session = std::make_shared<Session>(io_);
 
     acc_.async_accept(
-        session->socket(), std::bind(&TCPServer::handle_accept, this, asio::placeholders::error, session)
+        session->socket(), [this, session] (asio::error_code ec) {
+            std::cout << "Accepted\n";
+            handle_accept(ec, session);
+        }
     );
 }
 
 void server::TCPServer::TCPServer::run()
 {
-    asio_run();
-    io_.run();
+    thread_ = std::thread([this]() {
+        asio_run();
+        io_.run();
+    });
 }

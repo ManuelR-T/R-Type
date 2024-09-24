@@ -61,7 +61,5 @@ int main()
     }
 
     run(reg, window, dt);
-
-    receiveThread.join();
     return 0;
 }

@@ -32,7 +32,6 @@
 
 #include "argParser.hpp"
 #include "my_log.hpp"
-#include "core/tracked_exception.hpp"
 #include "GameProtocol.hpp"
 
 static void register_components(ecs::registry &reg)

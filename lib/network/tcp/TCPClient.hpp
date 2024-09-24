@@ -7,14 +7,15 @@
 
 #pragma once
 
-#include "../AsioClient.hpp"
+#include "AsioClient.hpp"
 
 #include <asio.hpp>
 #include <asio/ip/tcp.hpp>
+#include <thread>
 
 using asio::ip::tcp;
 
-namespace server {
+namespace client {
 
 class TCPClient : public client::AsioClient {
     public:
@@ -29,24 +30,29 @@ class TCPClient : public client::AsioClient {
     /**
      * @brief Destructor of the TCPClient Object
      */
-    ~TCPClient() override = default;
+    ~TCPClient() override;
 
     /**
      * @brief Run the `io_context` variable member of this class and
      *        the `asio_run` function that is a recursive loop of asynchronous operations.
      */
-    void run() override {};
+    void run() override;
+
+    void send(const char *data, std::size_t size) override;
 
     private:
+
     /**
      * @brief Recursive loop of asynchronous operations (read, write),
      *        handling the read and write on udp server.
      */
-    void asio_run() override {};
+    void asio_run() override;
 
+    std::thread thread_;
     tcp::socket socket_;
     std::string host_;
     int port_;
+    std::array<char, BUFF_SIZE> buff_;
 };
 
 } // namespace server

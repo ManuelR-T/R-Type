@@ -9,33 +9,15 @@
 #include <asio/placeholders.hpp>
 #include <cstddef>
 #include <iostream>
-#include <vector>
 
 void server::UDPServer::handle_recv(asio::error_code ec, std::size_t bytes)
 {
-    // std::cout << "Received: [";
-    // std::cout.write(buff_.data(), bytes);
-    // std::cout << "]\n";
-
     if (ec) {
         std::cout << ec << std::endl;
         return;
     }
     if (bytes) {
         handler_(buff_.data(), bytes);
-        //        try {
-        //            auto func = handlers_.find(std::string(buff_, bytes - 1));
-        //
-        //            if (func == handlers_.end()) {
-        //                throw std::runtime_error("No such command");
-        //            }
-        //
-        //            func->second(buff_, bytes);
-        //        } catch (std::exception &err) {
-        //            std::cerr << "No such command: [";
-        //            std::cerr.write(buff_, bytes);
-        //            std::cerr << "]\n";
-        //        }
     }
 
     asio_run();
