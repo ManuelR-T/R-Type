@@ -7,9 +7,9 @@
 
 #pragma once
 
+#include <SFML/Window/Event.hpp>
 #include "../core/registry.hpp"
 #include "UDPClient.hpp"
-#include <SFML/Window/Event.hpp>
 #include "../core/input_manager.hpp"
 
 namespace ecs::systems {
@@ -22,7 +22,7 @@ namespace ecs::systems {
  *
  * This function is analog to `control` function that handle movements inputs, and handle
  * special keyboard input.
- * 
+ *
  * @param reg Reference to the registry managing entities and their components.
  * @param input Input manager object that contains states of keyboard values.
  * @param udp Udp client to send informations to server.

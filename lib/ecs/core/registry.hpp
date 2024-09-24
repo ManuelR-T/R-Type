@@ -8,9 +8,9 @@
 #pragma once
 
 #include "entity.hpp"
+#include "components/shared_entity.hpp"
 #include "shared_entity.hpp"
 #include "sparse_array.hpp"
-#include "../components/shared_entity.hpp"
 
 #include <any>
 #include <functional>

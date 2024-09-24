@@ -18,5 +18,5 @@
 using shared_entity_t = std::size_t;
 
 namespace ecs {
-    shared_entity_t generate_shared_entity_id();
+shared_entity_t generate_shared_entity_id();
 } // namespace ecs

@@ -18,22 +18,21 @@
 #include "systems/control.hpp"
 #include "systems/draw.hpp"
 #include "systems/position.hpp"
-#include "systems/missiles_stop.hpp"
-#include "systems/control_special.hpp"
 #include "components/share_movement.hpp"
 #include "components/shared_entity.hpp"
 #include "core/input_manager.hpp"
 #include "core/shared_entity.hpp"
 #include "core/tick_rate_manager.hpp"
+#include "systems/control_special.hpp"
+#include "systems/missiles_stop.hpp"
 #include "systems/share_movement.hpp"
 
 #include <SFML/Graphics.hpp>
 #include <thread>
 
+#include "GameProtocol.hpp"
 #include "argParser.hpp"
 #include "my_log.hpp"
-#include "core/tracked_exception.hpp"
-#include "GameProtocol.hpp"
 
 static void register_components(ecs::registry &reg)
 {
@@ -72,7 +71,7 @@ static void register_systems(
             ecs::systems::share_movement(reg, udpClient);
         }
     });
-    reg.add_system([&reg] () { ecs::systems::missiles_stop(reg); });
+    reg.add_system([&reg]() { ecs::systems::missiles_stop(reg); });
 }
 
 static void create_player(ecs::registry &reg, client::UDPClient &udpClient)
@@ -161,9 +160,7 @@ int main(int ac, char **av)
 
         ecs::registry reg;
         float dt = 0.f;
-        sf::RenderWindow window(sf::VideoMode(
-            ecs::constants::screen_width,
-            ecs::constants::screen_height), "R-Type");
+        sf::RenderWindow window(sf::VideoMode(ecs::constants::screen_width, ecs::constants::screen_height), "R-Type");
         ecs::input_manager input_manager;
         ecs::tick_rate_manager tick_rate_manager;
 

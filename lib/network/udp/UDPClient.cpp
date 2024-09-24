@@ -17,7 +17,6 @@ client::UDPClient::UDPClient(const std::string &host, int port)
 
 void client::UDPClient::asio_run()
 {
-    std::cout << "Start receiving data from server!" << std::endl;
     sock_.async_receive_from(asio::buffer(buff_), endpoint_, [this](auto &&PH1, auto &&PH2) {
         handle_recv(std::forward<decltype(PH1)>(PH1), std::forward<decltype(PH2)>(PH2));
     });
@@ -29,10 +28,6 @@ void client::UDPClient::handle_recv(asio::error_code ec, std::size_t bytes)
         std::cerr << "Receive error: " << ec.message() << std::endl;
         return;
     }
-
-    // std::cout << "Received: ";
-    // std::cout.write(buff_.data(), bytes);
-    // std::cout << std::endl;
 
     asio_run();
 }

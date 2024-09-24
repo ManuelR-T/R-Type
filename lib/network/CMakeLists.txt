@@ -1,5 +1,6 @@
 add_library(NETWORK STATIC
     tcp/TCPServer.cpp
+    tcp/TCPClient.cpp
     udp/UDPServer.cpp
     udp/UDPClient.cpp
 )
