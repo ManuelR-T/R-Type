@@ -9,6 +9,7 @@
 #include "core/response_handler.hpp"
 #include "rtype_server.hpp"
 #include "game_runner.hpp"
+#include "room_manager.hpp"
 
 #include "UDPServer.hpp"
 #include <SFML/Graphics.hpp>

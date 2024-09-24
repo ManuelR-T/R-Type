@@ -7,24 +7,51 @@
 
 #pragma once
 
+#include <array>
+#include <map>
 #include <string>
-#include <unordered_map>
 
 namespace rts {
 
+struct room_player {
+    std::string name;
+    bool ready;
+};
+
 struct room {
     std::string name;
-    std::size_t nb_player = 0;
-    
+    std::map<std::size_t, room_player> player;
 };
 
-class room_manager
-{
+class room_manager {
     private:
-    std::unordered_map<std::string, room> _rooms;
+    std::map<std::string, room> _rooms;
 
     public:
-    //    room_manager();
-    //    ~room_manager();
+    void create_room(const std::string &name)
+    {
+        _rooms[name] = room{.name = name};
+    }
+
+    void delete_room(const std::string &name)
+    {
+        _rooms.erase(name);
+    }
+
+    void join_room(const std::string &name,
+        std::size_t player_id, const rts::room_player &player)
+    {
+        _rooms.at(name).player[player_id] = player;
+    }
+
+    void leave_room(const std::string &name, std::size_t player_id)
+    {
+        _rooms.at(name).player.erase(player_id);
+    }
+
+    void leave_game(const std::string &room_name, std::size_t player_id)
+    {
+        _rooms.at(room_name).player.erase(player_id);
+    }
 };
-} // namespace server
+} // namespace rts
