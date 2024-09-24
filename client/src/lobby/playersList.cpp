@@ -34,9 +34,9 @@ void Cli::Lobby::createPlayerLine(const std::string &namePlayer, const bool &isR
     _playersList.push_back(player);
 }
 
-void Cli::Lobby::fetchListPlayerFromRoom()
+void Cli::Lobby::fetchListPlayerFromRoom(const std::size_t &indexRoom) // ! Each time we open a room, we call this function
 {
-    // ! Fetch nb of player in the list
+    // ! Fetch nb of player in the list with the indexRoom
 
     createPlayerLine("Jean", true);
     createPlayerLine("Marc", false);
