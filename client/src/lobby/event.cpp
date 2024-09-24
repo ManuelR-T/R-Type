@@ -12,6 +12,7 @@ void Cli::Lobby::addNewRoom()
 {
     const sf::Vector2f posLastBox = _movableBoxes.back().rectangle.getPosition();
 
+    // ! Create new room
     _movableBoxes.push_back(createMovableBox(
         sf::Vector2f{0.8f * ecs::constants::screen_width, 0.1f * ecs::constants::screen_height},
         sf::Vector2f{0.1f * ecs::constants::screen_width, posLastBox.y + 0.1f * ecs::constants::screen_height},
@@ -21,6 +22,7 @@ void Cli::Lobby::addNewRoom()
 
 void Cli::Lobby::removeRoom(const std::size_t &indexRoom)
 {
+    // ! Delete a room with his index
     _movableBoxes.erase(_movableBoxes.begin() + indexRoom);
 }
 

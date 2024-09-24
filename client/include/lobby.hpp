@@ -61,7 +61,7 @@ class Lobby {
     void initializeTextBox(MovableBox &box, const sf::Vector2f &pos);
     void updateBoxesPosition(MovableBox &box, const sf::Vector2f &pos, const float &offset);
 
-    void fetchListPlayerFromRoom();
+    void fetchListPlayerFromRoom(const std::size_t &indexRoom = 0);
     void createPlayerLine(const std::string &namePlayer, const bool &isReady);
 
     // RUN

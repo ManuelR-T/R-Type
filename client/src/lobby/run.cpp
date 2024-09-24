@@ -76,6 +76,7 @@ void Cli::Lobby::handleStaticBoxClick(const sf::Vector2i &mousePos, bool &isInPl
                 addNewRoom();
             }
         } else if (box.type == VISIBLE_READY && isMouseOnBox(box.rectangle, mousePos)) {
+            // ! Client leave the room
             std::cout << "SET TO READY\n";
         }
     }
