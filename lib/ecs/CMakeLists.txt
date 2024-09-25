@@ -6,6 +6,7 @@ add_library(ECS STATIC
     systems/position.cpp
     systems/missiles_stop.cpp
     systems/share_movement.cpp
+    systems/health_check.cpp
     systems/ai_act.cpp
     core/shared_entity.cpp
 )

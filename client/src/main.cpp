@@ -206,7 +206,7 @@ int main(int ac, char **av)
         create_player(reg, udpClient);
 
         for (int i = 0; i < 10; ++i) {
-            create_ai(reg, dt, 100.f * i, 100.f * i);
+            create_static(reg, 100.f * i, 100.f * i);
         }
 
         // create_ai(reg, dt);

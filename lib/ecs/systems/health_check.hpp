@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** R-Type
 ** File description:
-** missiles_stop
+** health_check
 */
 
 #pragma once
@@ -11,6 +11,6 @@
 
 namespace ecs::systems {
 
-void missiles_stop(ecs::registry &reg);
+void health_check(registry &reg);
 
 } // namespace ecs::systems
