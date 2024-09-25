@@ -10,8 +10,6 @@
 namespace ecs::component {
 
 struct missile {
-    float endx;
-    float endy;
 };
 
 } // namespace ecs::component

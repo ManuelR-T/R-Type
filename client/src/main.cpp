@@ -121,11 +121,11 @@ static void create_static(ecs::registry &reg, float x, float y)
     reg.add_component(entity, ecs::component::hitbox{50.f, 50.f});
 }
 
-static void create_ai(ecs::registry &reg, float &dt)
+static void create_ai(ecs::registry &reg, float &dt, float x, float y)
 {
     auto entity = reg.spawn_entity();
 
-    reg.add_component(entity, ecs::component::position{750, 300});
+    reg.add_component(entity, ecs::component::position{x, y});
 
     ecs::component::drawable entityDrawable;
     entityDrawable.shape.setSize(sf::Vector2f(50.f, 50.f));
@@ -207,10 +207,10 @@ int main(int ac, char **av)
         create_player(reg, udpClient);
 
         for (int i = 0; i < 10; ++i) {
-            create_static(reg, 100.f * i, 100.f * i);
+            create_ai(reg, dt, 100.f * i, 100.f * i);
         }
 
-        create_ai(reg, dt);
+        // create_ai(reg, dt);
         run(reg, window, dt, udpClient, input_manager);
 
         receiveThread.join();

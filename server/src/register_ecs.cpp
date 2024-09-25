@@ -52,11 +52,14 @@ void register_response(ecs::registry &reg, ecs::response_handler &response_handl
     });
 
     response_handler.register_handler(ecs::ntw_action::MOD_ENTITY, [&reg](ecs::protocol &msg) {
-        if (std::holds_alternative<ecs::ntw::movement>(msg.data)) {
-            reg.get_component<ecs::component::position>(reg.get_local_entity().at(msg.shared_entity_id)).value() =
-                std::get<ecs::ntw::movement>(msg.data).pos;
-            reg.get_component<ecs::component::velocity>(reg.get_local_entity().at(msg.shared_entity_id)).value() =
-                std::get<ecs::ntw::movement>(msg.data).vel;
+        try {
+            if (std::holds_alternative<ecs::ntw::movement>(msg.data)) {
+                reg.get_component<ecs::component::position>(reg.get_local_entity().at(msg.shared_entity_id)).value() =
+                    std::get<ecs::ntw::movement>(msg.data).pos;
+                reg.get_component<ecs::component::velocity>(reg.get_local_entity().at(msg.shared_entity_id)).value() =
+                    std::get<ecs::ntw::movement>(msg.data).vel;
+            }
+        } catch (...) {
         }
     });
     response_handler.register_handler(ecs::ntw_action::NEW_ENTITY, [&reg](ecs::protocol &msg) {
