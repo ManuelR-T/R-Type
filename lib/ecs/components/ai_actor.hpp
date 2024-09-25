@@ -22,7 +22,7 @@ namespace ecs::component {
  */
 struct ai_actor {
     bool val = false; // ! For testing
-    std::function<void (registry &registry, entity_t entity)> act;
+    std::function<void(registry &registry, entity_t entity)> act;
 };
 
-}
+} // namespace ecs::component

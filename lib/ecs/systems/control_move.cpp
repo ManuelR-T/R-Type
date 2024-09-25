@@ -10,9 +10,9 @@
 
 #include "components/controllable.hpp"
 #include "components/velocity.hpp"
-#include "control_move.hpp"
 #include "core/registry.hpp"
 #include "core/zipper.hpp"
+#include "control_move.hpp"
 
 namespace ecs::systems {
 
