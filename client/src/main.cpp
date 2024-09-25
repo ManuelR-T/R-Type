@@ -144,80 +144,52 @@ static void run(
 
 int main(int ac, char **av)
 {
-    sf::RenderWindow window(sf::VideoMode(1280, 720), "ImGui + SFML = <3");
-    window.setFramerateLimit(60);
-    ImGui::SFML::Init(window);
+    ArgParser argParser;
+    argParser.addArgument("ip", "i", ArgParser::ArgType::STRING, true, "Server IP address");
+    argParser.addArgument("port", "p", ArgParser::ArgType::INT, true, "Server port");
+    argParser.addArgument("help", "h", ArgParser::ArgType::BOOL, false, "Print this help message");
 
-    sf::Clock deltaClock;
-    while (window.isOpen()) {
-        sf::Event event;
-        while (window.pollEvent(event)) {
-            ImGui::SFML::ProcessEvent(event);
-
-            if (event.type == sf::Event::Closed) {
-                window.close();
-            }
-        }
-
-        ImGui::SFML::Update(window, deltaClock.restart());
-
-        ImGui::ShowDemoWindow();
-
-        window.clear();
-        ImGui::SFML::Render(window);
-        window.display();
+    if (!argParser.parse(ac, av)) {
+        argParser.printHelp();
+        return 84;
+    }
+    if (argParser.getValue<bool>("help")) {
+        argParser.printHelp();
+        return 0;
     }
 
-    ImGui::SFML::Shutdown();
+    auto ip = argParser.getValue<std::string>("ip");
+    auto port = argParser.getValue<int>("port");
 
+    try {
+        client::UDPClient udpClient(ip, port);
+        std::thread receiveThread([&udpClient]() { udpClient.run(); });
+
+        ecs::registry reg;
+        float dt = 0.f;
+        sf::RenderWindow window(sf::VideoMode(ecs::constants::screen_width, ecs::constants::screen_height), "R-Type");
+        ecs::input_manager input_manager;
+        ecs::tick_rate_manager tick_rate_manager;
+
+        window.setFramerateLimit(ecs::constants::fps_limit);
+        register_components(reg);
+        register_systems(reg, window, dt, udpClient, input_manager, tick_rate_manager);
+
+        create_player(reg, udpClient);
+
+        for (int i = 0; i < 10; ++i) {
+            create_static(reg, 100.f * i, 100.f * i);
+        }
+
+        run(reg, window, dt, udpClient, input_manager);
+
+        receiveThread.join();
+    } catch (const std::exception &exception) {
+        my::log::error(exception.what());
+        return 84;
+    } catch (...) {
+        my::log::error("Unknow error.");
+        return 84;
+    }
     return 0;
-
-    // ArgParser argParser;
-    // argParser.addArgument("ip", "i", ArgParser::ArgType::STRING, true, "Server IP address");
-    // argParser.addArgument("port", "p", ArgParser::ArgType::INT, true, "Server port");
-    // argParser.addArgument("help", "h", ArgParser::ArgType::BOOL, false, "Print this help message");
-
-    // if (!argParser.parse(ac, av)) {
-    //     argParser.printHelp();
-    //     return 84;
-    // }
-    // if (argParser.getValue<bool>("help")) {
-    //     argParser.printHelp();
-    //     return 0;
-    // }
-
-    // auto ip = argParser.getValue<std::string>("ip");
-    // auto port = argParser.getValue<int>("port");
-
-    // try {
-    //     client::UDPClient udpClient(ip, port);
-    //     std::thread receiveThread([&udpClient]() { udpClient.run(); });
-
-    //     ecs::registry reg;
-    //     float dt = 0.f;
-    //     sf::RenderWindow window(sf::VideoMode(ecs::constants::screen_width, ecs::constants::screen_height), "R-Type");
-    //     ecs::input_manager input_manager;
-    //     ecs::tick_rate_manager tick_rate_manager;
-
-    //     window.setFramerateLimit(ecs::constants::fps_limit);
-    //     register_components(reg);
-    //     register_systems(reg, window, dt, udpClient, input_manager, tick_rate_manager);
-
-    //     create_player(reg, udpClient);
-
-    //     for (int i = 0; i < 10; ++i) {
-    //         create_static(reg, 100.f * i, 100.f * i);
-    //     }
-
-    //     run(reg, window, dt, udpClient, input_manager);
-
-    //     receiveThread.join();
-    // } catch (const std::exception &exception) {
-    //     my::log::error(exception.what());
-    //     return 84;
-    // } catch (...) {
-    //     my::log::error("Unknow error.");
-    //     return 84;
-    // }
-    // return 0;
 }
