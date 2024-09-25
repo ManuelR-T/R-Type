@@ -25,6 +25,11 @@ jobs:
     - name: install dependencies
       run: sudo apt-get install -y libasio-dev flex bison javacc
 
+    - name: doxygen
+      run: |
+        sudo apt-get install -y doxygen
+        doxygen doxy.conf
+
     - name: check compilation
       run: |
           echo "## 🚀 Compilation result" >> $GITHUB_STEP_SUMMARY
