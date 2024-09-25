@@ -23,7 +23,7 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: install dependencies
-      run: sudo apt-get install -y libasio-dev flex bison
+      run: sudo apt-get install -y libasio-dev flex bison javacc
 
     - name: check compilation
       run: |
