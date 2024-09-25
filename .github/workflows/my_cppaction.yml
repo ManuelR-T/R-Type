@@ -22,8 +22,8 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: install asio
-      run: sudo apt-get install -y libasio-dev
+    - name: install dependencies
+      run: sudo apt-get install -y libasio-dev flex
 
     - name: check compilation
       run: |
