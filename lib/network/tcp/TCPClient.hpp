@@ -40,6 +40,8 @@ class TCPClient : public client::AsioClient {
 
     void send(const char *data, std::size_t size) override;
 
+    void register_handler(std::function<void(const char *, std::size_t)> handler);
+
     private:
     /**
      * @brief Recursive loop of asynchronous operations (read, write),
@@ -52,6 +54,7 @@ class TCPClient : public client::AsioClient {
     std::string host_;
     int port_;
     std::array<char, BUFF_SIZE> buff_;
+    std::function<void(const char *, std::size_t)> recv_handler_;
 };
 
 } // namespace client

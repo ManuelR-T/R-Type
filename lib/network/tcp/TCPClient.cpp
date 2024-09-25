@@ -35,8 +35,8 @@ void client::TCPClient::asio_run()
 {
     std::cout << "Start receiving data from server!" << std::endl;
     socket_.async_receive(asio::buffer(buff_, buff_.size()), [&](const asio::error_code &ec, std::size_t bytes) {
-        std::cout.write(buff_.data(), bytes);
         if (!ec) {
+            this->recv_handler_(buff_.data(), bytes);
             asio_run();
         }
     });
@@ -49,4 +49,9 @@ void client::TCPClient::run()
         io_.run();
         std::cout << "Client terminated" << std::endl;
     });
+}
+
+void client::TCPClient::register_handler(std::function<void(const char *, std::size_t)> handler)
+{
+    recv_handler_ = std::move(handler);
 }

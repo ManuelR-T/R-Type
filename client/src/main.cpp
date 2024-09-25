@@ -5,6 +5,7 @@
 ** main
 */
 
+#include "TCPClient.hpp"
 #include "UDPClient.hpp"
 #include "components/controllable.hpp"
 #include "components/drawable.hpp"
@@ -27,7 +28,6 @@
 #include "systems/missiles_stop.hpp"
 #include "systems/share_movement.hpp"
 
-#include <SFML/Graphics.hpp>
 #include <thread>
 
 #include "GameProtocol.hpp"
@@ -92,8 +92,7 @@ static void create_player(ecs::registry &reg, client::UDPClient &udpClient)
     // ! will be changed with lobby
     ecs::protocol msg = {
         .action = ecs::ntw_action::NEW_PLAYER,
-        .shared_entity_id = reg.get_component<ecs::component::shared_entity>(player).value().shared_entity_id
-    };
+        .shared_entity_id = reg.get_component<ecs::component::shared_entity>(player).value().shared_entity_id};
     udpClient.send(reinterpret_cast<const char *>(&msg), sizeof(msg));
     // ! will be changed with lobby
 }
@@ -140,6 +139,7 @@ int main(int ac, char **av)
     ArgParser argParser;
     argParser.addArgument("ip", "i", ArgParser::ArgType::STRING, true, "Server IP address");
     argParser.addArgument("port", "p", ArgParser::ArgType::INT, true, "Server port");
+    argParser.addArgument("player_name", "pn", ArgParser::ArgType::STRING, true, "Player name");
     argParser.addArgument("help", "h", ArgParser::ArgType::BOOL, false, "Print this help message");
 
     if (!argParser.parse(ac, av)) {
@@ -153,9 +153,88 @@ int main(int ac, char **av)
 
     auto ip = argParser.getValue<std::string>("ip");
     auto port = argParser.getValue<int>("port");
+    auto player_name = argParser.getValue<std::string>("player_name");
+
+    // !
+    client::TCPClient tcpClient(ip, port);
+    bool in_lobby = true;
+    std::size_t user_id = ecs::generate_shared_entity_id();
+    int game_port = 0;
+
+    {
+        rt::tcp_packet packet{.cmd = rt::tcp_command::CL_NEW_USER};
+        packet.body.cl_new_user.user_id = user_id;
+        tcpClient.send(reinterpret_cast<const char *>(&packet), sizeof(packet));
+        packet.cmd = rt::tcp_command::CL_ROOM_LIST;
+        tcpClient.send(reinterpret_cast<const char *>(&packet), sizeof(packet));
+    }
+
+    tcpClient.register_handler([&in_lobby, &game_port](const char *data, std::size_t size) {
+        rt::tcp_packet packet{};
+
+        std::memcpy(&packet, data, sizeof(packet));
+        switch (packet.cmd) {
+            case rt::tcp_command::SER_ROOM_LIST:
+                my::log::info("Room list recv");
+                std::cout << "Room name: " << packet.body.ser_room_list.room_name
+                          << ", nb player: " << packet.body.ser_room_list.nb_player << "\n";
+                break;
+            case rt::tcp_command::SER_ROOM_READY:
+                my::log::info("Game start");
+                in_lobby = false;
+                game_port = packet.body.ser_room_ready.port;
+                my::log::info("Port: " + std::to_string(game_port));
+                break;
+        }
+    });
+
+    tcpClient.run();
+
+    std::string str;
+    while (in_lobby && std::getline(std::cin, str)) {
+        rt::tcp_packet packet{.cmd = rt::tcp_command::NONE};
+        if (str.starts_with("create_room: ")) {
+            packet.cmd = rt::tcp_command::CL_CREATE_ROOM;
+            packet.body.cl_create_room.user_id = user_id;
+            std::memcpy(
+                packet.body.cl_create_room.room_name, str.substr(13).c_str(), str.substr(13).size()
+            ); // ! to change
+        }
+        if (str.starts_with("delete_room: ")) {
+            packet.cmd = rt::tcp_command::CL_DELETE_ROOM;
+            packet.body.cl_delete_room.user_id = user_id;
+            std::memcpy(
+                packet.body.cl_delete_room.room_name, str.substr(13).c_str(), str.substr(13).size()
+            ); // ! to change
+        }
+        if (str.starts_with("join_room: ")) {
+            packet.cmd = rt::tcp_command::CL_JOIN_ROOM;
+            packet.body.cl_join_room.user_id = user_id;
+            std::memcpy(
+                packet.body.cl_join_room.room_name, str.substr(11).c_str(), str.substr(11).size()
+            );                                                                                        // ! to change
+            std::memcpy(packet.body.cl_join_room.user_name, player_name.c_str(), player_name.size()); // ! to change
+        }
+        if (str.starts_with("leave_room: ")) {
+            packet.cmd = rt::tcp_command::CL_LEAVE_ROOM;
+            packet.body.cl_leave_room.user_id = user_id;
+            std::memcpy(
+                packet.body.cl_leave_room.room_name, str.substr(12).c_str(), str.substr(12).size()
+            ); // ! to change
+        }
+        if (str.starts_with("ready: ")) {
+            packet.cmd = rt::tcp_command::CL_READY;
+            packet.body.cl_ready.user_id = user_id;
+            std::memcpy(packet.body.cl_ready.room_name, str.substr(7).c_str(), str.substr(7).size()); // ! to change
+        }
+        tcpClient.send(reinterpret_cast<const char *>(&packet), sizeof(packet));
+        if (str == "quit" || str == "exit") {
+            break;
+        }
+    }
 
     try {
-        client::UDPClient udpClient(ip, port);
+        client::UDPClient udpClient(ip, game_port); // port change
         udpClient.run();
 
         ecs::registry reg;
@@ -182,5 +261,8 @@ int main(int ac, char **av)
         my::log::error("Unknow error.");
         return 84;
     }
+    rt::tcp_packet packet{.cmd = rt::tcp_command::CL_DISCONNECT_USER};
+    packet.body.cl_disconnect_user.user_id = user_id;
+    tcpClient.send(reinterpret_cast<const char *>(&packet), sizeof(packet));
     return 0;
 }

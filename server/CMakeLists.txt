@@ -9,6 +9,7 @@ target_link_libraries( r-type_server PRIVATE ECS PRIVATE NETWORK INCLUDE)
 include_directories(
     ${CMAKE_SOURCE_DIR}/lib/include
     ${CMAKE_SOURCE_DIR}/lib/network/udp
+    ${CMAKE_SOURCE_DIR}/lib/network/tcp
     ${CMAKE_SOURCE_DIR}/server/include
     ${CMAKE_SOURCE_DIR}/lib/ecs
 )

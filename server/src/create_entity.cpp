@@ -14,11 +14,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <cstring>
-<<<<<<< HEAD
 #include "rtype_server.hpp"
-=======
-#include "GameProtocol.hpp"
->>>>>>> main
 
 // ! It's a temporary file that will be delete when factory are setup
 
@@ -49,7 +45,7 @@ void rts::create_static(ecs::registry &reg, float x, float y)
     reg.add_component(entity, ecs::component::hitbox{50.f, 50.f});
 }
 
-void create_missile(ecs::registry &reg, ecs::protocol &msg)
+void rts::create_missile(ecs::registry &reg, ecs::protocol &msg)
 {
     auto missile = reg.spawn_shared_entity(msg.shared_entity_id);
 
