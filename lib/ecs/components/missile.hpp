@@ -9,7 +9,6 @@
 
 namespace ecs::component {
 
-struct missile {
-};
+struct missile {};
 
 } // namespace ecs::component
