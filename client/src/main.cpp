@@ -16,16 +16,16 @@
 #include "core/entity.hpp"
 #include "core/registry.hpp"
 #include "systems/collision.hpp"
-#include "components/ai_actor.hpp"
-#include "systems/ai_act.hpp"
-#include "systems/control_move.hpp"
 #include "systems/draw.hpp"
 #include "systems/position.hpp"
+#include "components/ai_actor.hpp"
 #include "components/share_movement.hpp"
 #include "components/shared_entity.hpp"
 #include "core/input_manager.hpp"
 #include "core/shared_entity.hpp"
 #include "core/tick_rate_manager.hpp"
+#include "systems/ai_act.hpp"
+#include "systems/control_move.hpp"
 #include "systems/control_special.hpp"
 #include "systems/missiles_stop.hpp"
 #include "systems/share_movement.hpp"
@@ -66,9 +66,9 @@ static void register_systems(
     reg.add_system([&reg, &input, &udpClient]() { ecs::systems::control_special(reg, input, udpClient); });
     reg.add_system([&reg, &dt, &tick_rate_manager]() {
         if (tick_rate_manager.need_update(10, dt)) {
-            ecs::systems::ai_act(reg); }
+            ecs::systems::ai_act(reg);
         }
-    );
+    });
     reg.add_system([&reg, &dt]() { ecs::systems::position(reg, dt); });
     reg.add_system([&reg]() { ecs::systems::collision(reg); });
     reg.add_system([&reg, &window]() {
@@ -132,19 +132,18 @@ static void create_ai(ecs::registry &reg, float &dt, float x, float y)
     entityDrawable.shape.setFillColor(sf::Color::Red);
     reg.add_component(entity, std::move(entityDrawable));
 
-    reg.add_component(entity, ecs::component::ai_actor{
-        true,
-        [](ecs::registry &reg, entity_t e){
-            auto &pos = reg.get_component<ecs::component::position>(e);
-            auto &val = reg.get_component<ecs::component::ai_actor>(e)->val;
+    auto func = [](ecs::registry &reg, entity_t e) {
+        auto &pos = reg.get_component<ecs::component::position>(e);
+        auto &val = reg.get_component<ecs::component::ai_actor>(e)->val;
 
-            if (val) {
-                pos->y += 20;
-            } else {
-                pos->y -= 20;
-            }
-            val = !val;
-    }});
+        if (val) {
+            pos->y += 20;
+        } else {
+            pos->y -= 20;
+        }
+        val = !val;
+    };
+    reg.add_component(entity, ecs::component::ai_actor{true, std::move(func)});
 }
 
 static void run(
