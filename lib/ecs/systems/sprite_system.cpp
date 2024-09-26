@@ -9,7 +9,9 @@
 #include "../components/animation.hpp"
 #include "../components/position.hpp"
 #include "../components/sprite.hpp"
+#include "core/registry.hpp"
 #include "core/zipper.hpp"
+#include "core/indexed_zipper.hpp"
 
 namespace ecs::systems {
 
@@ -28,14 +30,15 @@ void sprite_system(registry &reg, float dt, SpriteManager &sprite_manager)
         }
         sprite_comp.sprite_obj.setPosition(pos_comp.x, pos_comp.y);
     }
-    zipper<component::sprite, component::animation> anim_zip(sprites, animations);
+    indexed_zipper<component::sprite, component::animation> anim_zip(sprites, animations);
 
-    for (auto &&[sprite_comp, anim_comp] : anim_zip) {
+    for (auto &&[id, sprite_comp, anim_comp] : anim_zip) {
         anim_comp.elapsed_time += dt;
         if (anim_comp.elapsed_time >= anim_comp.frame_time) {
+            anim_comp.updateState(reg, id, anim_comp);
             anim_comp.elapsed_time = 0.0f;
-            anim_comp.current_frame = (anim_comp.current_frame + 1) % anim_comp.frames.size();
-            sprite_comp.sprite_obj.setTextureRect(anim_comp.frames[anim_comp.current_frame]);
+            anim_comp.current_frame = (anim_comp.current_frame + 1) % anim_comp.frames[anim_comp.state].size();
+            sprite_comp.sprite_obj.setTextureRect(anim_comp.frames[anim_comp.state][anim_comp.current_frame]);
         }
     }
 }
