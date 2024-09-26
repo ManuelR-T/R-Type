@@ -20,9 +20,11 @@
 #include "components/velocity.hpp"
 #include "core/SpriteManager.hpp"
 #include "core/constants.hpp"
+#include "core/entity.hpp"
 #include "core/registry.hpp"
 #include "systems/collision.hpp"
 #include "systems/control.hpp"
+#include "systems/draw.hpp"
 #include "systems/position.hpp"
 #include "components/share_movement.hpp"
 #include "components/shared_entity.hpp"
@@ -33,7 +35,6 @@
 #include "systems/control_special.hpp"
 #include "systems/missiles_stop.hpp"
 #include "systems/share_movement.hpp"
-#include "systems/draw.hpp"
 #include "systems/sprite_system.hpp"
 
 static void register_components(ecs::registry &reg)
@@ -94,7 +95,48 @@ static void create_player(ecs::registry &reg, client::UDPClient &udpClient, Spri
 
     playerSprite.sprite_obj.setTextureRect(sf::IntRect(0, 0, 32, 16));
     ecs::component::animation playerAnimation;
-    playerAnimation.frames = {{102, 2, 32, 16}, {135, 2, 32, 16}, {168, 2, 32, 16}, {201, 2, 32, 16}, {234, 2, 32, 16}};
+    playerAnimation.frames["up"] = {{135, 2, 32, 16}};
+    playerAnimation.frames["top"] = {{102, 2, 32, 16}};
+    playerAnimation.frames["neutral"] = {{168, 2, 32, 16}};
+    playerAnimation.frames["bottom"] = {{234, 2, 32, 16}};
+    playerAnimation.frames["down"] = {{201, 2, 32, 16}};
+    playerAnimation.frame_time = 0.1f;
+    playerAnimation.updateState = [](ecs::registry &reg, entity_t id, ecs::component::animation &anim) {
+        auto vel_opt = reg.get_component<ecs::component::velocity>(id);
+        if (!vel_opt) {
+            return;
+        }
+
+        auto &vel = *vel_opt;
+        float vy = vel.vy;
+        std::string &state = anim.state;
+
+        if (vy > 0) {
+            if (state == "up" || state == "top") {
+                state = "top";
+            } else if (state == "neutral") {
+                state = "up";
+            } else {
+                state = "neutral";
+            }
+        } else if (vy < 0) {
+            if (state == "down" || state == "bottom") {
+                state = "bottom";
+            } else if (state == "neutral") {
+                state = "down";
+            } else {
+                state = "neutral";
+            }
+        } else {
+            if (state == "top") {
+                state = "up";
+            } else if (state == "bottom") {
+                state = "down";
+            } else {
+                state = "neutral";
+            }
+        }
+    };
 
     reg.add_component(player, std::move(playerAnimation));
     reg.add_component(player, std::move(playerSprite));
@@ -122,11 +164,10 @@ static void create_static(ecs::registry &reg, SpriteManager &sprite_manager, flo
 
     entitySprite.sprite_obj.setTextureRect(sf::IntRect(0, 0, 32, 32));
     ecs::component::animation entityAnimation;
-    entityAnimation.frames = {{0, 0, 32, 32}, {32, 0, 32, 32}, {64, 0, 32, 32}, {96, 0, 32, 32}};
+    entityAnimation.frames["neutral"] = {{0, 0, 32, 32}, {32, 0, 32, 32}, {64, 0, 32, 32}, {96, 0, 32, 32}};
 
     reg.add_component(entity, std::move(entityAnimation));
     reg.add_component(entity, std::move(entitySprite));
-
     reg.add_component(entity, ecs::component::hitbox{32.f, 32.f});
 }
 
