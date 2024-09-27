@@ -28,7 +28,7 @@ class response_handler {
         _handler[cmd] = std::move(handler);
     }
 
-    void handle_response(char *data, std::size_t size)
+    void handle_response(const char *data, std::size_t size)
     {
         PacketType msg{};
         CommandType cmd_type;

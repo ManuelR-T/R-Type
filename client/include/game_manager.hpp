@@ -10,6 +10,7 @@
 #include <memory>
 #include "GameProtocol.hpp"
 #include "argParser.hpp"
+#include "core/response_handler.hpp"
 #include "room_manager.hpp"
 #include "rtype_client.hpp"
 
@@ -28,16 +29,19 @@ class game_manager {
     std::size_t _user_id = 0;
     int _game_port = 0;
     rtc::room_manager _room_manager;
+    ecs::response_handler<rt::tcp_command, rt::tcp_packet> _tcp_response_handler;
 
     std::shared_ptr<sf::RenderWindow> _window;
 
+    void register_tcp_response();
     void setup_tcp_connection();
     void launch_game();
 
     public:
     game_manager(const std::string &ip, int port, const std::string &player_name)
         : _ip(ip), _tcpClient(ip, port, sizeof(rt::tcp_packet)), _player_name(player_name),
-          _user_id(ecs::generate_shared_entity_id()), _room_manager(_tcpClient, _user_id, player_name)
+          _user_id(ecs::generate_shared_entity_id()), _room_manager(_tcpClient, _user_id, player_name),
+          _tcp_response_handler([](const rt::tcp_packet &packet) { return packet.cmd; })
     {
     }
 

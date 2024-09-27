@@ -7,11 +7,11 @@
 
 #pragma once
 
-#include "TCPClient.hpp"
-#include "GameProtocol.hpp"
-#include <memory>
 #include <map>
+#include <memory>
 #include <utility>
+#include "GameProtocol.hpp"
+#include "TCPClient.hpp"
 
 namespace rtc {
 

@@ -149,8 +149,10 @@ void rts::room_manager::send_list_room(std::size_t player_id, server::TCPServer 
                 is_full_ready = false;
             }
         }
-        rt::tcp_packet packet{.cmd = rt::tcp_command::SER_ROOM_IN_GAME};
-        std::memcpy(packet.body.ser_room_list.room_name, name.c_str(), name.size());
-        tcpServer.send_to_user(player_id, reinterpret_cast<const char *>(&packet), sizeof(packet));
+        if (is_full_ready) {
+            rt::tcp_packet packet{.cmd = rt::tcp_command::SER_ROOM_IN_GAME};
+            std::memcpy(packet.body.ser_room_list.room_name, name.c_str(), name.size());
+            tcpServer.send_to_user(player_id, reinterpret_cast<const char *>(&packet), sizeof(packet));
+        }
     }
 }
