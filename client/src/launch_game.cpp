@@ -27,14 +27,15 @@ void rtc::game_manager::launch_game()
     float dt = 0.f;
     ecs::input_manager input_manager;
     ecs::tick_rate_manager tick_rate_manager;
+    SpriteManager sprite_manager;
 
     rtc::register_components(reg);
-    rtc::register_systems(reg, *_window, dt, udpClient, input_manager, tick_rate_manager);
+    rtc::register_systems(reg, *_window, dt, udpClient, input_manager, tick_rate_manager, sprite_manager);
 
-    rtc::create_player(reg, udpClient);
+    rtc::create_player(reg, udpClient, sprite_manager);
 
-    for (int i = 0; i < 10; ++i) {
-        rtc::create_static(reg, 100.f * i, 100.f * i);
+    for (int i = 0; i < 20; ++i) {
+        rtc::create_static(reg, sprite_manager, 48.f * i, 48.f * i);
     }
 
     run(reg, _window, dt, udpClient, input_manager);

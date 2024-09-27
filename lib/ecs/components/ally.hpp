@@ -2,13 +2,18 @@
 ** EPITECH PROJECT, 2024
 ** R-Type
 ** File description:
-** missile
+** ally
 */
 
 #pragma once
 
 namespace ecs::component {
 
-struct missile {};
+/**
+ * @brief Tag that mark an entity as ally.
+ *
+ * An entity with this component is marked as an ally.
+ */
+struct ally {};
 
 } // namespace ecs::component

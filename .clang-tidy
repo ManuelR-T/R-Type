@@ -25,6 +25,7 @@ Checks:
   -modernize-return-braced-init-list
   -cppcoreguidelines-prefer-member-initializer
   -modernize-avoid-c-arrays
+  -clang-diagnostic-error
 
 CheckOptions:
   - key: readability-function-size.StatementThreshold

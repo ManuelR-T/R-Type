@@ -16,6 +16,7 @@
 #include <any>
 #include <functional>
 #include <stdexcept>
+#include <string>
 #include <typeindex>
 #include <unordered_map>
 
@@ -83,7 +84,7 @@ class registry {
         std::type_index typeIdx(typeid(Component));
         auto it = _components_arrays.find(typeIdx);
         if (it == _components_arrays.end()) {
-            throw std::runtime_error("Component not registered.");
+            throw std::runtime_error(std::string("Component not registered: ") + typeid(Component).name());
         }
         return std::any_cast<sparse_array<Component> &>(it->second);
     }
@@ -104,7 +105,7 @@ class registry {
         std::type_index typeIdx(typeid(Component));
         auto it = _components_arrays.find(typeIdx);
         if (it == _components_arrays.end()) {
-            throw std::runtime_error("Component not registered.");
+            throw std::runtime_error(std::string("Component not registered: ") + typeid(Component).name());
         }
         return std::any_cast<const sparse_array<Component> &>(it->second);
     }
