@@ -142,8 +142,8 @@ struct tcp_packet {
 
 } // namespace rt
 
-namespace ecs {
-enum class ntw_action : std::size_t {
+namespace rt {
+enum class udp_command : std::size_t {
     NONE,
     NEW_PLAYER,
     NEW_ENTITY,
@@ -151,16 +151,16 @@ enum class ntw_action : std::size_t {
     DEL_ENTITY
 };
 
-namespace ntw {
-struct movement {
-    ecs::component::position pos;
-    ecs::component::velocity vel;
-};
-} // namespace ntw
+struct udp_packet {
+    udp_command cmd;
 
-struct protocol {
-    ntw_action action;
     shared_entity_t shared_entity_id;
-    std::variant<std::monostate, ntw::movement> data;
+
+    union {
+        struct share_movement {
+            ecs::component::position pos;
+            ecs::component::velocity vel;
+        } share_movement;
+    } body;
 };
-} // namespace ecs
+} // namespace rt

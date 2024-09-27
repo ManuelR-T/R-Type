@@ -5,6 +5,7 @@
 ** create_entity
 */
 
+#include "GameProtocol.hpp"
 #include "components/drawable.hpp"
 #include "components/hitbox.hpp"
 #include "components/missile.hpp"
@@ -45,12 +46,12 @@ void rts::create_static(ecs::registry &reg, float x, float y)
     reg.add_component(entity, ecs::component::hitbox{50.f, 50.f});
 }
 
-void rts::create_missile(ecs::registry &reg, ecs::protocol &msg)
+void rts::create_missile(ecs::registry &reg, const rt::udp_packet &msg)
 {
     auto missile = reg.spawn_shared_entity(msg.shared_entity_id);
 
-    const auto &pos = std::get<ecs::ntw::movement>(msg.data).pos;
-    const auto &vel = std::get<ecs::ntw::movement>(msg.data).vel;
+    const auto &pos = msg.body.share_movement.pos;
+    const auto &vel = msg.body.share_movement.vel;
 
     reg.add_component(missile, ecs::component::position{pos.x, pos.y});
     reg.add_component(missile, ecs::component::velocity{vel.vx, vel.vy});

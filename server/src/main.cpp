@@ -48,11 +48,6 @@ int main()
     tcpServer.register_command([&room_manager, &tcpServer](tcp::socket &sock, char *data, std::size_t size) {
         rt::tcp_packet packet{};
 
-        if (size != sizeof(packet)) {
-            std::cerr << "\n\nINVALID PACK RECV SIZE: " << size << "\n\n";
-            return;
-        }
-
         std::memcpy(&packet, data, sizeof(packet));
         switch (packet.cmd) {
             case rt::tcp_command::CL_NEW_USER:

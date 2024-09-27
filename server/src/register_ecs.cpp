@@ -17,8 +17,8 @@
 #include "systems/collision.hpp"
 #include "systems/draw.hpp"
 #include "systems/position.hpp"
-#include "components/shared_entity.hpp"
 #include "components/share_movement.hpp"
+#include "components/shared_entity.hpp"
 #include "core/response_handler.hpp"
 #include "rtype_server.hpp"
 #include "systems/missiles_stop.hpp"
@@ -47,21 +47,22 @@ void rts::register_systems(ecs::registry &reg, sf::RenderWindow &window, float &
     reg.add_system([&reg]() { ecs::systems::missiles_stop(reg); });
 }
 
-void rts::register_response(ecs::registry &reg, ecs::response_handler &response_handler)
+void rts::register_response(
+    ecs::registry &reg,
+    ecs::response_handler<rt::udp_command, rt::udp_packet> &response_handler
+)
 {
-    response_handler.register_handler(ecs::ntw_action::NEW_PLAYER, [&reg](ecs::protocol &msg) {
+    response_handler.register_handler(rt::udp_command::NEW_PLAYER, [&reg](const rt::udp_packet &msg) {
         rts::create_player(reg, msg.shared_entity_id);
     });
 
-    response_handler.register_handler(ecs::ntw_action::MOD_ENTITY, [&reg](ecs::protocol &msg) {
-        if (std::holds_alternative<ecs::ntw::movement>(msg.data)) {
-            reg.get_component<ecs::component::position>(reg.get_local_entity().at(msg.shared_entity_id)).value() =
-                std::get<ecs::ntw::movement>(msg.data).pos;
-            reg.get_component<ecs::component::velocity>(reg.get_local_entity().at(msg.shared_entity_id)).value() =
-                std::get<ecs::ntw::movement>(msg.data).vel;
-        }
+    response_handler.register_handler(rt::udp_command::MOD_ENTITY, [&reg](const rt::udp_packet &msg) {
+        reg.get_component<ecs::component::position>(reg.get_local_entity().at(msg.shared_entity_id)).value() =
+            msg.body.share_movement.pos;
+        reg.get_component<ecs::component::velocity>(reg.get_local_entity().at(msg.shared_entity_id)).value() =
+            msg.body.share_movement.vel;
     });
-    response_handler.register_handler(ecs::ntw_action::NEW_ENTITY, [&reg](ecs::protocol &msg) {
+    response_handler.register_handler(rt::udp_command::NEW_ENTITY, [&reg](const rt::udp_packet &msg) {
         rts::create_missile(reg, msg);
     });
 }

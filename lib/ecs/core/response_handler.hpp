@@ -9,33 +9,43 @@
 
 #include <cstring>
 #include <functional>
+#include <utility>
 #include "GameProtocol.hpp"
 #include "tracked_exception.hpp"
 #include <unordered_map>
 
 namespace ecs {
+template <typename CommandType, typename PacketType>
 class response_handler {
     public:
-    void register_handler(ecs::ntw_action action, std::function<void(ecs::protocol &)> handler)
+    response_handler(std::function<CommandType (const PacketType &)> cmd_type_getter)
+        : _cmd_type_getter(cmd_type_getter)
     {
-        _handler[action] = handler;
+    }
+
+    void register_handler(CommandType cmd, std::function<void(const PacketType &)> handler)
+    {
+        _handler[cmd] = std::move(handler);
     }
 
     void handle_response(char *data, std::size_t size)
     {
-        ecs::protocol msg{};
+        PacketType msg{};
+        CommandType cmd_type;
 
         std::memcpy(&msg, data, sizeof(msg));
-        if (_handler.contains(msg.action)) {
-            _handler[msg.action](msg);
+        cmd_type = _cmd_type_getter(msg);
+        if (_handler.contains(cmd_type)) {
+            _handler[cmd_type](msg);
         } else {
             throw ecs::tracked_exception(
-                "Response without handler: " + std::to_string(static_cast<std::size_t>(msg.action)) + "."
+                "Response without handler: " + std::to_string(static_cast<std::size_t>(cmd_type)) + "."
             );
         }
     }
 
     private:
-    std::unordered_map<ecs::ntw_action, std::function<void(ecs::protocol &)>> _handler;
+    std::unordered_map<CommandType, std::function<void(const PacketType &)>> _handler;
+    std::function<CommandType (const PacketType &)> _cmd_type_getter;
 };
 } // namespace ecs

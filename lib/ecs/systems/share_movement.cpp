@@ -31,11 +31,11 @@ void share_movement(registry &reg, client::UDPClient &udpClient)
         zip(shared_mov, positions, velocitys, shared_entity);
 
     for (auto [_, pos, vel, shared_entity] : zip) {
-        ecs::protocol msg = {
-            .action = ecs::ntw_action::MOD_ENTITY,
-            .shared_entity_id = shared_entity.shared_entity_id,
-            .data = ecs::ntw::movement{.pos = {pos.x, pos.y}, .vel = {.vx = vel.vx, .vy = vel.vy}}
+        rt::udp_packet msg = {
+            .cmd = rt::udp_command::MOD_ENTITY,
+            .shared_entity_id = shared_entity.shared_entity_id
         };
+        msg.body.share_movement = {.pos = {pos.x, pos.y}, .vel = {.vx = vel.vx, .vy = vel.vy}};
         udpClient.send(reinterpret_cast<const char *>(&msg), sizeof(msg));
     }
 }

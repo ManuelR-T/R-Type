@@ -9,6 +9,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <thread>
+#include "GameProtocol.hpp"
 #include "UDPServer.hpp"
 #include "core/registry.hpp"
 #include "core/response_handler.hpp"
@@ -22,7 +23,7 @@ private:
     server::UDPServer _udp_server;
     std::thread _receive_thread;
     ecs::registry _reg;
-    ecs::response_handler _response_handler;
+    ecs::response_handler<rt::udp_command, rt::udp_packet> _response_handler;
     float _dt = 0;
     sf::RenderWindow _window;
 

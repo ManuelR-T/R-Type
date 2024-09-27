@@ -6,15 +6,14 @@
 */
 
 #include "game_runner.hpp"
+#include "GameProtocol.hpp"
 
 rts::game_runner::game_runner(int port)
     : _port(port),
     _udp_server(port),
-//    _receive_thread([this]() { this->_udp_server.run(); }),
+    _response_handler([](const rt::udp_packet &packet) { return packet.cmd; }),
     _window(sf::VideoMode(1000, 700), "R-Type") // ! for debug
 {
-//    _receive_thread.detach();
-
     rts::register_response(_reg, _response_handler);
     _udp_server.register_command([this](char *data, std::size_t size) {
         this->_response_handler.handle_response(data, size);
