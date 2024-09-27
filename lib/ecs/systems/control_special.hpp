@@ -8,9 +8,9 @@
 #pragma once
 
 #include <SFML/Window/Event.hpp>
-#include "../core/registry.hpp"
+#include "core/registry.hpp"
 #include "UDPClient.hpp"
-#include "../core/input_manager.hpp"
+#include "core/input_manager.hpp"
 
 namespace ecs::systems {
 

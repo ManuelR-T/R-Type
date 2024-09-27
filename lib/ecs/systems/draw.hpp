@@ -8,7 +8,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "../core/registry.hpp"
+#include "core/registry.hpp"
 
 namespace ecs::systems {
 

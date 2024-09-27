@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "../core/registry.hpp"
+#include "core/registry.hpp"
 #include "UDPClient.hpp"
 
 namespace ecs::systems {
