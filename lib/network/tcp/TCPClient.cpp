@@ -41,7 +41,6 @@ void client::TCPClient::run()
 void client::TCPClient::send(const char *data, std::size_t size)
 {
     socket_.async_write_some(asio::buffer(data, size), [](const asio::error_code &ec, std::size_t bytes) {
-        std::cout << "Message sent !" << std::endl;
     });
 }
 

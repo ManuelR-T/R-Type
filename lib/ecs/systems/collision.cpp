@@ -66,6 +66,9 @@ void collision(registry &reg)
         sf::FloatRect rectA(posA.x, posA.y, hbA.width, hbA.height);
 
         for (size_t j = i + 1; j < maxSize; ++j) {
+            if (!positions.has(j) || !hitboxes.has(j)) {
+                continue;
+            }
             size_t entityB = j;
             auto &posB = *positions[entityB];
             auto &hbB = *hitboxes[entityB];

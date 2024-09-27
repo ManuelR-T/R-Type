@@ -26,7 +26,6 @@ void server::UDPServer::handle_recv(asio::error_code ec, std::size_t bytes)
 void server::UDPServer::handle_send(const char *data, std::size_t size)
 {
     sock_.async_send_to(asio::buffer(data, size), endpoint_, [](asio::error_code, std::size_t bytes) {
-        std::cout << "I sent data Bytes\n";
     });
 }
 

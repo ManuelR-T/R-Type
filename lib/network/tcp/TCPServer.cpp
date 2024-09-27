@@ -85,7 +85,6 @@ server::TCPServer::~TCPServer()
 
 void server::TCPServer::sock_write(tcp::socket &sock_, const char *data, std::size_t size)
 {
-    std::cout << "SENT TO CLIENT SIZE:" << size << "\n";
     sock_.async_write_some(asio::buffer(data, size), [](asio::error_code ec, std::size_t) {
         if (ec) {
             std::cout << "FAIL TO SEND DATA TO USER !";

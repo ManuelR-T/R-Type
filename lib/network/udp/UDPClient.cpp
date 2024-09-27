@@ -36,7 +36,6 @@ void client::UDPClient::send(const char *data, std::size_t size)
 {
     sock_.async_send_to(asio::buffer(data, size), endpoint_, [](asio::error_code ec, std::size_t bytes) {
         if (!ec) {
-            std::cout << "Sent " << bytes << " bytes" << std::endl;
         } else {
             std::cerr << "Send error: " << ec.message() << std::endl;
         }
