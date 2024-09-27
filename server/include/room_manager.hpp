@@ -8,10 +8,13 @@
 #pragma once
 
 #include <array>
+#include <future>
 #include <map>
 #include <string>
 #include "TCPServer.hpp"
 #include "game_runner.hpp"
+#include <iostream>
+#include <utility>
 
 namespace rts {
 class room_manager {
@@ -46,7 +49,6 @@ class room_manager {
         _rooms[name] = room{};
 
         std::memcpy(packet.body.ser_room_created.room_name, name.c_str(), name.size());
-        packet.body.ser_room_created.nb_player = 0;
         tcpServer.send_to_all_user(reinterpret_cast<const char *>(&packet), sizeof(packet));
     }
 
@@ -101,33 +103,43 @@ class room_manager {
             _rooms.at(room_name).player.at(player_id).name.c_str(),
             _rooms.at(room_name).player.at(player_id).name.size()
         );
+        std::memcpy(packet.body.ser_ready.room_name, room_name.c_str(), room_name.size());
 
         _rooms.at(room_name).player.at(player_id).ready = true;
+        tcpServer.send_to_all_user(reinterpret_cast<const char *>(&packet), sizeof(packet));
+        // * check if all player in the room are ready
         for (const auto &[id, player] : _rooms.at(room_name).player) {
-            tcpServer.send_to_user(id, reinterpret_cast<const char *>(&packet), sizeof(packet));
             if (!player.ready) {
                 all_ready = false;
             }
         }
-        if (all_ready) {
-            _rooms.at(room_name).game = std::make_unique<std::thread>(
-                [](int port) {
-                    rts::game_runner game_runner(port);
-                    game_runner.run_game();
-                },
-                _next_port
-            );
-            std::memset(reinterpret_cast<void *>(&packet), 0, sizeof(packet));
-            packet.cmd = rt::tcp_command::SER_ROOM_READY;
-            packet.body.ser_room_ready.port = this->_next_port++;
-            for (const auto &[id, player] : _rooms.at(room_name).player) {
-                tcpServer.send_to_user(id, reinterpret_cast<const char *>(&packet), sizeof(packet));
-            }
-            std::memset(reinterpret_cast<void *>(&packet), 0, sizeof(packet));
-            packet.cmd = rt::tcp_command::SER_ROOM_IN_GAME;
-            std::memcpy(packet.body.ser_room_in_game.room_name, room_name.c_str(), room_name.size());
-            tcpServer.send_to_all_user(reinterpret_cast<const char *>(&packet), sizeof(packet));
+        if (!all_ready) {
+            return;
         }
+
+        std::promise<bool> server_ready;
+        std::future<bool> server = server_ready.get_future();
+
+        _rooms.at(room_name).game = std::make_unique<std::thread>(
+            [](int port, std::promise<bool> server_ready) {
+                rts::game_runner game_runner(port);
+                server_ready.set_value(true);
+                game_runner.run_game();
+            },
+            _next_port, std::move(server_ready)
+        );
+        server.wait();
+
+        std::memset(reinterpret_cast<void *>(&packet), 0, sizeof(packet));
+        packet.cmd = rt::tcp_command::SER_ROOM_READY;
+        packet.body.ser_room_ready.port = this->_next_port++;
+        for (const auto &[id, player] : _rooms.at(room_name).player) {
+            tcpServer.send_to_user(id, reinterpret_cast<const char *>(&packet), sizeof(packet));
+        }
+        std::memset(reinterpret_cast<void *>(&packet), 0, sizeof(packet));
+        packet.cmd = rt::tcp_command::SER_ROOM_IN_GAME;
+        std::memcpy(packet.body.ser_room_in_game.room_name, room_name.c_str(), room_name.size());
+        tcpServer.send_to_all_user(reinterpret_cast<const char *>(&packet), sizeof(packet));
     }
 
     void player_not_ready(const std::string &room_name, std::size_t player_id, server::TCPServer &tcpServer)
@@ -139,18 +151,39 @@ class room_manager {
             _rooms.at(room_name).player.at(player_id).name.c_str(),
             _rooms.at(room_name).player.at(player_id).name.size()
         );
+        std::memcpy(packet.body.ser_not_ready.room_name, room_name.c_str(), room_name.size());
 
         _rooms.at(room_name).player.at(player_id).ready = false;
+        tcpServer.send_to_all_user(reinterpret_cast<const char *>(&packet), sizeof(packet));
     }
 
-    void send_list_room(server::TCPServer &tcpServer, tcp::socket &sock)
+    void send_list_room(std::size_t player_id, server::TCPServer &tcpServer)
     {
+        std::cout << "\n\nSTART SENDING ROOM !!! PLAYER ID: " << player_id << "\n";
         for (const auto &[name, content] : _rooms) {
-            rt::tcp_packet packet{.cmd = rt::tcp_command::SER_ROOM_LIST};
+            {
+                rt::tcp_packet packet{.cmd = rt::tcp_command::SER_ROOM_LIST};
 
-            packet.body.ser_room_list.nb_player = content.player.size();
+                std::memcpy(packet.body.ser_room_list.room_name, name.c_str(), name.size());
+                tcpServer.send_to_user(player_id, reinterpret_cast<const char *>(&packet), sizeof(packet));
+                std::cout << "SEND ROOM !!!\n";
+            }
+            bool is_full_ready = !content.player.empty();
+            for (const auto &[_, player] : content.player) {
+                {
+                    rt::tcp_packet packet{.cmd = rt::tcp_command::SER_ROOM_CONTENT};
+                    packet.body.ser_room_content.ready = player.ready;
+                    std::memcpy(packet.body.ser_room_content.player_name, player.name.c_str(), player.name.size());
+                    tcpServer.send_to_user(player_id, reinterpret_cast<const char *>(&packet), sizeof(packet));
+                    std::cout << "SEND ROOM CONTENT !!!\n";
+                }
+                if (!player.ready) {
+                    is_full_ready = false;
+                }
+            }
+            rt::tcp_packet packet{.cmd = rt::tcp_command::SER_ROOM_IN_GAME};
             std::memcpy(packet.body.ser_room_list.room_name, name.c_str(), name.size());
-            tcpServer.sock_write(sock, reinterpret_cast<const char *>(&packet), sizeof(packet));
+            tcpServer.send_to_user(player_id, reinterpret_cast<const char *>(&packet), sizeof(packet));
         }
     }
 };

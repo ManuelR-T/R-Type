@@ -5,8 +5,7 @@
 ** GameProtocol
 */
 
-#ifndef GAMEPROTOCOL_HPP_
-#define GAMEPROTOCOL_HPP_
+#pragma once
 
 #include <cstddef>
 #include <variant>
@@ -39,8 +38,9 @@ enum class tcp_command : std::size_t {
     CL_NOT_READY,
     SER_NOT_READY,
 
-    CL_ROOM_LIST,  // ask for room list
-    SER_ROOM_LIST, // send room list (one by one)
+    CL_ROOM_LIST,     // ask for room list
+    SER_ROOM_LIST,    // send room list (one by one)
+    SER_ROOM_CONTENT, // send room content (one by one)
 
     SER_ROOM_IN_GAME,
     SER_ROOM_READY
@@ -65,7 +65,6 @@ struct tcp_packet {
 
         struct ser_room_created {
             char room_name[32] = {0};
-            int nb_player = 0;
         } ser_room_created;
 
         struct cl_delete_room {
@@ -104,6 +103,7 @@ struct tcp_packet {
         } cl_ready;
 
         struct ser_ready {
+            char room_name[32] = {0};
             char player_name[32] = {0};
         } ser_ready;
 
@@ -113,16 +113,22 @@ struct tcp_packet {
         } cl_not_ready;
 
         struct ser_not_ready {
+            char room_name[32] = {0};
             char player_name[32] = {0};
         } ser_not_ready;
 
         struct cl_room_list {
+            std::size_t user_id = 0;
         } cl_room_list;
 
         struct ser_room_list {
             char room_name[32] = {0};
-            int nb_player = 0;
         } ser_room_list;
+
+        struct ser_room_content {
+            char player_name[32] = {0};
+            bool ready = false;
+        } ser_room_content;
 
         struct ser_room_in_game {
             char room_name[32] = {0};
@@ -158,5 +164,3 @@ struct protocol {
     std::variant<std::monostate, ntw::movement> data;
 };
 } // namespace ecs
-
-#endif /* !GAMEPROTOCOL_HPP_ */

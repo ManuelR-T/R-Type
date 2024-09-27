@@ -46,7 +46,7 @@ class ArgParser {
         std::optional<std::function<bool(const std::string &)>> validator = std::nullopt
     );
 
-    bool parse(int argc, char *argv[]);
+    bool parse(int argc, const char **argv);
 
     template <typename T>
     T getValue(const std::string &long_name) const;

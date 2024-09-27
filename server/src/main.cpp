@@ -5,6 +5,7 @@
 ** main
 */
 
+#include "GameProtocol.hpp"
 #include "core/registry.hpp"
 #include "core/response_handler.hpp"
 #include "game_runner.hpp"
@@ -41,11 +42,16 @@ static void run(ecs::registry &reg, sf::RenderWindow &window, float &dt)
 
 int main()
 {
-    server::TCPServer tcpServer(8080);
+    server::TCPServer tcpServer(8080, sizeof(rt::tcp_packet));
     rts::room_manager room_manager;
 
     tcpServer.register_command([&room_manager, &tcpServer](tcp::socket &sock, char *data, std::size_t size) {
         rt::tcp_packet packet{};
+
+        if (size != sizeof(packet)) {
+            std::cerr << "\n\nINVALID PACK RECV SIZE: " << size << "\n\n";
+            return;
+        }
 
         std::memcpy(&packet, data, sizeof(packet));
         switch (packet.cmd) {
@@ -87,7 +93,7 @@ int main()
                 );
                 break;
             case rt::tcp_command::CL_ROOM_LIST:
-                room_manager.send_list_room(tcpServer, sock);
+                room_manager.send_list_room(packet.body.cl_room_list.user_id, tcpServer);
                 break;
         }
     });
@@ -100,44 +106,5 @@ int main()
             break;
         }
     }
-
-    // !
-    // constexpr std::size_t nb_game = 3;
-    // std::vector<std::thread> game_list;
-
-    // for (std::size_t i = 0; i < nb_game; ++i) {
-    //     game_list.push_back(std::thread([i]() {
-    //         rts::game_runner game_runner(8081 + i);
-    //         game_runner.run_game();
-    //     }));
-    // }
-
-    // for (std::size_t i = 0; i < nb_game; ++i) {
-    //     game_list[i].join();
-    // }
-    // !
-
-    // std::thread receiveThread([&udp_server]() { udp_server.run(); });
-
-    // ecs::registry reg;
-    // ecs::response_handler response_handler;
-
-    // register_response(reg, response_handler);
-    // udp_server.register_command([&response_handler](char *data, std::size_t size) {
-    //     response_handler.handle_response(data, size);
-    // });
-
-    // float dt = 0.f;
-    // sf::RenderWindow window(sf::VideoMode(1000, 700), "R-Type"); // ! for deebug
-
-    // window.setFramerateLimit(60); // ! for debug
-    // register_components(reg);
-    // register_systems(reg, window, dt);
-
-    // for (int i = 0; i < 10; ++i) {
-    //     create_static(reg, 100.f * i, 100.f * i);
-    // }
-
-    // run(reg, window, dt);
     return 0;
 }

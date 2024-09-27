@@ -25,7 +25,7 @@ class TCPClient : public client::AsioClient {
      * @param host Hostname of the server to connect.
      * @param port Port of the server the clients connect to.
      */
-    TCPClient(const std::string &host, int port);
+    TCPClient(const std::string &host, int port, std::size_t size_data);
 
     /**
      * @brief Destructor of the TCPClient Object
@@ -53,6 +53,7 @@ class TCPClient : public client::AsioClient {
     tcp::socket socket_;
     std::string host_;
     int port_;
+    std::size_t size_data_;
     std::array<char, BUFF_SIZE> buff_;
     std::function<void(const char *, std::size_t)> recv_handler_;
 };

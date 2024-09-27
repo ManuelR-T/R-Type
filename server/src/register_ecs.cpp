@@ -18,6 +18,7 @@
 #include "systems/draw.hpp"
 #include "systems/position.hpp"
 #include "components/shared_entity.hpp"
+#include "components/share_movement.hpp"
 #include "core/response_handler.hpp"
 #include "rtype_server.hpp"
 #include "systems/missiles_stop.hpp"
@@ -31,6 +32,7 @@ void rts::register_components(ecs::registry &reg)
     reg.register_component<ecs::component::hitbox>();
     reg.register_component<ecs::component::shared_entity>();
     reg.register_component<ecs::component::missile>();
+    reg.register_component<ecs::component::share_movement>();
 }
 
 void rts::register_systems(ecs::registry &reg, sf::RenderWindow &window, float &dt)

@@ -8,6 +8,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS On)
 add_subdirectory(lib)
 add_subdirectory(client)
 add_subdirectory(server)
+add_subdirectory(dependencies)
 
 find_package(Doxygen)
 

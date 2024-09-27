@@ -32,7 +32,7 @@ void server::UDPServer::handle_send(const char *data, std::size_t size)
 
 void server::UDPServer::register_command(std::function<void(char *, std::size_t)> func)
 {
-    handler_ = func;
+    handler_ = std::move(func);
 }
 
 void server::UDPServer::asio_run()
@@ -47,6 +47,5 @@ void server::UDPServer::run()
     recv_thread_ = std::thread([this]() {
         asio_run();
         io_.run();
-        std::cout << "End !\n";
     });
 }

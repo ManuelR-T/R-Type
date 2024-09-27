@@ -5,8 +5,7 @@
 ** my_log
 */
 
-#ifndef MY_LOG_HPP_
-#define MY_LOG_HPP_
+#pragma once
 
 #include <format>
 #include <iostream>
@@ -47,5 +46,3 @@ void error(const std::string &msg, std::source_location info = std::source_locat
     );
 }
 } // namespace my::log
-
-#endif /* !MY_LOG_HPP_ */
