@@ -64,7 +64,7 @@ static void register_systems(
     tick_rate_manager.add_tick_rate(ecs::constants::movement_tick_rate);
 
     reg.add_system([&reg, &input, &udpClient]() { ecs::systems::control(reg, input); });
-    reg.add_system([&reg, &input, &udpClient]() { ecs::systems::control_special(reg, input, udpClient); });
+    reg.add_system([&reg, &input, &udpClient, &sprite_manager]() { ecs::systems::control_special(reg, input, udpClient, sprite_manager); });
     reg.add_system([&reg, &dt]() { ecs::systems::position(reg, dt); });
     reg.add_system([&reg]() { ecs::systems::collision(reg); });
     reg.add_system([&reg, &udpClient, &tick_rate_manager, &dt]() {
@@ -98,8 +98,8 @@ static void create_player(ecs::registry &reg, client::UDPClient &udpClient, Spri
     playerAnimation.frames["up"] = {{135, 2, 32, 16}};
     playerAnimation.frames["top"] = {{102, 2, 32, 16}};
     playerAnimation.frames["neutral"] = {{168, 2, 32, 16}};
-    playerAnimation.frames["bottom"] = {{234, 2, 32, 16}};
     playerAnimation.frames["down"] = {{201, 2, 32, 16}};
+    playerAnimation.frames["bottom"] = {{234, 2, 32, 16}};
     playerAnimation.frame_time = 0.1f;
     playerAnimation.updateState = [](ecs::registry &reg, entity_t id, ecs::component::animation &anim) {
         auto vel_opt = reg.get_component<ecs::component::velocity>(id);
@@ -164,7 +164,16 @@ static void create_static(ecs::registry &reg, SpriteManager &sprite_manager, flo
 
     entitySprite.sprite_obj.setTextureRect(sf::IntRect(0, 0, 32, 32));
     ecs::component::animation entityAnimation;
-    entityAnimation.frames["neutral"] = {{0, 0, 32, 32}, {32, 0, 32, 32}, {64, 0, 32, 32}, {96, 0, 32, 32}};
+    entityAnimation.frames["neutral"] = {
+        {0, 0, 32, 32},
+        {32, 0, 32, 32},
+        {64, 0, 32, 32},
+        {96, 0, 32, 32},
+        {128, 0, 32, 32},
+        {160, 0, 32, 32},
+        {192, 0, 32, 32},
+        {224, 0, 32, 32}
+    };
 
     reg.add_component(entity, std::move(entityAnimation));
     reg.add_component(entity, std::move(entitySprite));

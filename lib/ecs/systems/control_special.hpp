@@ -10,6 +10,7 @@
 #include <SFML/Window/Event.hpp>
 #include "../core/registry.hpp"
 #include "UDPClient.hpp"
+#include "core/SpriteManager.hpp"
 #include "../core/input_manager.hpp"
 
 namespace ecs::systems {
@@ -26,7 +27,8 @@ namespace ecs::systems {
  * @param reg Reference to the registry managing entities and their components.
  * @param input Input manager object that contains states of keyboard values.
  * @param udp Udp client to send informations to server.
+ * @param sprite_manager SpriteManager object that contains all the textures.
  */
-void control_special(registry &reg, ecs::input_manager &input, client::UDPClient &udp);
+void control_special(registry &reg, ecs::input_manager &input, client::UDPClient &udp, SpriteManager &sprite_manager);
 
 } // namespace ecs::systems
