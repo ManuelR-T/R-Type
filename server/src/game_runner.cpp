@@ -14,7 +14,7 @@ rts::game_runner::game_runner(int port)
     _response_handler([](const rt::udp_packet &packet) { return packet.cmd; }),
     _window(sf::VideoMode(1000, 700), "R-Type") // ! for debug
 {
-    rts::register_response(_reg, _response_handler);
+    rts::register_udp_response(_reg, _response_handler);
     _udp_server.register_command([this](char *data, std::size_t size) {
         this->_response_handler.handle_response(data, size);
     });

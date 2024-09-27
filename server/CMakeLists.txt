@@ -3,6 +3,9 @@ add_executable( r-type_server
     src/register_ecs.cpp
     src/create_entity.cpp
     src/game_runner.cpp
+    src/register_tcp_response.cpp
+    src/register_udp_response.cpp
+    src/room_manager.cpp
 )
 
 target_link_libraries( r-type_server PRIVATE ECS PRIVATE NETWORK INCLUDE)

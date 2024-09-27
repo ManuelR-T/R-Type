@@ -44,52 +44,20 @@ int main()
 {
     server::TCPServer tcpServer(8080, sizeof(rt::tcp_packet));
     rts::room_manager room_manager;
+    ecs::response_handler<rt::tcp_command, rt::tcp_packet> response_handler([](const rt::tcp_packet &packet) {
+        return packet.cmd;
+    });
 
-    tcpServer.register_command([&room_manager, &tcpServer](tcp::socket &sock, char *data, std::size_t size) {
-        rt::tcp_packet packet{};
+    rts::register_tcp_response(room_manager, tcpServer, response_handler);
+    tcpServer.register_command([&response_handler, &tcpServer](tcp::socket &sock, char *data, std::size_t size) {
+        rt::tcp_command new_user_cmd = rt::tcp_command::CL_NEW_USER;
 
-        std::memcpy(&packet, data, sizeof(packet));
-        switch (packet.cmd) {
-            case rt::tcp_command::CL_NEW_USER:
-                tcpServer.add_user(sock, packet.body.cl_new_user.user_id);
-                break;
-            case rt::tcp_command::CL_DISCONNECT_USER:
-                tcpServer.remove_user(packet.body.cl_new_user.user_id);
-                break;
-            case rt::tcp_command::CL_CREATE_ROOM:
-                room_manager.create_room(
-                    packet.body.cl_create_room.room_name, packet.body.cl_create_room.user_id, tcpServer
-                );
-                break;
-            case rt::tcp_command::CL_DELETE_ROOM:
-                room_manager.delete_room(
-                    packet.body.cl_delete_room.room_name, packet.body.cl_delete_room.user_id, tcpServer
-                );
-                break;
-            case rt::tcp_command::CL_JOIN_ROOM:
-                room_manager.join_room(
-                    packet.body.cl_join_room.room_name,
-                    packet.body.cl_join_room.user_id,
-                    packet.body.cl_join_room.user_name,
-                    tcpServer
-                );
-                break;
-            case rt::tcp_command::CL_LEAVE_ROOM:
-                room_manager.leave_room(
-                    packet.body.cl_leave_room.room_name, packet.body.cl_leave_room.user_id, tcpServer
-                );
-                break;
-            case rt::tcp_command::CL_READY:
-                room_manager.player_ready(packet.body.cl_ready.room_name, packet.body.cl_ready.user_id, tcpServer);
-                break;
-            case rt::tcp_command::CL_NOT_READY:
-                room_manager.player_not_ready(
-                    packet.body.cl_not_ready.room_name, packet.body.cl_not_ready.user_id, tcpServer
-                );
-                break;
-            case rt::tcp_command::CL_ROOM_LIST:
-                room_manager.send_list_room(packet.body.cl_room_list.user_id, tcpServer);
-                break;
+        if (std::memcmp(data, &new_user_cmd, sizeof(rt::tcp_command)) == 0) {
+            rt::tcp_packet packet{};
+            std::memcpy(&packet, data, sizeof(packet));
+            tcpServer.add_user(sock, packet.body.cl_new_user.user_id);
+        } else {
+            response_handler.handle_response(data, size);
         }
     });
 
