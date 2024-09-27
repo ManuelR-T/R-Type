@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** R-type
 ** File description:
-** control
+** control_move
 */
 
 #include <SFML/Graphics.hpp>
@@ -10,13 +10,13 @@
 
 #include "components/controllable.hpp"
 #include "components/velocity.hpp"
-#include "control.hpp"
 #include "core/registry.hpp"
 #include "core/zipper.hpp"
+#include "control_move.hpp"
 
 namespace ecs::systems {
 
-void control(registry &reg, ecs::input_manager &input)
+void control_move(registry &reg, ecs::input_manager &input)
 {
     auto &velocities = reg.get_components<ecs::component::velocity>();
     auto &controllables = reg.get_components<ecs::component::controllable>();

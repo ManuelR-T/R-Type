@@ -21,16 +21,19 @@
 #include "core/SpriteManager.hpp"
 #include "core/constants.hpp"
 #include "core/entity.hpp"
+#include "core/entity.hpp"
 #include "core/registry.hpp"
 #include "systems/collision.hpp"
-#include "systems/control.hpp"
 #include "systems/draw.hpp"
 #include "systems/position.hpp"
+#include "components/ai_actor.hpp"
 #include "components/share_movement.hpp"
 #include "components/shared_entity.hpp"
 #include "core/input_manager.hpp"
 #include "core/shared_entity.hpp"
 #include "core/tick_rate_manager.hpp"
+#include "systems/ai_act.hpp"
+#include "systems/control_move.hpp"
 #include "my_log.hpp"
 #include "systems/control_special.hpp"
 #include "systems/missiles_stop.hpp"
@@ -49,6 +52,7 @@ static void register_components(ecs::registry &reg)
     reg.register_component<ecs::component::share_movement>();
     reg.register_component<ecs::component::shared_entity>();
     reg.register_component<ecs::component::missile>();
+    reg.register_component<ecs::component::ai_actor>();
 }
 
 static void register_systems(
@@ -62,9 +66,15 @@ static void register_systems(
 )
 {
     tick_rate_manager.add_tick_rate(ecs::constants::movement_tick_rate);
+    tick_rate_manager.add_tick_rate(10);
 
-    reg.add_system([&reg, &input, &udpClient]() { ecs::systems::control(reg, input); });
+    reg.add_system([&reg, &input, &udpClient]() { ecs::systems::control_move(reg, input); });
     reg.add_system([&reg, &input, &udpClient, &sprite_manager]() { ecs::systems::control_special(reg, input, udpClient, sprite_manager); });
+    reg.add_system([&reg, &dt, &tick_rate_manager]() {
+        if (tick_rate_manager.need_update(10, dt)) {
+            ecs::systems::ai_act(reg);
+        }
+    });
     reg.add_system([&reg, &dt]() { ecs::systems::position(reg, dt); });
     reg.add_system([&reg]() { ecs::systems::collision(reg); });
     reg.add_system([&reg, &udpClient, &tick_rate_manager, &dt]() {
@@ -180,6 +190,56 @@ static void create_static(ecs::registry &reg, SpriteManager &sprite_manager, flo
     reg.add_component(entity, ecs::component::hitbox{32.f, 32.f});
 }
 
+static void create_ai(ecs::registry &reg, float &dt, float x, float y)
+{
+    auto entity = reg.spawn_entity();
+
+    reg.add_component(entity, ecs::component::position{x, y});
+
+    ecs::component::drawable entityDrawable;
+    entityDrawable.shape.setSize(sf::Vector2f(50.f, 50.f));
+    entityDrawable.shape.setFillColor(sf::Color::Red);
+    reg.add_component(entity, std::move(entityDrawable));
+
+    auto func = [](ecs::registry &reg, entity_t e) {
+        auto &pos = reg.get_component<ecs::component::position>(e);
+        auto &val = reg.get_component<ecs::component::ai_actor>(e)->val;
+
+        if (val) {
+            pos->y += 20;
+        } else {
+            pos->y -= 20;
+        }
+        val = !val;
+    };
+    reg.add_component(entity, ecs::component::ai_actor{true, std::move(func)});
+}
+
+static void create_ai(ecs::registry &reg, float &dt, float x, float y)
+{
+    auto entity = reg.spawn_entity();
+
+    reg.add_component(entity, ecs::component::position{x, y});
+
+    ecs::component::drawable entityDrawable;
+    entityDrawable.shape.setSize(sf::Vector2f(50.f, 50.f));
+    entityDrawable.shape.setFillColor(sf::Color::Red);
+    reg.add_component(entity, std::move(entityDrawable));
+
+    auto func = [](ecs::registry &reg, entity_t e) {
+        auto &pos = reg.get_component<ecs::component::position>(e);
+        auto &val = reg.get_component<ecs::component::ai_actor>(e)->val;
+
+        if (val) {
+            pos->y += 20;
+        } else {
+            pos->y -= 20;
+        }
+        val = !val;
+    };
+    reg.add_component(entity, ecs::component::ai_actor{true, std::move(func)});
+}
+
 static void run(
     ecs::registry &reg,
     sf::RenderWindow &window,
@@ -243,6 +303,7 @@ int main(int ac, char **av)
             create_static(reg, sprite_manager, 48.f * i, 48.f * i);
         }
 
+        // create_ai(reg, dt);
         run(reg, window, dt, udpClient, input_manager);
 
         receiveThread.join();

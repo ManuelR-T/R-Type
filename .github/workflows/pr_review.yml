@@ -17,8 +17,13 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: install asio
-      run: sudo apt-get install -y libasio-dev
+    - name: install dependencies
+      run: sudo apt-get install -y libasio-dev flex bison javacc
+
+    - name: doxygen
+      run: |
+        sudo apt-get install -y doxygen
+        doxygen doxy.conf
 
     - name: Set base_dir
       run: |

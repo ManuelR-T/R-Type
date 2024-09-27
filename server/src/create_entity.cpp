@@ -61,5 +61,5 @@ void create_missile(ecs::registry &reg, ecs::protocol &msg)
     reg.add_component(missile, std::move(playerDrawable));
 
     // reg.add_component(player, component::hitbox{50.f, 50.f});
-    reg.add_component(missile, ecs::component::missile{700.0, 700.0});
+    reg.add_component(missile, ecs::component::missile{});
 }

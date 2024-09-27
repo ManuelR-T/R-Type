@@ -58,7 +58,7 @@ static void spawn_missile(ecs::registry &reg, client::UDPClient &udp, ecs::compo
     reg.add_component(missile, std::move(anim));
 
     // reg.add_component(player, component::hitbox{50.f, 50.f});
-    reg.add_component(missile, ecs::component::missile{700.0, 700.0});
+    reg.add_component(missile, ecs::component::missile{});
     reg.add_component(missile, ecs::component::share_movement{});
 
     ecs::protocol msg = {
