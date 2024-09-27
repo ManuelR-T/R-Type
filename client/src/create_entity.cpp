@@ -73,7 +73,8 @@ void rtc::create_player(ecs::registry &reg, client::UDPClient &udpClient, Sprite
     // ! will be changed with lobby
     rt::udp_packet msg = {
         .cmd = rt::udp_command::NEW_PLAYER,
-        .shared_entity_id = reg.get_component<ecs::component::shared_entity>(player).value().shared_entity_id};
+        .shared_entity_id = reg.get_component<ecs::component::shared_entity>(player).value().shared_entity_id
+    };
     udpClient.send(reinterpret_cast<const char *>(&msg), sizeof(msg));
     // ! will be changed with lobby
 }

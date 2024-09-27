@@ -36,7 +36,7 @@ class UDPClient : public AsioClient {
      */
     ~UDPClient() override
     {
-         if (recv_thread_.joinable()) {
+        if (recv_thread_.joinable()) {
             io_.stop();
             recv_thread_.join();
         }

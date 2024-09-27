@@ -12,9 +12,9 @@
 #include <array>
 #include <asio/ip/udp.hpp>
 #include <cstring>
+#include <thread>
 #include <asio/error_code.hpp>
 #include <asio/ip/address_v6.hpp>
-#include <thread>
 
 using asio::ip::udp;
 
