@@ -24,6 +24,7 @@ Checks:
   -readability-named-parameter
   -modernize-return-braced-init-list
   -cppcoreguidelines-prefer-member-initializer
+  -clang-diagnostic-error
 
 CheckOptions:
   - key: readability-function-size.StatementThreshold

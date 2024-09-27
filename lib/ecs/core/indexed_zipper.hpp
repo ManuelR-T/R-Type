@@ -5,7 +5,6 @@
 ** indexed_zipper
 */
 
-
 #pragma once
 
 #include "core/zipper.hpp"

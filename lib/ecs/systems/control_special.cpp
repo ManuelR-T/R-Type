@@ -18,7 +18,12 @@
 #include "core/zipper.hpp"
 #include "components/share_movement.hpp"
 
-static void spawn_missile(ecs::registry &reg, client::UDPClient &udp, ecs::component::position playerPos, SpriteManager &sprite_manager)
+static void spawn_missile(
+    ecs::registry &reg,
+    client::UDPClient &udp,
+    ecs::component::position playerPos,
+    SpriteManager &sprite_manager
+)
 {
     auto missile = reg.spawn_shared_entity(ecs::generate_shared_entity_id());
 
@@ -69,7 +74,12 @@ static void spawn_missile(ecs::registry &reg, client::UDPClient &udp, ecs::compo
     udp.send(reinterpret_cast<const char *>(&msg), sizeof(msg));
 }
 
-void ecs::systems::control_special(registry &reg, ecs::input_manager &input, client::UDPClient &udp, SpriteManager &sprite_manager)
+void ecs::systems::control_special(
+    registry &reg,
+    ecs::input_manager &input,
+    client::UDPClient &udp,
+    SpriteManager &sprite_manager
+)
 {
     auto &controllables = reg.get_components<ecs::component::controllable>();
     auto &positions = reg.get_components<ecs::component::position>();
