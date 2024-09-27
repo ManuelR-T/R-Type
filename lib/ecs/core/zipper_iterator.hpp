@@ -93,6 +93,16 @@ class zipper_iterator {
         return get_components(std::index_sequence_for<Components...>{});
     }
 
+    /**
+     * @brief Retrieves the current index of the iterator.
+     *
+     * @return size_t The current index.
+     */
+    size_t index() const
+    {
+        return _index;
+    }
+
     private:
     /**
      * @brief Skips over entities that do not possess all specified components.

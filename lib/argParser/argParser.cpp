@@ -29,7 +29,7 @@ void ArgParser::addArgument(
     }
 }
 
-bool ArgParser::parse(int argc, char *argv[])
+bool ArgParser::parse(int argc, const char **argv)
 {
     for (int i = 1; i < argc; ++i) {
         std::string arg(argv[i]);

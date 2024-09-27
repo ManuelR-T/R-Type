@@ -45,7 +45,9 @@ void client::UDPClient::send(const char *data, std::size_t size)
 
 void client::UDPClient::run()
 {
-    asio_run();
-    io_.run();
-    std::cout << "Client terminated" << std::endl;
+    recv_thread_ = std::thread([this]() {
+        asio_run();
+        io_.run();
+        std::cout << "Client terminated" << std::endl;
+    });
 }

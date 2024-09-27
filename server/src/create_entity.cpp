@@ -5,6 +5,7 @@
 ** create_entity
 */
 
+#include "GameProtocol.hpp"
 #include "components/drawable.hpp"
 #include "components/hitbox.hpp"
 #include "components/missile.hpp"
@@ -14,11 +15,11 @@
 
 #include <SFML/Graphics.hpp>
 #include <cstring>
-#include "GameProtocol.hpp"
+#include "rtype_server.hpp"
 
 // ! It's a temporary file that will be delete when factory are setup
 
-void create_player(ecs::registry &reg, shared_entity_t shared_entity_id)
+void rts::create_player(ecs::registry &reg, shared_entity_t shared_entity_id)
 {
     auto player = reg.spawn_shared_entity(shared_entity_id);
     reg.add_component(player, ecs::component::position{400.f, 300.f});
@@ -32,7 +33,7 @@ void create_player(ecs::registry &reg, shared_entity_t shared_entity_id)
     reg.add_component(player, ecs::component::hitbox{50.f, 50.f});
 }
 
-void create_static(ecs::registry &reg, float x, float y)
+void rts::create_static(ecs::registry &reg, float x, float y)
 {
     auto entity = reg.spawn_entity();
     reg.add_component(entity, ecs::component::position{x, y});
@@ -45,12 +46,12 @@ void create_static(ecs::registry &reg, float x, float y)
     reg.add_component(entity, ecs::component::hitbox{50.f, 50.f});
 }
 
-void create_missile(ecs::registry &reg, ecs::protocol &msg)
+void rts::create_missile(ecs::registry &reg, const rt::udp_packet &msg)
 {
     auto missile = reg.spawn_shared_entity(msg.shared_entity_id);
 
-    const auto &pos = std::get<ecs::ntw::movement>(msg.data).pos;
-    const auto &vel = std::get<ecs::ntw::movement>(msg.data).vel;
+    const auto &pos = msg.body.share_movement.pos;
+    const auto &vel = msg.body.share_movement.vel;
 
     reg.add_component(missile, ecs::component::position{pos.x, pos.y});
     reg.add_component(missile, ecs::component::velocity{vel.vx, vel.vy});

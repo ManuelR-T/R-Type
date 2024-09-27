@@ -32,12 +32,11 @@ void server::UDPServer::handle_send(const char *data, std::size_t size)
 
 void server::UDPServer::register_command(std::function<void(char *, std::size_t)> func)
 {
-    handler_ = func;
+    handler_ = std::move(func);
 }
 
 void server::UDPServer::asio_run()
 {
-    std::cout << "Start Receive !\n";
     sock_.async_receive_from(asio::buffer(buff_), endpoint_, [this](auto &&PH1, auto &&PH2) {
         handle_recv(std::forward<decltype(PH1)>(PH1), std::forward<decltype(PH2)>(PH2));
     });
@@ -45,7 +44,8 @@ void server::UDPServer::asio_run()
 
 void server::UDPServer::run()
 {
-    asio_run();
-    io_.run();
-    std::cout << "End !\n";
+    recv_thread_ = std::thread([this]() {
+        asio_run();
+        io_.run();
+    });
 }

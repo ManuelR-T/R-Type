@@ -12,6 +12,7 @@
 #include <array>
 #include <asio/ip/udp.hpp>
 #include <cstring>
+#include <thread>
 #include <asio/error_code.hpp>
 #include <asio/ip/address_v6.hpp>
 
@@ -38,7 +39,13 @@ class UDPServer : public server::AsioServer {
     /**
      * @brief Destructor of the UDPServer Object
      */
-    ~UDPServer() override = default;
+    ~UDPServer() override
+    {
+        if (recv_thread_.joinable()) {
+            io_.stop();
+            recv_thread_.join();
+        }
+    }
 
     /**
      * @brief Run the `io_context` variable member of this class and
@@ -96,5 +103,6 @@ class UDPServer : public server::AsioServer {
     udp::socket sock_;
     std::array<char, BUFF_SIZE> buff_;
     std::function<void(char *, std::size_t)> handler_;
+    std::thread recv_thread_;
 };
 } // namespace server
