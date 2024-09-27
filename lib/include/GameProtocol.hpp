@@ -161,6 +161,6 @@ struct udp_packet {
             ecs::component::position pos;
             ecs::component::velocity vel;
         } share_movement;
-    } body;
+    } body = {};
 };
 } // namespace rt

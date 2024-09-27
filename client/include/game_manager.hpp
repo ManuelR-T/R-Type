@@ -39,7 +39,7 @@ class game_manager {
 
     public:
     game_manager(const std::string &ip, int port, const std::string &player_name)
-        : _ip(ip), _tcpClient(ip, port, sizeof(rt::tcp_packet)), _player_name(player_name),
+        : _ip(ip), _player_name(player_name), _tcpClient(ip, port, sizeof(rt::tcp_packet)),
           _user_id(ecs::generate_shared_entity_id()), _room_manager(_tcpClient, _user_id, player_name),
           _tcp_response_handler([](const rt::tcp_packet &packet) { return packet.cmd; })
     {

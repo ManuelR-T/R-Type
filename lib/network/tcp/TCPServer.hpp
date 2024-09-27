@@ -41,9 +41,9 @@ class Session : public std::enable_shared_from_this<Session> {
         std::function<void(tcp::socket &, char *, std::size_t)> &handler
     );
 
-    std::size_t data_size_;
-    std::mutex &server_mutex_;
     tcp::socket sock_;
+    std::mutex &server_mutex_;
+    std::size_t data_size_;
     std::array<char, BUFF_SIZE> buff_;
 };
 
