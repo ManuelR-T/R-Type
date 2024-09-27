@@ -19,17 +19,13 @@ void rts::register_tcp_response(
     response_handler.register_handler(
         rt::tcp_command::CL_CREATE_ROOM,
         [&room_manager, &tcpServer](const rt::tcp_packet &packet) {
-            room_manager.create_room(
-                packet.body.cl_create_room.room_name, packet.body.cl_create_room.user_id, tcpServer
-            );
+            room_manager.create_room(packet.body.cl_create_room.room_name, tcpServer);
         }
     );
     response_handler.register_handler(
         rt::tcp_command::CL_DELETE_ROOM,
         [&room_manager, &tcpServer](const rt::tcp_packet &packet) {
-            room_manager.delete_room(
-                packet.body.cl_delete_room.room_name, packet.body.cl_delete_room.user_id, tcpServer
-            );
+            room_manager.delete_room(packet.body.cl_delete_room.room_name, tcpServer);
         }
     );
     response_handler.register_handler(

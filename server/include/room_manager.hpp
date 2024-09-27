@@ -43,8 +43,8 @@ class room_manager {
         }
     }
 
-    void create_room(const std::string &name, std::size_t player_id, server::TCPServer &tcpServer);
-    void delete_room(const std::string &name, std::size_t player_id, server::TCPServer &tcpServer);
+    void create_room(const std::string &name, server::TCPServer &tcpServer);
+    void delete_room(const std::string &name, server::TCPServer &tcpServer);
     void join_room(
         const std::string &name,
         std::size_t player_id,

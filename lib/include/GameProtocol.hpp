@@ -60,7 +60,6 @@ struct tcp_packet {
 
         struct cl_create_room {
             char room_name[32] = {0};
-            std::size_t user_id = 0;
         } cl_create_room;
 
         struct ser_room_created {
@@ -69,7 +68,6 @@ struct tcp_packet {
 
         struct cl_delete_room {
             char room_name[32] = {0};
-            std::size_t user_id = 0;
         } cl_delete_room;
 
         struct ser_room_deleted {
@@ -137,7 +135,7 @@ struct tcp_packet {
         struct ser_room_ready {
             int port;
         } ser_room_ready;
-    } body;
+    } body = {};
 };
 
 } // namespace rt

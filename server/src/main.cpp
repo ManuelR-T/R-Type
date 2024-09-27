@@ -21,25 +21,6 @@
 
 #include <iostream>
 
-static void run(ecs::registry &reg, sf::RenderWindow &window, float &dt)
-{
-    sf::Clock clock;
-
-    while (window.isOpen()) {
-        dt = clock.restart().asSeconds();
-
-        // ! for debug
-        sf::Event event;
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed) {
-                window.close();
-            }
-        }
-        // ! for debug
-        reg.run_systems();
-    }
-}
-
 int main()
 {
     server::TCPServer tcpServer(8080, sizeof(rt::tcp_packet));

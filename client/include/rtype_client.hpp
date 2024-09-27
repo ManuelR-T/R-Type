@@ -53,12 +53,6 @@ void create_player(ecs::registry &reg, client::UDPClient &udpClient, SpriteManag
 void create_static(ecs::registry &reg, SpriteManager &sprite_manager, float x, float y);
 void create_ai(ecs::registry &reg, SpriteManager &sprite_manager, float x, float y);
 
-void run(
-    ecs::registry &reg,
-    const std::shared_ptr<sf::RenderWindow> &window,
-    float &dt,
-    client::UDPClient &udpClient,
-    ecs::input_manager &input
-);
+void run(ecs::registry &reg, const std::shared_ptr<sf::RenderWindow> &window, float &dt, ecs::input_manager &input);
 void runGui(const std::shared_ptr<sf::RenderWindow> &window, rtc::room_manager &room_manager, bool &in_lobby);
 } // namespace rtc

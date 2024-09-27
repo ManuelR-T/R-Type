@@ -8,6 +8,7 @@ add_executable( r-type_server
     src/room_manager.cpp
 )
 
+target_compile_options( r-type_server PRIVATE -Wall -Wextra)
 target_link_libraries( r-type_server PRIVATE ECS PRIVATE NETWORK INCLUDE)
 include_directories(
     ${CMAKE_SOURCE_DIR}/lib/include

@@ -36,7 +36,6 @@ void rtc::room_manager::ask_to_create_room(const std::string &room_name)
 {
     rt::tcp_packet packet{.cmd = rt::tcp_command::CL_CREATE_ROOM};
 
-    packet.body.cl_create_room.user_id = _user_id;
     std::memcpy(packet.body.cl_create_room.room_name, room_name.c_str(), room_name.size());
     _tcpClient.send(reinterpret_cast<const char *>(&packet), sizeof(packet));
 }
@@ -45,7 +44,6 @@ void rtc::room_manager::ask_to_delete_room(const std::string &room_name)
 {
     rt::tcp_packet packet{.cmd = rt::tcp_command::CL_DELETE_ROOM};
 
-    packet.body.cl_delete_room.user_id = _user_id;
     std::memcpy(packet.body.cl_delete_room.room_name, room_name.c_str(), room_name.size());
     _tcpClient.send(reinterpret_cast<const char *>(&packet), sizeof(packet));
 }

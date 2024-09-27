@@ -8,7 +8,7 @@
 #include "room_manager.hpp"
 #include "game_runner.hpp"
 
-void rts::room_manager::create_room(const std::string &name, std::size_t player_id, server::TCPServer &tcpServer)
+void rts::room_manager::create_room(const std::string &name, server::TCPServer &tcpServer)
 {
     rt::tcp_packet packet{.cmd = rt::tcp_command::SER_ROOM_CREATED};
 
@@ -18,7 +18,7 @@ void rts::room_manager::create_room(const std::string &name, std::size_t player_
     tcpServer.send_to_all_user(reinterpret_cast<const char *>(&packet), sizeof(packet));
 }
 
-void rts::room_manager::delete_room(const std::string &name, std::size_t player_id, server::TCPServer &tcpServer)
+void rts::room_manager::delete_room(const std::string &name, server::TCPServer &tcpServer)
 {
     rt::tcp_packet packet{.cmd = rt::tcp_command::SER_ROOM_DELETED};
 

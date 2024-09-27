@@ -38,5 +38,5 @@ void rtc::game_manager::launch_game()
         rtc::create_static(reg, sprite_manager, 48.f * i, 48.f * i);
     }
 
-    run(reg, _window, dt, udpClient, input_manager);
+    run(reg, _window, dt, input_manager);
 }

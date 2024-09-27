@@ -178,13 +178,7 @@ void rtc::runGui(const std::shared_ptr<sf::RenderWindow> &window, rtc::room_mana
     }
 }
 
-void rtc::run(
-    ecs::registry &reg,
-    const std::shared_ptr<sf::RenderWindow> &window,
-    float &dt,
-    client::UDPClient &udpClient,
-    ecs::input_manager &input
-)
+void rtc::run(ecs::registry &reg, const std::shared_ptr<sf::RenderWindow> &window, float &dt, ecs::input_manager &input)
 {
     sf::Clock clock;
 

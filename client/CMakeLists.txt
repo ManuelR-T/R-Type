@@ -8,6 +8,7 @@ add_executable( r-type_client
     src/register_tcp_response.cpp
 )
 
+target_compile_options( r-type_client PRIVATE -Wall -Wextra)
 target_link_libraries( r-type_client PRIVATE ECS PRIVATE NETWORK PRIVATE INCLUDE PRIVATE ARGPARSER PRIVATE ImGui-SFML::ImGui-SFML)
 include_directories(
     ${CMAKE_SOURCE_DIR}/lib/include

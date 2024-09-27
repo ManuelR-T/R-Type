@@ -5,8 +5,8 @@
 ** create_entity
 */
 
-#include "rtype_client.hpp"
 #include "GameProtocol.hpp"
+#include "rtype_client.hpp"
 
 void rtc::create_player(ecs::registry &reg, client::UDPClient &udpClient, SpriteManager &sprite_manager)
 {
@@ -98,8 +98,7 @@ void rtc::create_static(ecs::registry &reg, SpriteManager &sprite_manager, float
         {128, 0, 32, 32},
         {160, 0, 32, 32},
         {192, 0, 32, 32},
-        {224, 0, 32, 32}
-    };
+        {224, 0, 32, 32}};
 
     reg.add_component(entity, std::move(entityAnimation));
     reg.add_component(entity, std::move(entitySprite));
@@ -127,8 +126,7 @@ void rtc::create_ai(ecs::registry &reg, SpriteManager &sprite_manager, float x, 
         {128, 0, 32, 32},
         {160, 0, 32, 32},
         {192, 0, 32, 32},
-        {224, 0, 32, 32}
-    };
+        {224, 0, 32, 32}};
 
     reg.add_component(entity, std::move(entityAnimation));
     reg.add_component(entity, std::move(entitySprite));
