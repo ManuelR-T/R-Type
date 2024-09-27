@@ -18,7 +18,7 @@
 namespace rts {
 
 class game_runner {
-private:
+    private:
     int _port = 0;
     server::UDPServer _udp_server;
     std::thread _receive_thread;
@@ -27,7 +27,7 @@ private:
     float _dt = 0;
     sf::RenderWindow _window;
 
-public:
+    public:
     game_runner(int port);
 
     void run_game();
