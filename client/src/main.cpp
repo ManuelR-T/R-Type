@@ -21,7 +21,6 @@
 #include "core/SpriteManager.hpp"
 #include "core/constants.hpp"
 #include "core/entity.hpp"
-#include "core/entity.hpp"
 #include "core/registry.hpp"
 #include "systems/collision.hpp"
 #include "systems/draw.hpp"
@@ -32,9 +31,9 @@
 #include "core/input_manager.hpp"
 #include "core/shared_entity.hpp"
 #include "core/tick_rate_manager.hpp"
+#include "my_log.hpp"
 #include "systems/ai_act.hpp"
 #include "systems/control_move.hpp"
-#include "my_log.hpp"
 #include "systems/control_special.hpp"
 #include "systems/missiles_stop.hpp"
 #include "systems/share_movement.hpp"
@@ -69,7 +68,9 @@ static void register_systems(
     tick_rate_manager.add_tick_rate(10);
 
     reg.add_system([&reg, &input, &udpClient]() { ecs::systems::control_move(reg, input); });
-    reg.add_system([&reg, &input, &udpClient, &sprite_manager]() { ecs::systems::control_special(reg, input, udpClient, sprite_manager); });
+    reg.add_system([&reg, &input, &udpClient, &sprite_manager]() {
+        ecs::systems::control_special(reg, input, udpClient, sprite_manager);
+    });
     reg.add_system([&reg, &dt, &tick_rate_manager]() {
         if (tick_rate_manager.need_update(10, dt)) {
             ecs::systems::ai_act(reg);
@@ -170,7 +171,7 @@ static void create_static(ecs::registry &reg, SpriteManager &sprite_manager, flo
     ecs::component::sprite entitySprite;
     entitySprite.texture_id = "assets/typesheets/r-typesheet5.gif";
     entitySprite.sprite_obj.setTexture(sprite_manager.get_texture(entitySprite.texture_id));
-    entitySprite.sprite_obj.setPosition(400.f, 300.f);
+    entitySprite.sprite_obj.setPosition(x, y);
 
     entitySprite.sprite_obj.setTextureRect(sf::IntRect(0, 0, 32, 32));
     ecs::component::animation entityAnimation;
@@ -190,41 +191,32 @@ static void create_static(ecs::registry &reg, SpriteManager &sprite_manager, flo
     reg.add_component(entity, ecs::component::hitbox{32.f, 32.f});
 }
 
-static void create_ai(ecs::registry &reg, float &dt, float x, float y)
+static void create_ai(ecs::registry &reg, SpriteManager &sprite_manager, float x, float y)
 {
     auto entity = reg.spawn_entity();
 
     reg.add_component(entity, ecs::component::position{x, y});
 
-    ecs::component::drawable entityDrawable;
-    entityDrawable.shape.setSize(sf::Vector2f(50.f, 50.f));
-    entityDrawable.shape.setFillColor(sf::Color::Red);
-    reg.add_component(entity, std::move(entityDrawable));
+    ecs::component::sprite entitySprite;
+    entitySprite.texture_id = "assets/typesheets/r-typesheet5.gif";
+    entitySprite.sprite_obj.setTexture(sprite_manager.get_texture(entitySprite.texture_id));
+    entitySprite.sprite_obj.setPosition(x, y);
 
-    auto func = [](ecs::registry &reg, entity_t e) {
-        auto &pos = reg.get_component<ecs::component::position>(e);
-        auto &val = reg.get_component<ecs::component::ai_actor>(e)->val;
-
-        if (val) {
-            pos->y += 20;
-        } else {
-            pos->y -= 20;
-        }
-        val = !val;
+    entitySprite.sprite_obj.setTextureRect(sf::IntRect(0, 0, 32, 32));
+    ecs::component::animation entityAnimation;
+    entityAnimation.frames["neutral"] = {
+        {0, 0, 32, 32},
+        {32, 0, 32, 32},
+        {64, 0, 32, 32},
+        {96, 0, 32, 32},
+        {128, 0, 32, 32},
+        {160, 0, 32, 32},
+        {192, 0, 32, 32},
+        {224, 0, 32, 32}
     };
-    reg.add_component(entity, ecs::component::ai_actor{true, std::move(func)});
-}
 
-static void create_ai(ecs::registry &reg, float &dt, float x, float y)
-{
-    auto entity = reg.spawn_entity();
-
-    reg.add_component(entity, ecs::component::position{x, y});
-
-    ecs::component::drawable entityDrawable;
-    entityDrawable.shape.setSize(sf::Vector2f(50.f, 50.f));
-    entityDrawable.shape.setFillColor(sf::Color::Red);
-    reg.add_component(entity, std::move(entityDrawable));
+    reg.add_component(entity, std::move(entityAnimation));
+    reg.add_component(entity, std::move(entitySprite));
 
     auto func = [](ecs::registry &reg, entity_t e) {
         auto &pos = reg.get_component<ecs::component::position>(e);
