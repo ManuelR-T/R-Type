@@ -21,7 +21,8 @@ void ecs::systems::missilesStop(ecs::Registry &reg)
         auto &pos = positions[entityId];
         auto &missile = missiles[entityId];
         if (missile && pos) {
-            if ((pos->x < 0 || pos->y < 0) || (pos->x > ecs::constants::SCREEN_WIDTH || pos->y > ecs::constants::SCREEN_HEIGHT)) {
+            if ((pos->x < 0 || pos->y < 0) ||
+                (pos->x > ecs::constants::SCREEN_WIDTH || pos->y > ecs::constants::SCREEN_HEIGHT)) {
                 reg.killEntity(entityId);
             }
         }

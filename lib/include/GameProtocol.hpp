@@ -45,7 +45,7 @@ enum class TcpCommand : std::size_t {
     SER_ROOM_READY
 };
 
-struct TcpPacket{
+struct TcpPacket {
     TcpCommand cmd = TcpCommand::NONE;
 
     union {
@@ -148,7 +148,7 @@ enum class UdpCommand : std::size_t {
     DEL_ENTITY
 };
 
-struct UdpPacket{
+struct UdpPacket {
     UdpCommand cmd;
 
     shared_entity_t shared_entity_id;

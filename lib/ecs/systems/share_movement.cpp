@@ -11,8 +11,8 @@
 #include "../core/registry.hpp"
 #include "../core/zipper.hpp"
 #include "GameProtocol.hpp"
-#include "../components/shared_entity.hpp"
 #include "UDPClient.hpp"
+#include "../components/shared_entity.hpp"
 
 namespace ecs::systems {
 

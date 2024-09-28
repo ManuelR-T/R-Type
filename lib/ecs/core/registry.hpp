@@ -272,11 +272,11 @@ class Registry {
     std::unordered_map<std::type_index, std::any>
         _componentsArrays; /**< Stores component arrays indexed by their type */
     std::unordered_map<std::type_index, std::function<void(Registry &, const entity_t &)>>
-        _eraseFunctions;                        /**< Stores erase functions for each component type */
+        _eraseFunctions;                         /**< Stores erase functions for each component type */
     std::vector<std::function<void()>> _systems; /**< List of systems to be executed */
     std::vector<entity_t> _entities;             /**< List of active entities */
-    std::vector<entity_t> _entitiesToDestroy;  /**< Queue of entities marked for destruction */
-    std::size_t _nextEntityId = 0;             /**< The next available entity identifier */
+    std::vector<entity_t> _entitiesToDestroy;    /**< Queue of entities marked for destruction */
+    std::size_t _nextEntityId = 0;               /**< The next available entity identifier */
 
     std::unordered_map<shared_entity_t, entity_t> _sharedEntityTracker;
 };

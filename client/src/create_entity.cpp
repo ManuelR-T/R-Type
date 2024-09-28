@@ -81,8 +81,7 @@ void rtc::createPlayer(ecs::Registry &reg, client::UDPClient &udpClient, SpriteM
 
     rt::UdpPacket msg = {
         .cmd = rt::UdpCommand::NEW_PLAYER,
-        .shared_entity_id = reg.getComponent<ecs::component::SharedEntity>(player).value().shared_entity_id
-    };
+        .shared_entity_id = reg.getComponent<ecs::component::SharedEntity>(player).value().shared_entity_id};
     udpClient.send(reinterpret_cast<const char *>(&msg), sizeof(msg));
 }
 
@@ -106,8 +105,7 @@ void rtc::createStatic(ecs::Registry &reg, SpriteManager &spriteManager, float x
         {128, 0, 32, 32},
         {160, 0, 32, 32},
         {192, 0, 32, 32},
-        {224, 0, 32, 32}
-    };
+        {224, 0, 32, 32}};
 
     reg.addComponent(entity, std::move(entityAnimation));
     reg.addComponent(entity, std::move(entitySprite));
@@ -135,8 +133,7 @@ void rtc::createAi(ecs::Registry &reg, SpriteManager &spriteManager, float x, fl
         {128, 0, 32, 32},
         {160, 0, 32, 32},
         {192, 0, 32, 32},
-        {224, 0, 32, 32}
-    };
+        {224, 0, 32, 32}};
 
     reg.addComponent(entity, std::move(entityAnimation));
     reg.addComponent(entity, std::move(entitySprite));

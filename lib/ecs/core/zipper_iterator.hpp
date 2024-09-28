@@ -169,7 +169,7 @@ class ZipperIterator {
         return std::tie(*std::get<Is>(_arrays)[_index]...);
     }
 
-    size_t _index;                                      /**< The current index in the iteration. */
+    size_t _index;                                     /**< The current index in the iteration. */
     size_t _maxSize;                                   /**< The maximum index to iterate up to. */
     std::tuple<SparseArray<Components> &...> &_arrays; /**< Tuple of references to component arrays. */
 };

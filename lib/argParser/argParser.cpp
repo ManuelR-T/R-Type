@@ -17,9 +17,8 @@ void ArgParser::addArgument(
     std::optional<std::function<bool(const std::string &)>> validator
 )
 {
-    _arguments.emplace_back(
-        Argument{longName, shortName, type, required, description, std::move(validator), std::nullopt}
-    );
+    _arguments.emplace_back(Argument{
+        longName, shortName, type, required, description, std::move(validator), std::nullopt});
 
     Argument *argPtr = &_arguments.back();
 

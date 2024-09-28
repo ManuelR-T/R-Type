@@ -62,7 +62,7 @@ class EntityManager {
     }
 
     private:
-    entity_t _nextEntityId = 0;        /**< The next available entity identifier */
+    entity_t _nextEntityId = 0;         /**< The next available entity identifier */
     std::queue<entity_t> _deadEntities; /**< Queue of identifiers from destroyed entities */
 };
 

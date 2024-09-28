@@ -15,6 +15,6 @@ namespace ecs::component {
  *
  * The `share_movement` component marks an entity as shared movement to the server.
  */
-struct ShareMovement{};
+struct ShareMovement {};
 
 } // namespace ecs::component

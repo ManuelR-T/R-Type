@@ -43,8 +43,7 @@ void rtc::GameManager::_registerTcpResponse()
         }
     });
     _tcpResponseHandler.registerHandler(rt::TcpCommand::SER_READY, [this](const rt::TcpPacket &packet) {
-        _roomManager.getRooms().at(packet.body.ser_ready.room_name).player.at(packet.body.ser_ready.player_name) =
-            true;
+        _roomManager.getRooms().at(packet.body.ser_ready.room_name).player.at(packet.body.ser_ready.player_name) = true;
     });
     _tcpResponseHandler.registerHandler(rt::TcpCommand::SER_NOT_READY, [this](const rt::TcpPacket &packet) {
         _roomManager.getRooms()

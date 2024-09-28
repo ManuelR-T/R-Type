@@ -18,7 +18,8 @@ namespace ecs {
 template <typename CommandType, typename PacketType>
 class ResponseHandler {
     public:
-    ResponseHandler(std::function<CommandType(const PacketType &)> cmdTypeGetter) : _cmdTypeGetter(std::move(cmdTypeGetter))
+    ResponseHandler(std::function<CommandType(const PacketType &)> cmdTypeGetter)
+        : _cmdTypeGetter(std::move(cmdTypeGetter))
     {
     }
 

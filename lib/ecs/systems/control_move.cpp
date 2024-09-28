@@ -12,8 +12,8 @@
 #include "components/velocity.hpp"
 #include "core/registry.hpp"
 #include "core/zipper.hpp"
-#include "core/input_manager.hpp"
 #include "control_move.hpp"
+#include "core/input_manager.hpp"
 
 namespace ecs::systems {
 

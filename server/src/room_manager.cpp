@@ -109,11 +109,7 @@ void rts::RoomManager::playerReady(const std::string &roomName, std::size_t play
     tcpServer.sendToAllUser(reinterpret_cast<const char *>(&packet), sizeof(packet));
 }
 
-void rts::RoomManager::playerNotReady(
-    const std::string &roomName,
-    std::size_t playerId,
-    server::TCPServer &tcpServer
-)
+void rts::RoomManager::playerNotReady(const std::string &roomName, std::size_t playerId, server::TCPServer &tcpServer)
 {
     rt::TcpPacket packet{.cmd = rt::TcpCommand::SER_NOT_READY};
 

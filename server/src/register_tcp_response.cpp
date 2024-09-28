@@ -45,18 +45,13 @@ void rts::registerTcpResponse(
             roomManager.leaveRoom(packet.body.cl_leave_room.room_name, packet.body.cl_leave_room.user_id, tcpServer);
         }
     );
-    responseHandler.registerHandler(
-        rt::TcpCommand::CL_READY,
-        [&roomManager, &tcpServer](const rt::TcpPacket &packet) {
-            roomManager.playerReady(packet.body.cl_ready.room_name, packet.body.cl_ready.user_id, tcpServer);
-        }
-    );
+    responseHandler.registerHandler(rt::TcpCommand::CL_READY, [&roomManager, &tcpServer](const rt::TcpPacket &packet) {
+        roomManager.playerReady(packet.body.cl_ready.room_name, packet.body.cl_ready.user_id, tcpServer);
+    });
     responseHandler.registerHandler(
         rt::TcpCommand::CL_NOT_READY,
         [&roomManager, &tcpServer](const rt::TcpPacket &packet) {
-            roomManager.playerNotReady(
-                packet.body.cl_not_ready.room_name, packet.body.cl_not_ready.user_id, tcpServer
-            );
+            roomManager.playerNotReady(packet.body.cl_not_ready.room_name, packet.body.cl_not_ready.user_id, tcpServer);
         }
     );
     responseHandler.registerHandler(

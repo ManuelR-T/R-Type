@@ -14,6 +14,9 @@
 #include "components/sprite.hpp"
 #include "components/velocity.hpp"
 #include "core/constants.hpp"
+#include "systems/collision.hpp"
+#include "systems/draw.hpp"
+#include "systems/position.hpp"
 #include "components/ai_actor.hpp"
 #include "components/share_movement.hpp"
 #include "core/tick_rate_manager.hpp"
@@ -22,11 +25,8 @@
 #include "systems/control_move.hpp"
 #include "systems/control_special.hpp"
 #include "systems/missiles_stop.hpp"
-#include "systems/sprite_system.hpp"
-#include "systems/position.hpp"
-#include "systems/collision.hpp"
 #include "systems/share_movement.hpp"
-#include "systems/draw.hpp"
+#include "systems/sprite_system.hpp"
 
 void rtc::registerComponents(ecs::Registry &reg)
 {
