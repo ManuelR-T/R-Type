@@ -5,8 +5,8 @@
 ** room_manager
 */
 
-#include "room_manager.hpp"
 #include "GameProtocol.hpp"
+#include "RoomManager.hpp"
 
 const std::string &rtc::RoomManager::getCurrentRoom() const
 {

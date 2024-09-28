@@ -11,10 +11,9 @@
 #include <functional>
 #include <string>
 #include <utility>
-#include "tracked_exception.hpp"
+#include "TrackedException.hpp"
 #include <unordered_map>
 
-namespace ecs {
 template <typename CommandType, typename PacketType>
 class ResponseHandler {
     public:
@@ -34,14 +33,14 @@ class ResponseHandler {
         CommandType cmdType;
 
         if (size != sizeof(msg)) {
-            throw ecs::TrackedException("Recv msg with bad size: " + std::to_string(size) + '.');
+            throw my::TrackedException("Recv msg with bad size: " + std::to_string(size) + '.');
         }
         std::memcpy(&msg, data, sizeof(msg));
         cmdType = _cmdTypeGetter(msg);
         if (_handler.contains(cmdType)) {
             _handler[cmdType](msg);
         } else {
-            throw ecs::TrackedException(
+            throw my::TrackedException(
                 "Response without handler: " + std::to_string(static_cast<std::size_t>(cmdType)) + '.'
             );
         }
@@ -51,4 +50,3 @@ class ResponseHandler {
     std::unordered_map<CommandType, std::function<void(const PacketType &)>> _handler;
     std::function<CommandType(const PacketType &)> _cmdTypeGetter;
 };
-} // namespace ecs

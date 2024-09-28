@@ -5,8 +5,8 @@
 ** setup_tcp_connection
 */
 
+#include "GameManager.hpp"
 #include "GameProtocol.hpp"
-#include "game_manager.hpp"
 
 void rtc::GameManager::_setupTcpConnection()
 {

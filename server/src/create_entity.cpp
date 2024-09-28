@@ -11,7 +11,7 @@
 #include "components/missile.hpp"
 #include "components/position.hpp"
 #include "components/velocity.hpp"
-#include "core/registry.hpp"
+#include "core/Registry.hpp"
 
 #include <SFML/Graphics.hpp>
 #include <cstring>

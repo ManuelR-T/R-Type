@@ -9,8 +9,8 @@
 
 #include <algorithm>
 #include <tuple>
-#include "sparse_array.hpp"
-#include "zipper_iterator.hpp"
+#include "SparseArray.hpp"
+#include "ZipperIterator.hpp"
 
 namespace ecs {
 /**
@@ -27,7 +27,7 @@ template <typename... Components>
 class Zipper {
     public:
     /** @brief Type alias for the zipper iterator. */
-    using iterator = ZipperIterator<Components...>;
+    using iterator_t = ZipperIterator<Components...>;
 
     /**
      * @brief Constructs a `zipper` with references to component arrays.
@@ -48,10 +48,10 @@ class Zipper {
      *
      * @return An `iterator` pointing to the first valid entity.
      */
-    iterator begin()
+    iterator_t begin()
     {
         size_t maxSize = _getMaxSize();
-        return iterator(0, maxSize, _arrays);
+        return iterator_t(0, maxSize, _arrays);
     }
 
     /**
@@ -62,10 +62,10 @@ class Zipper {
      *
      * @return An `iterator` representing the end of the iteration range.
      */
-    iterator end()
+    iterator_t end()
     {
         size_t maxSize = _getMaxSize();
-        return iterator(maxSize, maxSize, _arrays);
+        return iterator_t(maxSize, maxSize, _arrays);
     }
 
     private:

@@ -10,19 +10,19 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 
 #include "GameProtocol.hpp"
-#include "core/registry.hpp"
-#include "core/response_handler.hpp"
-#include "room_manager.hpp"
+#include "ResponseHandler.hpp"
+#include "RoomManager.hpp"
+#include "core/Registry.hpp"
 
 namespace rts {
 
 void registerComponents(ecs::Registry &reg);
 void registerSystems(ecs::Registry &reg, sf::RenderWindow &window, float &dt);
-void registerUdpResponse(ecs::Registry &reg, ecs::ResponseHandler<rt::UdpCommand, rt::UdpPacket> &responseHandler);
+void registerUdpResponse(ecs::Registry &reg, ResponseHandler<rt::UdpCommand, rt::UdpPacket> &responseHandler);
 void registerTcpResponse(
     rts::RoomManager &roomManager,
     server::TCPServer &tcpServer,
-    ecs::ResponseHandler<rt::TcpCommand, rt::TcpPacket> &responseHandler
+    ResponseHandler<rt::TcpCommand, rt::TcpPacket> &responseHandler
 );
 
 // ! will be replace by factory

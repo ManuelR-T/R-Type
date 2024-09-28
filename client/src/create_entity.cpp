@@ -12,7 +12,7 @@
 #include "components/position.hpp"
 #include "components/sprite.hpp"
 #include "components/velocity.hpp"
-#include "core/registry.hpp"
+#include "core/Registry.hpp"
 #include "components/ai_actor.hpp"
 #include "components/share_movement.hpp"
 #include "rtype_client.hpp"

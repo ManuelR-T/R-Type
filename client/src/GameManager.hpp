@@ -9,10 +9,10 @@
 
 #include <memory>
 #include "GameProtocol.hpp"
+#include "ResponseHandler.hpp"
+#include "RoomManager.hpp"
 #include "TCPClient.hpp"
-#include "core/response_handler.hpp"
 #include "core/shared_entity.hpp"
-#include "room_manager.hpp"
 
 #include <imgui.h>
 #include <imgui-SFML.h>
@@ -29,7 +29,7 @@ class GameManager {
     std::size_t _userId = 0;
     int _gamePort = 0;
     rtc::RoomManager _roomManager;
-    ecs::ResponseHandler<rt::TcpCommand, rt::TcpPacket> _tcpResponseHandler;
+    ResponseHandler<rt::TcpCommand, rt::TcpPacket> _tcpResponseHandler;
 
     std::shared_ptr<sf::RenderWindow> _window;
 

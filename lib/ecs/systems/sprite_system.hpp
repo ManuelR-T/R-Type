@@ -7,8 +7,8 @@
 
 #pragma once
 
+#include "../core/Registry.hpp"
 #include "../core/SpriteManager.hpp"
-#include "../core/registry.hpp"
 
 namespace ecs::systems {
 

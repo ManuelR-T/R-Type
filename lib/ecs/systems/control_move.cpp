@@ -10,10 +10,10 @@
 
 #include "components/controllable.hpp"
 #include "components/velocity.hpp"
-#include "core/registry.hpp"
-#include "core/zipper.hpp"
+#include "core/InputManager.hpp"
+#include "core/Registry.hpp"
+#include "core/Zipper.hpp"
 #include "control_move.hpp"
-#include "core/input_manager.hpp"
 
 namespace ecs::systems {
 

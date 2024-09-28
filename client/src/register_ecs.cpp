@@ -5,6 +5,7 @@
 ** register_ecs
 */
 
+#include "TickRateManager.hpp"
 #include "components/animation.hpp"
 #include "components/controllable.hpp"
 #include "components/drawable.hpp"
@@ -13,14 +14,13 @@
 #include "components/position.hpp"
 #include "components/sprite.hpp"
 #include "components/velocity.hpp"
-#include "core/constants.hpp"
 #include "systems/collision.hpp"
 #include "systems/draw.hpp"
 #include "systems/position.hpp"
 #include "components/ai_actor.hpp"
 #include "components/share_movement.hpp"
-#include "core/tick_rate_manager.hpp"
 #include "rtype_client.hpp"
+#include "rtype_const.hpp"
 #include "systems/ai_act.hpp"
 #include "systems/control_move.hpp"
 #include "systems/control_special.hpp"
@@ -49,11 +49,11 @@ void rtc::registerSystems(
     float &dt,
     client::UDPClient &udpClient,
     ecs::InputManager &input,
-    ecs::TickRateManager &tickRateManager,
+    TickRateManager &tickRateManager,
     SpriteManager &spriteManager
 )
 {
-    tickRateManager.addTickRate(ecs::constants::MOVEMENT_TICK_RATE);
+    tickRateManager.addTickRate(rt::MOVEMENT_TICK_RATE);
     tickRateManager.addTickRate(10);
 
     reg.addSystem([&reg, &input]() { ecs::systems::controlMove(reg, input); });
@@ -68,7 +68,7 @@ void rtc::registerSystems(
     reg.addSystem([&reg, &dt]() { ecs::systems::position(reg, dt); });
     reg.addSystem([&reg]() { ecs::systems::collision(reg); });
     reg.addSystem([&reg, &udpClient, &tickRateManager, &dt]() {
-        if (tickRateManager.needUpdate(ecs::constants::MOVEMENT_TICK_RATE, dt)) {
+        if (tickRateManager.needUpdate(rt::MOVEMENT_TICK_RATE, dt)) {
             ecs::systems::shareMovement(reg, udpClient);
         }
     });

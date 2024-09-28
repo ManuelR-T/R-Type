@@ -10,7 +10,6 @@
 #include <SFML/Window/Event.hpp>
 #include <unordered_map>
 
-namespace ecs {
 class TickRateManager {
     public:
     void addTickRate(float tickRate)
@@ -42,4 +41,3 @@ class TickRateManager {
 
     std::unordered_map<float, TickData> _tickRate;
 };
-} // namespace ecs

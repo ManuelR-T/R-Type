@@ -5,8 +5,8 @@
 ** room_manager
 */
 
-#include "room_manager.hpp"
-#include "game_runner.hpp"
+#include "GameRunner.hpp"
+#include "RoomManager.hpp"
 
 void rts::RoomManager::createRoom(const std::string &name, server::TCPServer &tcpServer)
 {

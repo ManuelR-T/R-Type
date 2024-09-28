@@ -5,8 +5,8 @@
 ** game_runner
 */
 
-#include "game_runner.hpp"
 #include "GameProtocol.hpp"
+#include "GameRunner.hpp"
 #include "rtype_server.hpp"
 
 rts::GameRunner::GameRunner(int port)

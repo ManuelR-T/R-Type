@@ -8,10 +8,10 @@
 #pragma once
 
 #include <SFML/Window/Event.hpp>
-#include "../core/registry.hpp"
+#include "../core/InputManager.hpp"
+#include "../core/Registry.hpp"
 #include "UDPClient.hpp"
 #include "core/SpriteManager.hpp"
-#include "../core/input_manager.hpp"
 
 namespace ecs::systems {
 

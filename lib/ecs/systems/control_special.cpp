@@ -14,11 +14,11 @@
 #include "components/position.hpp"
 #include "components/sprite.hpp"
 #include "components/velocity.hpp"
+#include "core/InputManager.hpp"
+#include "core/Registry.hpp"
 #include "core/SpriteManager.hpp"
-#include "core/registry.hpp"
-#include "core/zipper.hpp"
+#include "core/Zipper.hpp"
 #include "components/share_movement.hpp"
-#include "core/input_manager.hpp"
 #include "core/shared_entity.hpp"
 
 static void spawnMissile(

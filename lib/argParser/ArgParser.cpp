@@ -5,7 +5,7 @@
 ** argParser
 */
 
-#include "argParser.hpp"
+#include "ArgParser.hpp"
 #include <iostream>
 
 void ArgParser::addArgument(

@@ -11,7 +11,7 @@
 #include "components/hitbox.hpp"
 #include "components/position.hpp"
 #include "components/velocity.hpp"
-#include "core/registry.hpp"
+#include "core/Registry.hpp"
 
 static void resolveCollision(
     ecs::Registry &reg,

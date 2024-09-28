@@ -6,8 +6,8 @@
 */
 
 #include "GameProtocol.hpp"
-#include "core/response_handler.hpp"
-#include "room_manager.hpp"
+#include "ResponseHandler.hpp"
+#include "RoomManager.hpp"
 #include "rtype_server.hpp"
 
 #include <SFML/Graphics.hpp>
@@ -21,7 +21,7 @@ int main()
 {
     server::TCPServer tcpServer(8080, sizeof(rt::TcpPacket));
     rts::RoomManager roomManager;
-    ecs::ResponseHandler<rt::TcpCommand, rt::TcpPacket> responseHandler([](const rt::TcpPacket &packet) {
+    ResponseHandler<rt::TcpCommand, rt::TcpPacket> responseHandler([](const rt::TcpPacket &packet) {
         return packet.cmd;
     });
 

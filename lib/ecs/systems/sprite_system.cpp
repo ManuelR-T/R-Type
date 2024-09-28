@@ -9,9 +9,9 @@
 #include "../components/animation.hpp"
 #include "../components/position.hpp"
 #include "../components/sprite.hpp"
-#include "core/registry.hpp"
-#include "core/zipper.hpp"
-#include "core/indexed_zipper.hpp"
+#include "core/IndexedZipper.hpp"
+#include "core/Registry.hpp"
+#include "core/Zipper.hpp"
 
 namespace ecs::systems {
 

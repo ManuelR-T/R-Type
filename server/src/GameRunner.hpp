@@ -10,9 +10,9 @@
 #include <SFML/Graphics.hpp>
 #include <thread>
 #include "GameProtocol.hpp"
+#include "ResponseHandler.hpp"
 #include "UDPServer.hpp"
-#include "core/registry.hpp"
-#include "core/response_handler.hpp"
+#include "core/Registry.hpp"
 
 namespace rts {
 
@@ -22,7 +22,7 @@ class GameRunner {
     server::UDPServer _udpServer;
     std::thread _receiveThread;
     ecs::Registry _reg;
-    ecs::ResponseHandler<rt::UdpCommand, rt::UdpPacket> _responseHandler;
+    ResponseHandler<rt::UdpCommand, rt::UdpPacket> _responseHandler;
     float _dt = 0;
     sf::RenderWindow _window;
 

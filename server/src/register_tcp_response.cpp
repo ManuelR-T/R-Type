@@ -10,7 +10,7 @@
 void rts::registerTcpResponse(
     rts::RoomManager &roomManager,
     server::TCPServer &tcpServer,
-    ecs::ResponseHandler<rt::TcpCommand, rt::TcpPacket> &responseHandler
+    ResponseHandler<rt::TcpCommand, rt::TcpPacket> &responseHandler
 )
 {
     responseHandler.registerHandler(rt::TcpCommand::CL_DISCONNECT_USER, [&tcpServer](const rt::TcpPacket &packet) {

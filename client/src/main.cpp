@@ -7,10 +7,10 @@
 
 #include <SFML/Graphics.hpp>
 #include <memory>
-#include "argParser.hpp"
-#include "core/registry.hpp"
-#include "core/input_manager.hpp"
-#include "game_manager.hpp"
+#include "ArgParser.hpp"
+#include "GameManager.hpp"
+#include "core/InputManager.hpp"
+#include "core/Registry.hpp"
 #include "rtype_client.hpp"
 
 void rtc::run(ecs::Registry &reg, const std::shared_ptr<sf::RenderWindow> &window, float &dt, ecs::InputManager &input)

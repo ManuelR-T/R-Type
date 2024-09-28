@@ -5,7 +5,7 @@
 ** register_tcp_response
 */
 
-#include "game_manager.hpp"
+#include "GameManager.hpp"
 
 void rtc::GameManager::_registerTcpResponse()
 {

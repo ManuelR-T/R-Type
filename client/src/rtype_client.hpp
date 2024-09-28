@@ -8,12 +8,12 @@
 #pragma once
 
 #include <SFML/Graphics/RenderWindow.hpp>
+#include "RoomManager.hpp"
+#include "TickRateManager.hpp"
 #include "UDPClient.hpp"
+#include "core/InputManager.hpp"
+#include "core/Registry.hpp"
 #include "core/SpriteManager.hpp"
-#include "core/registry.hpp"
-#include "core/input_manager.hpp"
-#include "core/tick_rate_manager.hpp"
-#include "room_manager.hpp"
 
 namespace rtc {
 
@@ -24,7 +24,7 @@ void registerSystems(
     float &dt,
     client::UDPClient &udpClient,
     ecs::InputManager &input,
-    ecs::TickRateManager &tickRateManager,
+    TickRateManager &tickRateManager,
     SpriteManager &spriteManager
 );
 

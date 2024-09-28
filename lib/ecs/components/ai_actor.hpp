@@ -8,8 +8,8 @@
 #pragma once
 
 #include <functional>
+#include "core/Registry.hpp"
 #include "core/entity.hpp"
-#include "core/registry.hpp"
 
 namespace ecs::component {
 

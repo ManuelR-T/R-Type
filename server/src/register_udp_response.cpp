@@ -9,7 +9,7 @@
 #include "components/velocity.hpp"
 #include "rtype_server.hpp"
 
-void rts::registerUdpResponse(ecs::Registry &reg, ecs::ResponseHandler<rt::UdpCommand, rt::UdpPacket> &responseHandler)
+void rts::registerUdpResponse(ecs::Registry &reg, ResponseHandler<rt::UdpCommand, rt::UdpPacket> &responseHandler)
 {
     responseHandler.registerHandler(rt::UdpCommand::NEW_PLAYER, [&reg](const rt::UdpPacket &msg) {
         rts::createPlayer(reg, msg.shared_entity_id);

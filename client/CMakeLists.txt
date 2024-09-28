@@ -10,11 +10,13 @@ add_executable( r-type_client
 )
 
 target_compile_options( r-type_client PRIVATE -Wall -Wextra)
-target_link_libraries( r-type_client PRIVATE ECS PRIVATE NETWORK PRIVATE INCLUDE PRIVATE ARGPARSER PRIVATE ImGui-SFML::ImGui-SFML)
+target_link_libraries( r-type_client PRIVATE ECS PRIVATE NETWORK PRIVATE UTILS PRIVATE ARGPARSER PRIVATE ImGui-SFML::ImGui-SFML)
 include_directories(
-    ${CMAKE_SOURCE_DIR}/lib/include
+    ${CMAKE_SOURCE_DIR}/lib/utils
     ${CMAKE_SOURCE_DIR}/lib/network/udp
     ${CMAKE_SOURCE_DIR}/lib/network/tcp
+    ${CMAKE_SOURCE_DIR}/lib/network
+    ${CMAKE_SOURCE_DIR}/include
 )
 
 set_target_properties( r-type_client PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/)

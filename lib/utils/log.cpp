@@ -1,19 +1,15 @@
 /*
 ** EPITECH PROJECT, 2024
-** my_cpplib
+** R-Type
 ** File description:
-** my_log
+** log
 */
 
-#pragma once
-
+#include "log.hpp"
 #include <format>
 #include <iostream>
-#include <string>
-#include <source_location>
 
-namespace my::log {
-void info(const std::string &msg, std::source_location info = std::source_location::current())
+void my::log::info(const std::string &msg, std::source_location info)
 {
     std::cerr << std::format(
         "\033[1m{}:\033[96m{}\033[0;1m: "
@@ -24,7 +20,7 @@ void info(const std::string &msg, std::source_location info = std::source_locati
     );
 }
 
-void warning(const std::string &msg, std::source_location info = std::source_location::current())
+void my::log::warning(const std::string &msg, std::source_location info)
 {
     std::cerr << std::format(
         "\033[1m{}:\033[96m{}\033[0;1m: "
@@ -35,7 +31,7 @@ void warning(const std::string &msg, std::source_location info = std::source_loc
     );
 }
 
-void error(const std::string &msg, std::source_location info = std::source_location::current())
+void my::log::error(const std::string &msg, std::source_location info)
 {
     std::cerr << std::format(
         "\033[1m{}:\033[96m{}\033[0;1m: "
@@ -45,4 +41,3 @@ void error(const std::string &msg, std::source_location info = std::source_locat
         msg
     );
 }
-} // namespace my::log

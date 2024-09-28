@@ -11,7 +11,7 @@
 #include <iterator>
 #include <tuple>
 #include <utility>
-#include "sparse_array.hpp"
+#include "SparseArray.hpp"
 
 namespace ecs {
 /**

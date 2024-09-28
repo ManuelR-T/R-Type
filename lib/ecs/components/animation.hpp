@@ -11,7 +11,7 @@
 #include <functional>
 #include <string>
 #include <vector>
-#include "core/registry.hpp"
+#include "core/Registry.hpp"
 #include <unordered_map>
 
 namespace ecs::component {

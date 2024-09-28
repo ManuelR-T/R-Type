@@ -7,8 +7,8 @@
 
 #include "../components/position.hpp"
 #include "../components/velocity.hpp"
-#include "../core/registry.hpp"
-#include "../core/zipper.hpp"
+#include "../core/Registry.hpp"
+#include "../core/Zipper.hpp"
 
 namespace ecs::systems {
 

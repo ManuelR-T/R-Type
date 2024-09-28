@@ -100,13 +100,15 @@ CheckOptions:
   - key: readability-identifier-naming.UnionCase
     value: CamelCase
 
+  - key: readability-identifier-naming.TypeTemplateParameterIgnoredRegexp
+    value: expr-type
   - key: readability-identifier-naming.TemplateParameterCase
     value: CamelCase
 
   - key: readability-identifier-naming.TypeAliasCase
-    value: snake_case
+    value: lower_case
   - key: readability-identifier-naming.TypeAliasSuffix
     value: _t
 
   - key: readability-identifier-naming.NamespaceCase
-    value: snake_case
+    value: lower_case
