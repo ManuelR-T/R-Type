@@ -5,9 +5,10 @@
 ** run_gui
 */
 
-#include "imgui.h"
+#include <stdexcept>
 #include "core/shared_entity.hpp"
 #include "imgui-SFML.h"
+#include "imgui.h"
 #include "rtype_client.hpp"
 
 // ! This function is call when you click on a room in the lobby array.
@@ -121,13 +122,15 @@ static void renderLobbyWindow(rtc::RoomManager &roomManager)
 
 void rtc::runGui(const std::shared_ptr<sf::RenderWindow> &window, rtc::RoomManager &roomManager, bool &inLobby)
 {
-    ImGui::SFML::Init(*window);
+    if (!ImGui::SFML::Init(*window)) {
+        throw std::runtime_error("IMGUI Window init failed");
+    }
     sf::Clock dt;
 
     while (window->isOpen() && inLobby) {
         sf::Event event;
         while (window->pollEvent(event)) {
-            ImGui::SFML::ProcessEvent(event);
+            ImGui::SFML::ProcessEvent(*window, event);
             if (event.type == sf::Event::Closed) {
                 window->close();
             }

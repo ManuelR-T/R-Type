@@ -7,7 +7,9 @@
 
 #include "TCPClient.hpp"
 #include <cstddef>
+#include <functional>
 #include <iostream>
+#include <utility>
 #include <asio/ip/address_v4.hpp>
 #include <asio/socket_base.hpp>
 

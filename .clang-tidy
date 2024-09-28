@@ -10,6 +10,7 @@ Checks:
   -performance-enum-size
   -performance-move-constructor-init
   -performance-no-int-to-ptr
+  -performance-avoid-endl
   -modernize-use-trailing-return-type
   -modernize-redundant-void-arg
   -modernize-macro-to-enum

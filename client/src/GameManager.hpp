@@ -14,7 +14,6 @@
 #include "TCPClient.hpp"
 #include "core/shared_entity.hpp"
 
-#include <imgui.h>
 #include <imgui-SFML.h>
 
 namespace rtc {
