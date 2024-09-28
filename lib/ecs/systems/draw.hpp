@@ -21,6 +21,6 @@ namespace ecs::systems {
  * @param reg Reference to the registry managing entities and their components.
  * @param window Reference to the SFML render window where entities are drawn.
  */
-void draw(registry &reg, sf::RenderWindow &window);
+void draw(Registry &reg, sf::RenderWindow &window);
 
 } // namespace ecs::systems

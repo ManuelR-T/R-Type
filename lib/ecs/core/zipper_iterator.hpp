@@ -24,22 +24,22 @@ namespace ecs {
  * @tparam Components The types of components to include in the iteration.
  */
 template <typename... Components>
-class zipper_iterator {
+class ZipperIterator {
     public:
     /** @brief The type of value returned by the iterator (tuple of component references). */
-    using value_type = std::tuple<Components &...>;
+    using value_type_t = std::tuple<Components &...>;
 
     /** @brief The reference type returned by the dereference operator. */
-    using reference = value_type;
+    using reference_t = value_type_t;
 
     /** @brief The pointer type (void since pointers are not used). */
-    using pointer = void;
+    using pointer_t = void;
 
     /** @brief The type used for measuring the distance between iterators. */
-    using difference_type = std::ptrdiff_t;
+    using difference_type_t = std::ptrdiff_t;
 
     /** @brief The category of the iterator (forward iterator). */
-    using iterator_category = std::forward_iterator_tag;
+    using iterator_category_t = std::forward_iterator_tag;
 
     /**
      * @brief Constructs a `zipper_iterator`.
@@ -48,10 +48,10 @@ class zipper_iterator {
      * @param max_size The maximum size to iterate up to.
      * @param arrays A tuple containing references to the `sparse_array` instances for each component.
      */
-    zipper_iterator(size_t index, size_t max_size, std::tuple<sparse_array<Components> &...> &arrays)
-        : _index(index), _max_size(max_size), _arrays(arrays)
+    ZipperIterator(size_t index, size_t maxSize, std::tuple<SparseArray<Components> &...> &arrays)
+        : _index(index), _maxSize(maxSize), _arrays(arrays)
     {
-        skip_invalid();
+        _skipInvalid();
     }
 
     /**
@@ -61,10 +61,10 @@ class zipper_iterator {
      *
      * @return Reference to the incremented iterator.
      */
-    zipper_iterator &operator++()
+    ZipperIterator &operator++()
     {
         ++_index;
-        skip_invalid();
+        _skipInvalid();
         return *this;
     }
 
@@ -76,7 +76,7 @@ class zipper_iterator {
      * @param other The other `zipper_iterator` to compare against.
      * @return `true` if the iterators have different indices, `false` otherwise.
      */
-    bool operator!=(const zipper_iterator &other) const
+    bool operator!=(const ZipperIterator &other) const
     {
         return _index != other._index;
     }
@@ -88,9 +88,9 @@ class zipper_iterator {
      *
      * @return A tuple containing references to the components of the current entity.
      */
-    reference operator*()
+    reference_t operator*()
     {
-        return get_components(std::index_sequence_for<Components...>{});
+        return _getComponents(std::index_sequence_for<Components...>{});
     }
 
     /**
@@ -110,9 +110,9 @@ class zipper_iterator {
      * Advances the iterator index until it points to an entity that has all components
      * or until the maximum size is reached.
      */
-    void skip_invalid()
+    void _skipInvalid()
     {
-        while (_index < _max_size && !all_present()) {
+        while (_index < _maxSize && !_allPresent()) {
             ++_index;
         }
     }
@@ -122,9 +122,9 @@ class zipper_iterator {
      *
      * @return `true` if the entity has all components, `false` otherwise.
      */
-    bool all_present() const
+    bool _allPresent() const
     {
-        return all_present_impl(std::index_sequence_for<Components...>{});
+        return _allPresentImpl(std::index_sequence_for<Components...>{});
     }
 
     /**
@@ -135,9 +135,9 @@ class zipper_iterator {
      * @return `true` if all components are present, `false` otherwise.
      */
     template <std::size_t... Is>
-    bool all_present_impl(std::index_sequence<Is...> seq) const
+    bool _allPresentImpl(std::index_sequence<Is...> seq) const
     {
-        return (... && is_present<Is>());
+        return (... && _isPresent<Is>());
     }
 
     /**
@@ -147,7 +147,7 @@ class zipper_iterator {
      * @return `true` if the component is present, `false` otherwise.
      */
     template <std::size_t I>
-    bool is_present() const
+    bool _isPresent() const
     {
         const auto &array = std::get<I>(_arrays);
         if (_index >= array.size()) {
@@ -164,13 +164,13 @@ class zipper_iterator {
      * @return A tuple containing references to the components of the current entity.
      */
     template <std::size_t... Is>
-    reference get_components(std::index_sequence<Is...> seq)
+    reference_t _getComponents(std::index_sequence<Is...> seq)
     {
         return std::tie(*std::get<Is>(_arrays)[_index]...);
     }
 
     size_t _index;                                      /**< The current index in the iteration. */
-    size_t _max_size;                                   /**< The maximum index to iterate up to. */
-    std::tuple<sparse_array<Components> &...> &_arrays; /**< Tuple of references to component arrays. */
+    size_t _maxSize;                                   /**< The maximum index to iterate up to. */
+    std::tuple<SparseArray<Components> &...> &_arrays; /**< Tuple of references to component arrays. */
 };
 } // namespace ecs

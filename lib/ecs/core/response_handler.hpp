@@ -11,44 +11,43 @@
 #include <functional>
 #include <string>
 #include <utility>
-#include "GameProtocol.hpp"
 #include "tracked_exception.hpp"
 #include <unordered_map>
 
 namespace ecs {
 template <typename CommandType, typename PacketType>
-class response_handler {
+class ResponseHandler {
     public:
-    response_handler(std::function<CommandType(const PacketType &)> cmd_type_getter) : _cmd_type_getter(cmd_type_getter)
+    ResponseHandler(std::function<CommandType(const PacketType &)> cmdTypeGetter) : _cmdTypeGetter(std::move(cmdTypeGetter))
     {
     }
 
-    void register_handler(CommandType cmd, std::function<void(const PacketType &)> handler)
+    void registerHandler(CommandType cmd, std::function<void(const PacketType &)> handler)
     {
         _handler[cmd] = std::move(handler);
     }
 
-    void handle_response(const char *data, std::size_t size)
+    void handleResponse(const char *data, std::size_t size)
     {
         PacketType msg{};
-        CommandType cmd_type;
+        CommandType cmdType;
 
         if (size != sizeof(msg)) {
-            throw ecs::tracked_exception("Recv msg with bad size: " + std::to_string(size) + '.');
+            throw ecs::TrackedException("Recv msg with bad size: " + std::to_string(size) + '.');
         }
         std::memcpy(&msg, data, sizeof(msg));
-        cmd_type = _cmd_type_getter(msg);
-        if (_handler.contains(cmd_type)) {
-            _handler[cmd_type](msg);
+        cmdType = _cmdTypeGetter(msg);
+        if (_handler.contains(cmdType)) {
+            _handler[cmdType](msg);
         } else {
-            throw ecs::tracked_exception(
-                "Response without handler: " + std::to_string(static_cast<std::size_t>(cmd_type)) + '.'
+            throw ecs::TrackedException(
+                "Response without handler: " + std::to_string(static_cast<std::size_t>(cmdType)) + '.'
             );
         }
     }
 
     private:
     std::unordered_map<CommandType, std::function<void(const PacketType &)>> _handler;
-    std::function<CommandType(const PacketType &)> _cmd_type_getter;
+    std::function<CommandType(const PacketType &)> _cmdTypeGetter;
 };
 } // namespace ecs

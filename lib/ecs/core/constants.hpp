@@ -8,10 +8,10 @@
 #pragma once
 
 namespace ecs::constants {
-constexpr unsigned int fps_limit = 60;
+constexpr unsigned int FPS_LIMIT = 60;
 
-constexpr float movement_tick_rate = 30.0;
+constexpr float MOVEMENT_TICK_RATE = 30.0;
 
-constexpr unsigned int screen_width = 720;
-constexpr unsigned int screen_height = 480;
+constexpr unsigned int SCREEN_WIDTH = 720;
+constexpr unsigned int SCREEN_HEIGHT = 480;
 } // namespace ecs::constants

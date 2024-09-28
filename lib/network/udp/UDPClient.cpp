@@ -10,31 +10,31 @@
 #include <iostream>
 
 client::UDPClient::UDPClient(const std::string &host, int port)
-    : endpoint_(asio::ip::address::from_string(host), port), sock_(io_)
+    : _endpoint(asio::ip::address::from_string(host), port), _sock(_io)
 {
-    sock_.open(udp::v4());
+    _sock.open(udp::v4());
 }
 
-void client::UDPClient::asio_run()
+void client::UDPClient::_asioRun()
 {
-    sock_.async_receive_from(asio::buffer(buff_), endpoint_, [this](auto &&PH1, auto &&PH2) {
-        handle_recv(std::forward<decltype(PH1)>(PH1), std::forward<decltype(PH2)>(PH2));
+    _sock.async_receive_from(asio::buffer(_buff), _endpoint, [this](auto &&pH1, auto &&pH2) {
+        _handleRecv(std::forward<decltype(pH1)>(pH1), std::forward<decltype(pH2)>(pH2));
     });
 }
 
-void client::UDPClient::handle_recv(asio::error_code ec, std::size_t bytes)
+void client::UDPClient::_handleRecv(asio::error_code ec, std::size_t bytes)
 {
     if (ec) {
         std::cerr << "Receive error: " << ec.message() << std::endl;
         return;
     }
 
-    asio_run();
+    _asioRun();
 }
 
 void client::UDPClient::send(const char *data, std::size_t size)
 {
-    sock_.async_send_to(asio::buffer(data, size), endpoint_, [](asio::error_code ec, std::size_t bytes) {
+    _sock.async_send_to(asio::buffer(data, size), _endpoint, [](asio::error_code ec, std::size_t bytes) {
         if (!ec) {
             std::cout << "Sent " << bytes << " bytes" << std::endl;
         } else {
@@ -45,9 +45,9 @@ void client::UDPClient::send(const char *data, std::size_t size)
 
 void client::UDPClient::run()
 {
-    recv_thread_ = std::thread([this]() {
-        asio_run();
-        io_.run();
+    _recvThread = std::thread([this]() {
+        _asioRun();
+        _io.run();
         std::cout << "Client terminated" << std::endl;
     });
 }

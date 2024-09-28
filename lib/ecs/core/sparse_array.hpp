@@ -25,42 +25,42 @@ namespace ecs {
  * @tparam Component The type of component to be stored in the sparse array.
  */
 template <typename Component>
-class sparse_array {
+class SparseArray {
     public:
     /** @brief Alias for the optional component type. */
-    using value_type = std::optional<Component>;
+    using value_type_t = std::optional<Component>;
 
     /** @brief Alias for a reference to the optional component type. */
-    using reference_type = value_type &;
+    using reference_type_t = value_type_t &;
 
     /** @brief Alias for a const reference to the optional component type. */
-    using const_reference_type = const value_type &;
+    using const_reference_type_t = const value_type_t &;
 
     /** @brief Alias for the underlying container type (vector of optional components). */
-    using container_t = std::vector<value_type>;
+    using container_t = std::vector<value_type_t>;
 
     /** @brief Alias for the size type used by the container. */
-    using size_type = typename container_t::size_type;
+    using size_type_t = typename container_t::size_type;
 
     /** @brief Alias for the iterator type of the container. */
-    using iterator = typename container_t::iterator;
+    using iterator_t = typename container_t::iterator;
 
     /** @brief Alias for the const iterator type of the container. */
-    using const_iterator = typename container_t::const_iterator;
+    using const_iterator_t = typename container_t::const_iterator;
 
     /**
      * @brief Default constructor for sparse_array.
      *
      * Initializes an empty sparse array.
      */
-    sparse_array() = default;
+    SparseArray() = default;
 
     /**
      * @brief Default copy constructor.
      *
      * Performs a shallow copy of the sparse array.
      */
-    sparse_array(const sparse_array &) = default;
+    SparseArray(const SparseArray &) = default;
 
     /**
      * @brief Default move constructor.
@@ -69,14 +69,14 @@ class sparse_array {
      *
      * @param other The sparse array to move from.
      */
-    sparse_array(sparse_array &&other) noexcept = default;
+    SparseArray(SparseArray &&other) noexcept = default;
 
     /**
      * @brief Default destructor.
      *
      * Cleans up the sparse array.
      */
-    ~sparse_array() = default;
+    ~SparseArray() = default;
 
     /**
      * @brief Default copy assignment operator.
@@ -86,7 +86,7 @@ class sparse_array {
      * @param other The sparse array to copy from.
      * @return Reference to this sparse array.
      */
-    sparse_array &operator=(const sparse_array &other) = default;
+    SparseArray &operator=(const SparseArray &other) = default;
 
     /**
      * @brief Default move assignment operator.
@@ -96,7 +96,7 @@ class sparse_array {
      * @param other The sparse array to move from.
      * @return Reference to this sparse array.
      */
-    sparse_array &operator=(sparse_array &&other) noexcept = default;
+    SparseArray &operator=(SparseArray &&other) noexcept = default;
 
     /**
      * @brief Accesses the component at the specified index.
@@ -108,7 +108,7 @@ class sparse_array {
      * @return Reference to the optional component at the specified index.
      * @throws std::out_of_range If the index is out of bounds.
      */
-    reference_type operator[](size_type idx)
+    reference_type_t operator[](size_type_t idx)
     {
         if (idx >= _data.size()) {
             throw std::out_of_range("Index out of range in sparse_array");
@@ -126,7 +126,7 @@ class sparse_array {
      * @return Const reference to the optional component at the specified index.
      * @throws std::out_of_range If the index is out of bounds.
      */
-    const_reference_type operator[](size_type idx) const
+    const_reference_type_t operator[](size_type_t idx) const
     {
         if (idx >= _data.size()) {
             throw std::out_of_range("Index out of range in sparse_array");
@@ -139,7 +139,7 @@ class sparse_array {
      *
      * @return Iterator pointing to the first element of the sparse array.
      */
-    iterator begin()
+    iterator_t begin()
     {
         return _data.begin();
     }
@@ -149,7 +149,7 @@ class sparse_array {
      *
      * @return Const iterator pointing to the first element of the sparse array.
      */
-    const_iterator begin() const
+    const_iterator_t begin() const
     {
         return _data.begin();
     }
@@ -159,7 +159,7 @@ class sparse_array {
      *
      * @return Const iterator pointing to the first element of the sparse array.
      */
-    const_iterator cbegin() const
+    const_iterator_t cbegin() const
     {
         return _data.cbegin();
     }
@@ -169,7 +169,7 @@ class sparse_array {
      *
      * @return Iterator pointing to one past the last element of the sparse array.
      */
-    iterator end()
+    iterator_t end()
     {
         return _data.end();
     }
@@ -179,7 +179,7 @@ class sparse_array {
      *
      * @return Const iterator pointing to one past the last element of the sparse array.
      */
-    const_iterator end() const
+    const_iterator_t end() const
     {
         return _data.end();
     }
@@ -189,7 +189,7 @@ class sparse_array {
      *
      * @return Const iterator pointing to one past the last element of the sparse array.
      */
-    const_iterator cend() const
+    const_iterator_t cend() const
     {
         return _data.cend();
     }
@@ -199,7 +199,7 @@ class sparse_array {
      *
      * @return The size of the sparse array.
      */
-    size_type size() const
+    size_type_t size() const
     {
         return _data.size();
     }
@@ -214,9 +214,9 @@ class sparse_array {
      * @param component The component to insert.
      * @return Reference to the inserted optional component.
      */
-    reference_type insert_at(size_type pos, const Component &component)
+    reference_type_t insertAt(size_type_t pos, const Component &component)
     {
-        ensure_size(pos);
+        _ensureSize(pos);
         _data[pos] = component;
         return _data[pos];
     }
@@ -231,9 +231,9 @@ class sparse_array {
      * @param component The component to insert.
      * @return Reference to the inserted optional component.
      */
-    reference_type insert_at(size_type pos, Component &&component)
+    reference_type_t insertAt(size_type_t pos, Component &&component)
     {
-        ensure_size(pos);
+        _ensureSize(pos);
         _data[pos] = std::move(component);
         return _data[pos];
     }
@@ -250,9 +250,9 @@ class sparse_array {
      * @return Reference to the emplaced optional component.
      */
     template <class... Params>
-    reference_type emplace_at(size_type pos, Params &&...params)
+    reference_type_t emplaceAt(size_type_t pos, Params &&...params)
     {
-        ensure_size(pos);
+        _ensureSize(pos);
         _data[pos].emplace(std::forward<Params>(params)...);
         return _data[pos];
     }
@@ -264,7 +264,7 @@ class sparse_array {
      *
      * @param pos The position of the component to erase.
      */
-    void erase(size_type pos)
+    void erase(size_type_t pos)
     {
         if (pos < _data.size()) {
             _data[pos].reset();
@@ -280,7 +280,7 @@ class sparse_array {
      * @param value The component value to search for.
      * @return The index of the found component, or the size of the sparse array if not found.
      */
-    size_type get_index(const_reference_type value) const
+    size_type_t getIndex(const_reference_type_t value) const
     {
         auto it = std::find(_data.begin(), _data.end(), value);
         if (it != _data.end()) {
@@ -298,7 +298,7 @@ class sparse_array {
      * @param pos The position to check for the presence of a component.
      * @return `true` if a component exists at the position, `false` otherwise.
      */
-    bool has(size_type pos) const
+    bool has(size_type_t pos) const
     {
         return pos < _data.size() && _data[pos];
     }
@@ -312,7 +312,7 @@ class sparse_array {
      *
      * @param pos The position that needs to be accommodated within the array.
      */
-    void ensure_size(size_type pos)
+    void _ensureSize(size_type_t pos)
     {
         if (pos >= _data.size()) {
             _data.resize(pos + 1);

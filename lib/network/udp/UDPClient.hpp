@@ -36,9 +36,9 @@ class UDPClient : public AsioClient {
      */
     ~UDPClient() override
     {
-        if (recv_thread_.joinable()) {
-            io_.stop();
-            recv_thread_.join();
+        if (_recvThread.joinable()) {
+            _io.stop();
+            _recvThread.join();
         }
     }
 
@@ -61,18 +61,18 @@ class UDPClient : public AsioClient {
      * @brief Recursive loop of asynchronous operations (read, write),
      *        handling the read and write on udp server.
      */
-    void asio_run() override;
+    void _asioRun() override;
 
     /**
      * @brief Function that handle the message that was read in `buff_` variable member.
      * @param ec Asio error code to be decode.
      * @param bytes Number of bytes that were read.
      */
-    void handle_recv(asio::error_code ec, std::size_t bytes);
+    void _handleRecv(asio::error_code ec, std::size_t bytes);
 
-    udp::endpoint endpoint_;
-    udp::socket sock_;
-    std::array<char, BUFF_SIZE> buff_;
-    std::thread recv_thread_;
+    udp::endpoint _endpoint;
+    udp::socket _sock;
+    std::array<char, BUFF_SIZE> _buff;
+    std::thread _recvThread;
 };
 } // namespace client

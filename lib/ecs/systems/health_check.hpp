@@ -11,6 +11,6 @@
 
 namespace ecs::systems {
 
-void health_check(registry &reg);
+void healthCheck(Registry &reg);
 
 } // namespace ecs::systems

@@ -6,7 +6,6 @@
 */
 
 #include <SFML/Graphics.hpp>
-#include "GameProtocol.hpp"
 #include "components/animation.hpp"
 #include "components/controllable.hpp"
 #include "components/drawable.hpp"
@@ -22,33 +21,32 @@
 #include "components/ai_actor.hpp"
 #include "components/share_movement.hpp"
 #include "components/shared_entity.hpp"
-#include "core/response_handler.hpp"
 #include "rtype_server.hpp"
 #include "systems/missiles_stop.hpp"
 
-void rts::register_components(ecs::registry &reg)
+void rts::registerComponents(ecs::Registry &reg)
 {
-    reg.register_component<ecs::component::position>();
-    reg.register_component<ecs::component::velocity>();
-    reg.register_component<ecs::component::drawable>();
-    reg.register_component<ecs::component::sprite>();
-    reg.register_component<ecs::component::animation>();
-    reg.register_component<ecs::component::controllable>();
-    reg.register_component<ecs::component::hitbox>();
-    reg.register_component<ecs::component::share_movement>();
-    reg.register_component<ecs::component::shared_entity>();
-    reg.register_component<ecs::component::missile>();
-    reg.register_component<ecs::component::ai_actor>();
+    reg.registerComponent<ecs::component::Position>();
+    reg.registerComponent<ecs::component::Velocity>();
+    reg.registerComponent<ecs::component::Drawable>();
+    reg.registerComponent<ecs::component::Sprite>();
+    reg.registerComponent<ecs::component::Animation>();
+    reg.registerComponent<ecs::component::Controllable>();
+    reg.registerComponent<ecs::component::Hitbox>();
+    reg.registerComponent<ecs::component::ShareMovement>();
+    reg.registerComponent<ecs::component::SharedEntity>();
+    reg.registerComponent<ecs::component::Missile>();
+    reg.registerComponent<ecs::component::AiActor>();
 }
 
-void rts::register_systems(ecs::registry &reg, sf::RenderWindow &window, float &dt)
+void rts::registerSystems(ecs::Registry &reg, sf::RenderWindow &window, float &dt)
 {
-    reg.add_system([&reg, &dt]() { ecs::systems::position(reg, dt); });
-    reg.add_system([&reg]() { ecs::systems::collision(reg); });
-    reg.add_system([&reg, &window]() { // ! for debug
+    reg.addSystem([&reg, &dt]() { ecs::systems::position(reg, dt); });
+    reg.addSystem([&reg]() { ecs::systems::collision(reg); });
+    reg.addSystem([&reg, &window]() { // ! for debug
         window.clear();
         ecs::systems::draw(reg, window);
         window.display();
     });
-    reg.add_system([&reg]() { ecs::systems::missiles_stop(reg); });
+    reg.addSystem([&reg]() { ecs::systems::missilesStop(reg); });
 }

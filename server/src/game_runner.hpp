@@ -13,23 +13,22 @@
 #include "UDPServer.hpp"
 #include "core/registry.hpp"
 #include "core/response_handler.hpp"
-#include "rtype_server.hpp"
 
 namespace rts {
 
-class game_runner {
+class GameRunner {
     private:
     int _port = 0;
-    server::UDPServer _udp_server;
-    std::thread _receive_thread;
-    ecs::registry _reg;
-    ecs::response_handler<rt::udp_command, rt::udp_packet> _response_handler;
+    server::UDPServer _udpServer;
+    std::thread _receiveThread;
+    ecs::Registry _reg;
+    ecs::ResponseHandler<rt::UdpCommand, rt::UdpPacket> _responseHandler;
     float _dt = 0;
     sf::RenderWindow _window;
 
     public:
-    game_runner(int port);
+    GameRunner(int port);
 
-    void run_game();
+    void runGame();
 };
 } // namespace rts

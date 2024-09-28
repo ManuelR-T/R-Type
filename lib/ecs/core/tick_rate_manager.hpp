@@ -11,21 +11,21 @@
 #include <unordered_map>
 
 namespace ecs {
-class tick_rate_manager {
+class TickRateManager {
     public:
-    void add_tick_rate(float tick_rate)
+    void addTickRate(float tickRate)
     {
-        _tick_rate[tick_rate] = {1 / tick_rate, 0};
+        _tickRate[tickRate] = {1 / tickRate, 0};
     }
 
-    void remove_tick_rate(float tick_rate)
+    void removeTickRate(float tickRate)
     {
-        _tick_rate.erase(tick_rate);
+        _tickRate.erase(tickRate);
     }
 
-    bool need_update(float tick_rate, float dt)
+    bool needUpdate(float tickRate, float dt)
     {
-        auto &[time_between_tick, elapsed_time] = _tick_rate[tick_rate];
+        auto &[time_between_tick, elapsed_time] = _tickRate[tickRate];
         elapsed_time += dt;
         if (elapsed_time >= time_between_tick) {
             elapsed_time -= time_between_tick;
@@ -35,11 +35,11 @@ class tick_rate_manager {
     }
 
     private:
-    struct tick_data_t {
+    struct TickData {
         float _time_between_tick = 0;
         float _elapsed_time = 0;
     };
 
-    std::unordered_map<float, tick_data_t> _tick_rate;
+    std::unordered_map<float, TickData> _tickRate;
 };
 } // namespace ecs

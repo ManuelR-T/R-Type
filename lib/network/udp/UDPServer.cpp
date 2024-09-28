@@ -10,42 +10,42 @@
 #include <cstddef>
 #include <iostream>
 
-void server::UDPServer::handle_recv(asio::error_code ec, std::size_t bytes)
+void server::UDPServer::_handleRecv(asio::error_code ec, std::size_t bytes)
 {
     if (ec) {
         std::cout << ec << std::endl;
         return;
     }
     if (bytes) {
-        handler_(buff_.data(), bytes);
+        _handler(_buff.data(), bytes);
     }
 
-    asio_run();
+    _asioRun();
 }
 
-void server::UDPServer::handle_send(const char *data, std::size_t size)
+void server::UDPServer::handleSend(const char *data, std::size_t size)
 {
-    sock_.async_send_to(asio::buffer(data, size), endpoint_, [](asio::error_code, std::size_t bytes) {
+    _sock.async_send_to(asio::buffer(data, size), _endpoint, [](asio::error_code, std::size_t bytes) {
         std::cout << "I sent data Bytes\n";
     });
 }
 
-void server::UDPServer::register_command(std::function<void(char *, std::size_t)> func)
+void server::UDPServer::registerCommand(std::function<void(char *, std::size_t)> func)
 {
-    handler_ = std::move(func);
+    _handler = std::move(func);
 }
 
-void server::UDPServer::asio_run()
+void server::UDPServer::_asioRun()
 {
-    sock_.async_receive_from(asio::buffer(buff_), endpoint_, [this](auto &&PH1, auto &&PH2) {
-        handle_recv(std::forward<decltype(PH1)>(PH1), std::forward<decltype(PH2)>(PH2));
+    _sock.async_receive_from(asio::buffer(_buff), _endpoint, [this](auto &&pH1, auto &&pH2) {
+        _handleRecv(std::forward<decltype(pH1)>(pH1), std::forward<decltype(pH2)>(pH2));
     });
 }
 
 void server::UDPServer::run()
 {
-    recv_thread_ = std::thread([this]() {
-        asio_run();
-        io_.run();
+    _recvThread = std::thread([this]() {
+        _asioRun();
+        _io.run();
     });
 }

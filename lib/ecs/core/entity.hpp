@@ -38,14 +38,14 @@ class EntityManager {
      *
      * @return A unique identifier of type `entity_t` for the newly created entity.
      */
-    entity_t create_entity()
+    entity_t createEntity()
     {
-        if (!dead_entities.empty()) {
-            entity_t id = dead_entities.front();
-            dead_entities.pop();
+        if (!_deadEntities.empty()) {
+            entity_t id = _deadEntities.front();
+            _deadEntities.pop();
             return id;
         }
-        return next_entity_id++;
+        return _nextEntityId++;
     }
 
     /**
@@ -56,14 +56,14 @@ class EntityManager {
      *
      * @param entity The identifier of the entity to be destroyed.
      */
-    void destroy_entity(entity_t entity)
+    void destroyEntity(entity_t entity)
     {
-        dead_entities.push(entity);
+        _deadEntities.push(entity);
     }
 
     private:
-    entity_t next_entity_id = 0;        /**< The next available entity identifier */
-    std::queue<entity_t> dead_entities; /**< Queue of identifiers from destroyed entities */
+    entity_t _nextEntityId = 0;        /**< The next available entity identifier */
+    std::queue<entity_t> _deadEntities; /**< Queue of identifiers from destroyed entities */
 };
 
 } // namespace ecs

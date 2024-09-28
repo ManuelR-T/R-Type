@@ -16,6 +16,6 @@ namespace ecs::component {
  * The `controllable` component marks an entity as controllable by the player.
  * It can be used to process input and update the entity's state accordingly.
  */
-struct controllable {};
+struct Controllable {};
 
 } // namespace ecs::component

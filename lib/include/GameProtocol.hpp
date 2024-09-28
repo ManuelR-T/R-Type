@@ -8,13 +8,12 @@
 #pragma once
 
 #include <cstddef>
-#include <variant>
 #include "components/position.hpp"
 #include "components/velocity.hpp"
 #include "core/shared_entity.hpp"
 
 namespace rt {
-enum class tcp_command : std::size_t {
+enum class TcpCommand : std::size_t {
     NONE,
 
     CL_NEW_USER,
@@ -46,93 +45,93 @@ enum class tcp_command : std::size_t {
     SER_ROOM_READY
 };
 
-struct tcp_packet {
-    tcp_command cmd = tcp_command::NONE;
+struct TcpPacket{
+    TcpCommand cmd = TcpCommand::NONE;
 
     union {
-        struct cl_new_user {
+        struct ClNewUser {
             std::size_t user_id = 0;
         } cl_new_user;
 
-        struct cl_disconnect_user {
+        struct ClDisconnectUser {
             std::size_t user_id = 0;
         } cl_disconnect_user;
 
-        struct cl_create_room {
+        struct ClCreateRoom {
             char room_name[32] = {0};
         } cl_create_room;
 
-        struct ser_room_created {
+        struct SerRoomCreated {
             char room_name[32] = {0};
         } ser_room_created;
 
-        struct cl_delete_room {
+        struct ClDeleteRoom {
             char room_name[32] = {0};
         } cl_delete_room;
 
-        struct ser_room_deleted {
+        struct SerRoomDeleted {
             char room_name[32] = {0};
         } ser_room_deleted;
 
-        struct cl_join_room {
+        struct ClJoinRoom {
             char room_name[32] = {0};
             char user_name[32] = {0};
             std::size_t user_id = 0;
         } cl_join_room;
 
-        struct ser_room_joined {
+        struct SerRoomJoined {
             char room_name[32] = {0};
             char player_name[32] = {0};
         } ser_room_joined;
 
-        struct cl_leave_room {
+        struct ClLeaveRoom {
             char room_name[32] = {0};
             std::size_t user_id = 0;
         } cl_leave_room;
 
-        struct ser_room_leaved {
+        struct SerRoomLeaved {
             char room_name[32] = {0};
             char player_name[32] = {0};
         } ser_room_leaved;
 
-        struct cl_ready {
+        struct ClReady {
             char room_name[32] = {0};
             std::size_t user_id = 0;
         } cl_ready;
 
-        struct ser_ready {
+        struct SerReady {
             char room_name[32] = {0};
             char player_name[32] = {0};
         } ser_ready;
 
-        struct cl_not_ready {
+        struct ClNotReady {
             char room_name[32] = {0};
             std::size_t user_id = 0;
         } cl_not_ready;
 
-        struct ser_not_ready {
+        struct SerNotReady {
             char room_name[32] = {0};
             char player_name[32] = {0};
         } ser_not_ready;
 
-        struct cl_room_list {
+        struct ClRoomList {
             std::size_t user_id = 0;
         } cl_room_list;
 
-        struct ser_room_list {
+        struct SerRoomList {
             char room_name[32] = {0};
         } ser_room_list;
 
-        struct ser_room_content {
+        struct SerRoomContent {
             char player_name[32] = {0};
             bool ready = false;
         } ser_room_content;
 
-        struct ser_room_in_game {
+        struct SerRoomInGame {
             char room_name[32] = {0};
         } ser_room_in_game;
 
-        struct ser_room_ready {
+        struct SerRoomReady {
             int port;
         } ser_room_ready;
     } body = {};
@@ -141,7 +140,7 @@ struct tcp_packet {
 } // namespace rt
 
 namespace rt {
-enum class udp_command : std::size_t {
+enum class UdpCommand : std::size_t {
     NONE,
     NEW_PLAYER,
     NEW_ENTITY,
@@ -149,15 +148,15 @@ enum class udp_command : std::size_t {
     DEL_ENTITY
 };
 
-struct udp_packet {
-    udp_command cmd;
+struct UdpPacket{
+    UdpCommand cmd;
 
     shared_entity_t shared_entity_id;
 
     union {
-        struct share_movement {
-            ecs::component::position pos;
-            ecs::component::velocity vel;
+        struct ShareMovement {
+            ecs::component::Position pos;
+            ecs::component::Velocity vel;
         } share_movement;
     } body = {};
 };

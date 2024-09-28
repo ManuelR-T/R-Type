@@ -10,33 +10,33 @@
 namespace ecs {
 
 template <typename... Components>
-class indexed_zipper_iterator {
+class IndexedZipperIterator {
     public:
-    using base_iterator = zipper_iterator<Components...>;
-    using value_type = std::tuple<size_t, Components &...>;
-    using reference = value_type;
+    using base_iterator_t = ZipperIterator<Components...>;
+    using value_type_t = std::tuple<size_t, Components &...>;
+    using reference_t = value_type_t;
 
-    indexed_zipper_iterator(base_iterator base_it) : _base_it(base_it) {}
+    IndexedZipperIterator(base_iterator_t baseIt) : _baseIt(baseIt) {}
 
-    indexed_zipper_iterator &operator++()
+    IndexedZipperIterator &operator++()
     {
-        ++_base_it;
+        ++_baseIt;
         return *this;
     }
 
-    bool operator!=(const indexed_zipper_iterator &other) const
+    bool operator!=(const IndexedZipperIterator &other) const
     {
-        return _base_it != other._base_it;
+        return _baseIt != other._baseIt;
     }
 
-    reference operator*()
+    reference_t operator*()
     {
-        size_t index = _base_it.index();
-        auto components = *_base_it;
+        size_t index = _baseIt.index();
+        auto components = *_baseIt;
         return std::tuple_cat(std::make_tuple(index), components);
     }
 
     private:
-    base_iterator _base_it;
+    base_iterator_t _baseIt;
 };
 } // namespace ecs

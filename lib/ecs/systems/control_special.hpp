@@ -29,6 +29,6 @@ namespace ecs::systems {
  * @param udp Udp client to send informations to server.
  * @param sprite_manager SpriteManager object that contains all the textures.
  */
-void control_special(registry &reg, ecs::input_manager &input, client::UDPClient &udp, SpriteManager &sprite_manager);
+void controlSpecial(Registry &reg, ecs::InputManager &input, client::UDPClient &udp, SpriteManager &spriteManager);
 
 } // namespace ecs::systems

@@ -34,16 +34,16 @@ class UDPServer : public server::AsioServer {
      *        and construct the asynchronous udp server.
      * @param port Port the server listens.
      */
-    UDPServer(int port) : endpoint_(udp::endpoint(udp::v4(), port)), sock_(io_, endpoint_) {}
+    UDPServer(int port) : _endpoint(udp::endpoint(udp::v4(), port)), _sock(_io, _endpoint) {}
 
     /**
      * @brief Destructor of the UDPServer Object
      */
     ~UDPServer() override
     {
-        if (recv_thread_.joinable()) {
-            io_.stop();
-            recv_thread_.join();
+        if (_recvThread.joinable()) {
+            _io.stop();
+            _recvThread.join();
         }
     }
 
@@ -58,7 +58,7 @@ class UDPServer : public server::AsioServer {
      * @param func The function that handle the command that MUST have the following signature:
      *             `std::function<void (char *, std::size_t)>`
      */
-    void register_command(std::function<void(char *, std::size_t)> func);
+    void registerCommand(std::function<void(char *, std::size_t)> func);
 
     /**
      * @brief Return the udp socket used for asynchronous operations.
@@ -66,7 +66,7 @@ class UDPServer : public server::AsioServer {
      */
     udp::socket &socket()
     {
-        return sock_;
+        return _sock;
     };
 
     /**
@@ -75,21 +75,21 @@ class UDPServer : public server::AsioServer {
      */
     udp::endpoint &endpoint()
     {
-        return endpoint_;
+        return _endpoint;
     };
 
     /**
      * @brief Send a message specified in @param vect to the endpoint variable member.
      * @param vect Vector of string with the message to send.
      */
-    void handle_send(const char *data, std::size_t size);
+    void handleSend(const char *data, std::size_t size);
 
     private:
     /**
      * @brief Recursive loop of asynchronous operations (read, write),
      *        handling the read and write of udp clients.
      */
-    void asio_run() override;
+    void _asioRun() override;
 
     /**
      * @brief Function that handle the message that was read in `buff_` variable member,
@@ -97,12 +97,12 @@ class UDPServer : public server::AsioServer {
      * @param ec Asio error code to be decode.
      * @param bytes Number of bytes that were read.
      */
-    void handle_recv(asio::error_code ec, std::size_t bytes);
+    void _handleRecv(asio::error_code ec, std::size_t bytes);
 
-    udp::endpoint endpoint_;
-    udp::socket sock_;
-    std::array<char, BUFF_SIZE> buff_;
-    std::function<void(char *, std::size_t)> handler_;
-    std::thread recv_thread_;
+    udp::endpoint _endpoint;
+    udp::socket _sock;
+    std::array<char, BUFF_SIZE> _buff;
+    std::function<void(char *, std::size_t)> _handler;
+    std::thread _recvThread;
 };
 } // namespace server

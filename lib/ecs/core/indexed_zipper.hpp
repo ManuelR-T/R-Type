@@ -12,24 +12,24 @@
 
 namespace ecs {
 template <typename... Components>
-class indexed_zipper {
+class IndexedZipper {
     public:
-    using base_zipper = ecs::zipper<Components...>;
-    using iterator = indexed_zipper_iterator<Components...>;
+    using base_zipper_t = ecs::Zipper<Components...>;
+    using iterator_t = IndexedZipperIterator<Components...>;
 
-    indexed_zipper(ecs::sparse_array<Components> &...arrays) : _base_zipper(arrays...) {}
+    IndexedZipper(ecs::SparseArray<Components> &...arrays) : _baseZipper(arrays...) {}
 
-    iterator begin()
+    iterator_t begin()
     {
-        return iterator(_base_zipper.begin());
+        return iterator_t(_baseZipper.begin());
     }
 
-    iterator end()
+    iterator_t end()
     {
-        return iterator(_base_zipper.end());
+        return iterator_t(_baseZipper.end());
     }
 
     private:
-    base_zipper _base_zipper;
+    base_zipper_t _baseZipper;
 };
 } // namespace ecs

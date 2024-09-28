@@ -15,24 +15,24 @@
 
 namespace ecs::systems {
 
-void sprite_system(registry &reg, float dt, SpriteManager &sprite_manager)
+void spriteSystem(Registry &reg, float dt, SpriteManager &spriteManager)
 {
-    auto &sprites = reg.get_components<component::sprite>();
-    auto &positions = reg.get_components<component::position>();
-    auto &animations = reg.get_components<component::animation>();
+    auto &sprites = reg.getComponents<component::Sprite>();
+    auto &positions = reg.getComponents<component::Position>();
+    auto &animations = reg.getComponents<component::Animation>();
 
-    zipper<component::sprite, component::position> sprite_zip(sprites, positions);
+    Zipper<component::Sprite, component::Position> spriteZip(sprites, positions);
 
-    for (auto &&[sprite_comp, pos_comp] : sprite_zip) {
+    for (auto &&[sprite_comp, pos_comp] : spriteZip) {
         if (sprite_comp.sprite_obj.getTexture() == nullptr) {
-            sf::Texture &texture = sprite_manager.get_texture(sprite_comp.texture_id);
+            sf::Texture &texture = spriteManager.getTexture(sprite_comp.texture_id);
             sprite_comp.sprite_obj.setTexture(texture);
         }
         sprite_comp.sprite_obj.setPosition(pos_comp.x, pos_comp.y);
     }
-    indexed_zipper<component::sprite, component::animation> anim_zip(sprites, animations);
+    IndexedZipper<component::Sprite, component::Animation> animZip(sprites, animations);
 
-    for (auto &&[id, sprite_comp, anim_comp] : anim_zip) {
+    for (auto &&[id, sprite_comp, anim_comp] : animZip) {
         anim_comp.elapsed_time += dt;
         if (anim_comp.elapsed_time >= anim_comp.frame_time) {
             anim_comp.updateState(reg, id, anim_comp);

@@ -17,7 +17,7 @@ namespace ecs::component {
  *
  * The `shared_entity` component marks an entity as shared.
  */
-struct shared_entity {
+struct SharedEntity {
     shared_entity_t shared_entity_id;
 };
 

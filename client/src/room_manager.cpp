@@ -6,81 +6,82 @@
 */
 
 #include "room_manager.hpp"
+#include "GameProtocol.hpp"
 
-const std::string &rtc::room_manager::get_current_room() const
+const std::string &rtc::RoomManager::getCurrentRoom() const
 {
-    return _current_room;
+    return _currentRoom;
 }
 
-std::string &rtc::room_manager::get_current_room()
+std::string &rtc::RoomManager::getCurrentRoom()
 {
-    return _current_room;
+    return _currentRoom;
 }
 
-const std::map<std::string, bool> &rtc::room_manager::get_current_room_player() const
+const std::map<std::string, bool> &rtc::RoomManager::getCurrentRoomPlayer() const
 {
-    return _rooms.at(_current_room).player;
+    return _rooms.at(_currentRoom).player;
 }
 
-const std::map<std::string, rtc::room_manager::room_content_t> &rtc::room_manager::get_rooms() const
+const std::map<std::string, rtc::RoomManager::RoomContent> &rtc::RoomManager::getRooms() const
 {
     return _rooms;
 }
 
-std::map<std::string, rtc::room_manager::room_content_t> &rtc::room_manager::get_rooms()
+std::map<std::string, rtc::RoomManager::RoomContent> &rtc::RoomManager::getRooms()
 {
     return _rooms;
 }
 
-void rtc::room_manager::ask_to_create_room(const std::string &room_name)
+void rtc::RoomManager::askToCreateRoom(const std::string &roomName)
 {
-    rt::tcp_packet packet{.cmd = rt::tcp_command::CL_CREATE_ROOM};
+    rt::TcpPacket packet{.cmd = rt::TcpCommand::CL_CREATE_ROOM};
 
-    std::memcpy(packet.body.cl_create_room.room_name, room_name.c_str(), room_name.size());
+    std::memcpy(packet.body.cl_create_room.room_name, roomName.c_str(), roomName.size());
     _tcpClient.send(reinterpret_cast<const char *>(&packet), sizeof(packet));
 }
 
-void rtc::room_manager::ask_to_delete_room(const std::string &room_name)
+void rtc::RoomManager::askToDeleteRoom(const std::string &roomName)
 {
-    rt::tcp_packet packet{.cmd = rt::tcp_command::CL_DELETE_ROOM};
+    rt::TcpPacket packet{.cmd = rt::TcpCommand::CL_DELETE_ROOM};
 
-    std::memcpy(packet.body.cl_delete_room.room_name, room_name.c_str(), room_name.size());
+    std::memcpy(packet.body.cl_delete_room.room_name, roomName.c_str(), roomName.size());
     _tcpClient.send(reinterpret_cast<const char *>(&packet), sizeof(packet));
 }
 
-void rtc::room_manager::ask_to_join_room(const std::string &room_name)
+void rtc::RoomManager::askToJoinRoom(const std::string &roomName)
 {
-    rt::tcp_packet packet{.cmd = rt::tcp_command::CL_JOIN_ROOM};
+    rt::TcpPacket packet{.cmd = rt::TcpCommand::CL_JOIN_ROOM};
 
-    packet.body.cl_join_room.user_id = _user_id;
-    std::memcpy(packet.body.cl_join_room.room_name, room_name.c_str(), room_name.size());
-    std::memcpy(packet.body.cl_join_room.user_name, _user_name.c_str(), _user_name.size());
+    packet.body.cl_join_room.user_id = _userId;
+    std::memcpy(packet.body.cl_join_room.room_name, roomName.c_str(), roomName.size());
+    std::memcpy(packet.body.cl_join_room.user_name, _userName.c_str(), _userName.size());
     _tcpClient.send(reinterpret_cast<const char *>(&packet), sizeof(packet));
 }
 
-void rtc::room_manager::ask_to_leave_room()
+void rtc::RoomManager::askToLeaveRoom()
 {
-    rt::tcp_packet packet{.cmd = rt::tcp_command::CL_LEAVE_ROOM};
+    rt::TcpPacket packet{.cmd = rt::TcpCommand::CL_LEAVE_ROOM};
 
-    packet.body.cl_leave_room.user_id = _user_id;
-    std::memcpy(packet.body.cl_leave_room.room_name, _current_room.c_str(), _current_room.size());
+    packet.body.cl_leave_room.user_id = _userId;
+    std::memcpy(packet.body.cl_leave_room.room_name, _currentRoom.c_str(), _currentRoom.size());
     _tcpClient.send(reinterpret_cast<const char *>(&packet), sizeof(packet));
 }
 
-void rtc::room_manager::ask_to_be_ready()
+void rtc::RoomManager::askToBeReady()
 {
-    rt::tcp_packet packet{.cmd = rt::tcp_command::CL_READY};
+    rt::TcpPacket packet{.cmd = rt::TcpCommand::CL_READY};
 
-    packet.body.cl_ready.user_id = _user_id;
-    std::memcpy(packet.body.cl_ready.room_name, _current_room.c_str(), _current_room.size());
+    packet.body.cl_ready.user_id = _userId;
+    std::memcpy(packet.body.cl_ready.room_name, _currentRoom.c_str(), _currentRoom.size());
     _tcpClient.send(reinterpret_cast<const char *>(&packet), sizeof(packet));
 }
 
-void rtc::room_manager::ask_to_be_not_ready()
+void rtc::RoomManager::askToBeNotReady()
 {
-    rt::tcp_packet packet{.cmd = rt::tcp_command::CL_NOT_READY};
+    rt::TcpPacket packet{.cmd = rt::TcpCommand::CL_NOT_READY};
 
-    packet.body.cl_not_ready.user_id = _user_id;
-    std::memcpy(packet.body.cl_not_ready.room_name, _current_room.c_str(), _current_room.size());
+    packet.body.cl_not_ready.user_id = _userId;
+    std::memcpy(packet.body.cl_not_ready.room_name, _currentRoom.c_str(), _currentRoom.size());
     _tcpClient.send(reinterpret_cast<const char *>(&packet), sizeof(packet));
 }

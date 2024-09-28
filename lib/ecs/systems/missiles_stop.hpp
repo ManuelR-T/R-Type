@@ -11,6 +11,6 @@
 
 namespace ecs::systems {
 
-void missiles_stop(ecs::registry &reg);
+void missilesStop(ecs::Registry &reg);
 
 } // namespace ecs::systems

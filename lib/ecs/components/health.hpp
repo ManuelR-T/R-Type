@@ -15,7 +15,7 @@ namespace ecs::component {
  * The health is an integer that decrease when the entity enter in collision
  * with an enemy
  */
-struct health {
+struct Health {
     int max_hp;
     int curr_hp;
 };

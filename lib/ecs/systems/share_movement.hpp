@@ -22,6 +22,6 @@ namespace ecs::systems {
  * @param reg Reference to the registry managing entities and their components.
  * @param dt The delta time since the last update, used to scale velocity.
  */
-void share_movement(registry &reg, client::UDPClient &udpClient);
+void shareMovement(Registry &reg, client::UDPClient &udpClient);
 
 } // namespace ecs::systems

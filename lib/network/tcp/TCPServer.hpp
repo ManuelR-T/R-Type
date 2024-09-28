@@ -20,64 +20,64 @@ namespace server {
 
 class Session : public std::enable_shared_from_this<Session> {
     public:
-    Session(tcp::socket &&sock, std::mutex &server_mutex, std::size_t data_size)
-        : sock_(std::move(sock)), server_mutex_(server_mutex), data_size_(data_size)
+    Session(tcp::socket &&sock, std::mutex &serverMutex, std::size_t dataSize)
+        : _sock(std::move(sock)), _serverMutex(serverMutex), _dataSize(dataSize)
     {
     }
 
     virtual ~Session() = default;
 
-    void handle_client(std::function<void(tcp::socket &, char *, std::size_t)> &handler);
+    void handleClient(std::function<void(tcp::socket &, char *, std::size_t)> &handler);
 
     tcp::socket &socket()
     {
-        return sock_;
+        return _sock;
     }
 
     private:
-    void handle_read(
+    void _handleRead(
         asio::error_code ec,
         std::size_t bytes,
         std::function<void(tcp::socket &, char *, std::size_t)> &handler
     );
 
-    tcp::socket sock_;
-    std::mutex &server_mutex_;
-    std::size_t data_size_;
-    std::array<char, BUFF_SIZE> buff_;
+    tcp::socket _sock;
+    std::mutex &_serverMutex;
+    std::size_t _dataSize;
+    std::array<char, BUFF_SIZE> _buff;
 };
 
 class TCPServer : public server::AsioServer {
     public:
-    TCPServer(int port, std::size_t data_size);
+    TCPServer(int port, std::size_t dataSize);
     ~TCPServer() override;
 
     void run() override;
 
-    void register_command(std::function<void(tcp::socket &, char *, std::size_t)> func);
+    void registerCommand(std::function<void(tcp::socket &, char *, std::size_t)> func);
 
-    void sock_write(tcp::socket &sock, const char *data, std::size_t size);
+    void sockWrite(tcp::socket &sock, const char *data, std::size_t size);
 
-    void remove_user(std::size_t id);
+    void removeUser(std::size_t id);
 
-    void add_user(tcp::socket &sock, size_t id);
+    void addUser(tcp::socket &sock, size_t id);
 
-    void send_to_user(size_t id, const char *data, std::size_t size);
+    void sendToUser(size_t id, const char *data, std::size_t size);
 
-    void send_to_all_user(const char *data, std::size_t size);
+    void sendToAllUser(const char *data, std::size_t size);
 
     private:
-    void asio_run() override;
+    void _asioRun() override;
 
-    void handle_accept(asio::error_code ec, const std::shared_ptr<Session> &session);
+    void _handleAccept(asio::error_code ec, const std::shared_ptr<Session> &session);
 
-    std::size_t data_size_;
-    std::thread thread_;
-    asio::io_context io_;
-    tcp::acceptor acc_;
-    std::function<void(tcp::socket &, char *, std::size_t)> handler_;
-    std::mutex mutex_;
-    std::unordered_map<size_t, std::shared_ptr<Session>> session_;
-    std::list<std::shared_ptr<Session>> free_session_;
+    std::size_t _dataSize;
+    std::thread _thread;
+    asio::io_context _io;
+    tcp::acceptor _acc;
+    std::function<void(tcp::socket &, char *, std::size_t)> _handler;
+    std::mutex _mutex;
+    std::unordered_map<size_t, std::shared_ptr<Session>> _session;
+    std::list<std::shared_ptr<Session>> _freeSession;
 };
 } // namespace server

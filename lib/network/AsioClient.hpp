@@ -24,7 +24,7 @@ class AsioClient : public IClient {
     ~AsioClient() override = default;
 
     protected:
-    virtual void asio_run() = 0;
-    asio::io_context io_;
+    virtual void _asioRun() = 0;
+    asio::io_context _io;
 };
 } // namespace client

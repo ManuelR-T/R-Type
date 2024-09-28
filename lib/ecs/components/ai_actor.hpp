@@ -20,9 +20,9 @@ namespace ecs::component {
  * The `act` function take the @param registry and the @param entity
  * to modify the current ai.
  */
-struct ai_actor {
+struct AiActor {
     bool val = false; // ! For testing
-    std::function<void(registry &registry, entity_t entity)> act;
+    std::function<void(Registry &registry, entity_t entity)> act;
 };
 
 } // namespace ecs::component

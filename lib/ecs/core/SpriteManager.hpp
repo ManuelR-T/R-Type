@@ -31,18 +31,18 @@ class SpriteManager {
      * @return Reference to the SFML texture associated with the identifier.
      * @throws std::runtime_error If the texture fails to load.
      */
-    sf::Texture &get_texture(const std::string &texture_id)
+    sf::Texture &getTexture(const std::string &textureId)
     {
-        auto it = _textures.find(texture_id);
+        auto it = _textures.find(textureId);
         if (it != _textures.end()) {
             return it->second;
         } else {
             sf::Texture texture;
-            if (!texture.loadFromFile(texture_id)) {
-                throw std::runtime_error("Failed to load texture: " + texture_id);
+            if (!texture.loadFromFile(textureId)) {
+                throw std::runtime_error("Failed to load texture: " + textureId);
             }
-            auto emplace_result = _textures.emplace(texture_id, std::move(texture));
-            return emplace_result.first->second;
+            auto emplaceResult = _textures.emplace(textureId, std::move(texture));
+            return emplaceResult.first->second;
         }
     }
 

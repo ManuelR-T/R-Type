@@ -14,6 +14,6 @@ namespace ecs::component {
  *
  * An entity with this component is marked as an ally.
  */
-struct ally {};
+struct Ally {};
 
 } // namespace ecs::component

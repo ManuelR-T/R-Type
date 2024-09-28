@@ -22,6 +22,6 @@ namespace ecs::systems {
  * @param reg Reference to the registry managing entities and their components.
  * @param input Input manager object that contains states of keyboard values.
  */
-void control_move(registry &reg, ecs::input_manager &input);
+void controlMove(Registry &reg, ecs::InputManager &input);
 
 } // namespace ecs::systems
