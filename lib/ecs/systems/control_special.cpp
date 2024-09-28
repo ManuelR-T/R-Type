@@ -71,7 +71,8 @@ static void spawnMissile(
 
     rt::UdpPacket msg = {
         .cmd = rt::UdpCommand::NEW_ENTITY,
-        .shared_entity_id = reg.getComponent<ecs::component::SharedEntity>(missile).value().shared_entity_id};
+        .shared_entity_id = reg.getComponent<ecs::component::SharedEntity>(missile).value().shared_entity_id
+    };
     msg.body.share_movement = {.pos = {playerPos.x + 10, playerPos.y + 10}, .vel = {.vx = 50.f, .vy = 0}};
     udp.send(reinterpret_cast<const char *>(&msg), sizeof(msg));
 }
