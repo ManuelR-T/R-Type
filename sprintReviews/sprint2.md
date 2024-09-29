@@ -12,6 +12,8 @@
 - **Server-Client Architecture:**
   We also designed the new architecture for both the server and the client.
   This architecture will ensure better scalability and maintainability, laying the groundwork for future development.
+  ![image](https://github.com/user-attachments/assets/b14ea274-b964-4113-946f-c7c2f16887c0)
+
 - **Planning Future Tasks:**
   We outlined and defined several upcoming tasks that align with the overall project goals.
 
