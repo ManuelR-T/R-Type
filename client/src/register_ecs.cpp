@@ -5,6 +5,8 @@
 ** register_ecs
 */
 
+#include "RTypeClient.hpp"
+#include "RTypeConst.hpp"
 #include "TickRateManager.hpp"
 #include "components/animation.hpp"
 #include "components/controllable.hpp"
@@ -14,13 +16,12 @@
 #include "components/position.hpp"
 #include "components/sprite.hpp"
 #include "components/velocity.hpp"
+#include "core/SpriteManager.hpp"
 #include "systems/collision.hpp"
 #include "systems/draw.hpp"
 #include "systems/position.hpp"
 #include "components/ai_actor.hpp"
 #include "components/share_movement.hpp"
-#include "rtype_client.hpp"
-#include "rtype_const.hpp"
 #include "systems/ai_act.hpp"
 #include "systems/control_move.hpp"
 #include "systems/control_special.hpp"
@@ -47,10 +48,10 @@ void rtc::registerSystems(
     ecs::Registry &reg,
     sf::RenderWindow &window,
     float &dt,
-    client::UDPClient &udpClient,
+    ntw::UDPClient &udpClient,
     ecs::InputManager &input,
-    TickRateManager &tickRateManager,
-    SpriteManager &spriteManager
+    ntw::TickRateManager &tickRateManager,
+    ecs::SpriteManager &spriteManager
 )
 {
     tickRateManager.addTickRate(rt::MOVEMENT_TICK_RATE);

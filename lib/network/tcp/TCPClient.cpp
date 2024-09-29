@@ -11,14 +11,14 @@
 #include <asio/ip/address_v4.hpp>
 #include <asio/socket_base.hpp>
 
-client::TCPClient::TCPClient(const std::string &host, int port, std::size_t sizeData)
+ntw::TCPClient::TCPClient(const std::string &host, int port, std::size_t sizeData)
     : _socket(_io), _host(host), _port(port), _sizeData(sizeData)
 {
     auto end = tcp::endpoint();
     _socket.connect(tcp::endpoint(asio::ip::address::from_string(host.c_str()), _port));
 }
 
-client::TCPClient::~TCPClient()
+ntw::TCPClient::~TCPClient()
 {
     if (_thread.joinable()) {
         _io.stop();
@@ -30,7 +30,7 @@ client::TCPClient::~TCPClient()
     }
 }
 
-void client::TCPClient::run()
+void ntw::TCPClient::run()
 {
     _thread = std::thread([this]() {
         _asioRun();
@@ -39,19 +39,19 @@ void client::TCPClient::run()
     });
 }
 
-void client::TCPClient::send(const char *data, std::size_t size)
+void ntw::TCPClient::send(const char *data, std::size_t size)
 {
     _socket.async_write_some(asio::buffer(data, size), [](const asio::error_code &ec, std::size_t bytes) {
         std::cout << "Message sent !" << std::endl;
     });
 }
 
-void client::TCPClient::registerHandler(std::function<void(const char *, std::size_t)> handler)
+void ntw::TCPClient::registerHandler(std::function<void(const char *, std::size_t)> handler)
 {
     _recvHandler = std::move(handler);
 }
 
-void client::TCPClient::_asioRun()
+void ntw::TCPClient::_asioRun()
 {
     std::cout << "Start receiving data from server!" << std::endl;
     _socket.async_receive(asio::buffer(_buff, _sizeData), [&](const asio::error_code &ec, std::size_t bytes) {

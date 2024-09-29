@@ -23,12 +23,12 @@ class RoomManager {
     private:
     std::map<std::string, RoomContent> _rooms;
     std::string _currentRoom;
-    client::TCPClient &_tcpClient;
+    ntw::TCPClient &_tcpClient;
     std::size_t _userId;
     std::string _userName;
 
     public:
-    RoomManager(client::TCPClient &tcpClient, std::size_t userId, std::string userName)
+    RoomManager(ntw::TCPClient &tcpClient, std::size_t userId, std::string userName)
         : _tcpClient(tcpClient), _userId(userId), _userName(std::move(userName))
     {
     }

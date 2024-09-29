@@ -6,7 +6,7 @@
 */
 
 #include "systems/control_special.hpp"
-#include "GameProtocol.hpp"
+#include "RTypeUDPProtol.hpp"
 #include "UDPClient.hpp"
 #include "components/animation.hpp"
 #include "components/controllable.hpp"
@@ -23,9 +23,9 @@
 
 static void spawnMissile(
     ecs::Registry &reg,
-    client::UDPClient &udp,
+    ntw::UDPClient &udp,
     ecs::component::Position playerPos,
-    SpriteManager &spriteManager
+    ecs::SpriteManager &spriteManager
 )
 {
     auto missile = reg.spawnSharedEntity(ecs::generateSharedEntityId());
@@ -34,10 +34,10 @@ static void spawnMissile(
     reg.addComponent(missile, ecs::component::Velocity{50.f, 0});
 
     ecs::component::Sprite sprite;
-    sprite.texture_id = "assets/typesheets/r-typesheet1.gif";
-    sprite.sprite_obj.setTexture(spriteManager.getTexture(sprite.texture_id));
-    sprite.sprite_obj.setPosition({playerPos.x + 10, playerPos.y + 10});
-    sprite.sprite_obj.setTextureRect(sf::IntRect(0, 0, 16, 16));
+    sprite.textureId = "assets/typesheets/r-typesheet1.gif";
+    sprite.spriteObj.setTexture(spriteManager.getTexture(sprite.textureId));
+    sprite.spriteObj.setPosition({playerPos.x + 10, playerPos.y + 10});
+    sprite.spriteObj.setTextureRect(sf::IntRect(0, 0, 16, 16));
     reg.addComponent(missile, std::move(sprite));
 
     ecs::component::Animation anim;
@@ -69,18 +69,17 @@ static void spawnMissile(
     reg.addComponent(missile, ecs::component::Missile{});
     reg.addComponent(missile, ecs::component::ShareMovement{});
 
-    rt::UdpPacket msg = {
-        .cmd = rt::UdpCommand::NEW_ENTITY,
-        .shared_entity_id = reg.getComponent<ecs::component::SharedEntity>(missile).value().shared_entity_id
-    };
-    msg.body.share_movement = {.pos = {playerPos.x + 10, playerPos.y + 10}, .vel = {.vx = 50.f, .vy = 0}};
+    rt::UDPPacket msg = {
+        .cmd = rt::UDPCommand::NEW_ENTITY,
+        .sharedEntityId = reg.getComponent<ecs::component::SharedEntity>(missile).value().sharedEntityId};
+    msg.body.shareMovement = {.pos = {playerPos.x + 10, playerPos.y + 10}, .vel = {.vx = 50.f, .vy = 0}};
     udp.send(reinterpret_cast<const char *>(&msg), sizeof(msg));
 }
 
 void ecs::systems::controlSpecial(
     ecs::Registry &reg,
     ecs::InputManager &input,
-    client::UDPClient &udp,
+    ntw::UDPClient &udp,
     SpriteManager &spriteManager
 )
 {

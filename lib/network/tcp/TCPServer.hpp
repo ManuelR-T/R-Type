@@ -16,7 +16,7 @@
 
 using asio::ip::tcp;
 
-namespace server {
+namespace ntw {
 
 class Session : public std::enable_shared_from_this<Session> {
     public:
@@ -47,7 +47,7 @@ class Session : public std::enable_shared_from_this<Session> {
     std::array<char, BUFF_SIZE> _buff;
 };
 
-class TCPServer : public server::AsioServer {
+class TCPServer : public ntw::AsioServer {
     public:
     TCPServer(int port, std::size_t dataSize);
     ~TCPServer() override;
@@ -80,4 +80,4 @@ class TCPServer : public server::AsioServer {
     std::unordered_map<size_t, std::shared_ptr<Session>> _session;
     std::list<std::shared_ptr<Session>> _freeSession;
 };
-} // namespace server
+} // namespace ntw

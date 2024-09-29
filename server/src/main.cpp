@@ -5,10 +5,10 @@
 ** main
 */
 
-#include "GameProtocol.hpp"
+#include "RTypeServer.hpp"
+#include "RTypeTCPProtol.hpp"
 #include "ResponseHandler.hpp"
 #include "RoomManager.hpp"
-#include "rtype_server.hpp"
 
 #include <SFML/Graphics.hpp>
 #include <cstddef>
@@ -19,18 +19,18 @@
 
 int main()
 {
-    server::TCPServer tcpServer(8080, sizeof(rt::TcpPacket));
+    ntw::TCPServer tcpServer(8080, sizeof(rt::TCPPacket));
     rts::RoomManager roomManager;
-    ResponseHandler<rt::TcpCommand, rt::TcpPacket> responseHandler([](const rt::TcpPacket &packet) {
+    ntw::ResponseHandler<rt::TCPCommand, rt::TCPPacket> responseHandler([](const rt::TCPPacket &packet) {
         return packet.cmd;
     });
 
     rts::registerTcpResponse(roomManager, tcpServer, responseHandler);
     tcpServer.registerCommand([&responseHandler, &tcpServer](tcp::socket &sock, char *data, std::size_t size) {
-        rt::TcpCommand newUserCmd = rt::TcpCommand::CL_NEW_USER;
+        rt::TCPCommand newUserCmd = rt::TCPCommand::CL_NEW_USER;
 
-        if (std::memcmp(data, &newUserCmd, sizeof(rt::TcpCommand)) == 0) {
-            rt::TcpPacket packet{};
+        if (std::memcmp(data, &newUserCmd, sizeof(rt::TCPCommand)) == 0) {
+            rt::TCPPacket packet{};
             std::memcpy(&packet, data, sizeof(packet));
             tcpServer.addUser(sock, packet.body.cl_new_user.user_id);
         } else {

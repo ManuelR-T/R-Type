@@ -8,13 +8,13 @@
 #include <SFML/Window/VideoMode.hpp>
 #include <memory>
 #include "GameManager.hpp"
+#include "RTypeClient.hpp"
+#include "RTypeConst.hpp"
 #include "TickRateManager.hpp"
 #include "UDPClient.hpp"
 #include "core/InputManager.hpp"
 #include "core/Registry.hpp"
 #include "core/SpriteManager.hpp"
-#include "rtype_client.hpp"
-#include "rtype_const.hpp"
 
 void rtc::GameManager::_launchGame()
 {
@@ -26,14 +26,14 @@ void rtc::GameManager::_launchGame()
     if (_inLobby) { // if lobby is true we are outsie of lobby the window has been closed
         return;
     }
-    client::UDPClient udpClient(_ip, _gamePort);
+    ntw::UDPClient udpClient(_ip, _gamePort);
     udpClient.run();
 
     ecs::Registry reg;
     float dt = 0.f;
     ecs::InputManager inputManager;
-    TickRateManager tickRateManager;
-    SpriteManager spriteManager;
+    ntw::TickRateManager tickRateManager;
+    ecs::SpriteManager spriteManager;
 
     rtc::registerComponents(reg);
     rtc::registerSystems(reg, *_window, dt, udpClient, inputManager, tickRateManager, spriteManager);

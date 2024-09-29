@@ -8,7 +8,7 @@
 #include "TrackedException.hpp"
 #include <algorithm>
 
-std::string my::TrackedException::_getFuncName(const std::string &func)
+std::string eng::TrackedException::_getFuncName(const std::string &func)
 {
     std::string funcName;
 
@@ -19,7 +19,7 @@ std::string my::TrackedException::_getFuncName(const std::string &func)
     return funcName;
 }
 
-std::string my::TrackedException::_indentExcepetion(const std::string &str)
+std::string eng::TrackedException::_indentExcepetion(const std::string &str)
 {
     std::string result;
 
@@ -32,19 +32,19 @@ std::string my::TrackedException::_indentExcepetion(const std::string &str)
     return result;
 }
 
-std::string my::TrackedException::_formatSrcLocation(const std::source_location &info)
+std::string eng::TrackedException::_formatSrcLocation(const std::source_location &info)
 {
     return std::string("\n└ \033[1;95mexception throw from: \033[0;1m") + info.file_name() + ": \033[1m" +
         _getFuncName(info.function_name()) + ": \033[1;96m" + std::to_string(info.line()) + "\033[0m";
 }
 
-my::TrackedException::TrackedException(const std::string &message, std::source_location location)
+eng::TrackedException::TrackedException(const std::string &message, std::source_location location)
 {
     _message += _indentExcepetion(message);
     _message += _formatSrcLocation(location);
 }
 
-const char *my::TrackedException::what() const noexcept
+const char *eng::TrackedException::what() const noexcept
 {
     return _message.c_str();
 }

@@ -10,7 +10,7 @@
 #include "IClient.hpp"
 #include <asio/io_context.hpp>
 
-namespace client {
+namespace ntw {
 
 /**
  *  @class AsioClient
@@ -27,4 +27,4 @@ class AsioClient : public IClient {
     virtual void _asioRun() = 0;
     asio::io_context _io;
 };
-} // namespace client
+} // namespace ntw

@@ -41,17 +41,17 @@ class RoomManager {
         }
     }
 
-    void createRoom(const std::string &name, server::TCPServer &tcpServer);
-    void deleteRoom(const std::string &name, server::TCPServer &tcpServer);
+    void createRoom(const std::string &name, ntw::TCPServer &tcpServer);
+    void deleteRoom(const std::string &name, ntw::TCPServer &tcpServer);
     void joinRoom(
         const std::string &name,
         std::size_t playerId,
         const std::string &playerName,
-        server::TCPServer &tcpServer
+        ntw::TCPServer &tcpServer
     );
-    void leaveRoom(const std::string &name, std::size_t playerId, server::TCPServer &tcpServer);
-    void playerReady(const std::string &roomName, std::size_t playerId, server::TCPServer &tcpServer);
-    void playerNotReady(const std::string &roomName, std::size_t playerId, server::TCPServer &tcpServer);
-    void sendListRoom(std::size_t playerId, server::TCPServer &tcpServer);
+    void leaveRoom(const std::string &name, std::size_t playerId, ntw::TCPServer &tcpServer);
+    void playerReady(const std::string &roomName, std::size_t playerId, ntw::TCPServer &tcpServer);
+    void playerNotReady(const std::string &roomName, std::size_t playerId, ntw::TCPServer &tcpServer);
+    void sendListRoom(std::size_t playerId, ntw::TCPServer &tcpServer);
 };
 } // namespace rts

@@ -11,7 +11,7 @@
 #include <string>
 #include <source_location>
 
-namespace my {
+namespace eng {
 
 class TrackedException : public std::exception {
     private:
@@ -29,4 +29,4 @@ class TrackedException : public std::exception {
 
     [[nodiscard]] const char *what() const noexcept override;
 };
-} // namespace my
+} // namespace eng

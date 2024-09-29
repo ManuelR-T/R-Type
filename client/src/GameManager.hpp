@@ -8,7 +8,7 @@
 #pragma once
 
 #include <memory>
-#include "GameProtocol.hpp"
+#include "RTypeTCPProtol.hpp"
 #include "ResponseHandler.hpp"
 #include "RoomManager.hpp"
 #include "TCPClient.hpp"
@@ -24,12 +24,12 @@ class GameManager {
     std::string _ip;
     std::string _playerName;
 
-    client::TCPClient _tcpClient;
+    ntw::TCPClient _tcpClient;
     bool _inLobby = true;
     std::size_t _userId = 0;
     int _gamePort = 0;
     rtc::RoomManager _roomManager;
-    ResponseHandler<rt::TcpCommand, rt::TcpPacket> _tcpResponseHandler;
+    ntw::ResponseHandler<rt::TCPCommand, rt::TCPPacket> _tcpResponseHandler;
 
     std::shared_ptr<sf::RenderWindow> _window;
 
@@ -39,15 +39,15 @@ class GameManager {
 
     public:
     GameManager(const std::string &ip, int port, const std::string &playerName)
-        : _ip(ip), _playerName(playerName), _tcpClient(ip, port, sizeof(rt::TcpPacket)),
+        : _ip(ip), _playerName(playerName), _tcpClient(ip, port, sizeof(rt::TCPPacket)),
           _userId(ecs::generateSharedEntityId()), _roomManager(_tcpClient, _userId, playerName),
-          _tcpResponseHandler([](const rt::TcpPacket &packet) { return packet.cmd; })
+          _tcpResponseHandler([](const rt::TCPPacket &packet) { return packet.cmd; })
     {
     }
 
     ~GameManager()
     {
-        rt::TcpPacket packet{.cmd = rt::TcpCommand::CL_DISCONNECT_USER};
+        rt::TCPPacket packet{.cmd = rt::TCPCommand::CL_DISCONNECT_USER};
         packet.body.cl_disconnect_user.user_id = _userId;
         _tcpClient.send(reinterpret_cast<const char *>(&packet), sizeof(packet));
         ImGui::SFML::Shutdown();

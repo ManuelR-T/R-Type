@@ -5,10 +5,10 @@
 ** run_gui
 */
 
+#include "RTypeClient.hpp"
 #include "imgui.h"
 #include "core/shared_entity.hpp"
 #include "imgui-SFML.h"
-#include "rtype_client.hpp"
 
 // ! This function is call when you click on a room in the lobby array.
 static void renderInsideRoom(const std::string &name, rtc::RoomManager &roomManager)

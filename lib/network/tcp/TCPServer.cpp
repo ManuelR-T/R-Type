@@ -19,7 +19,7 @@
     Session
 */
 
-void server::Session::_handleRead(
+void ntw::Session::_handleRead(
     asio::error_code ec,
     std::size_t bytes,
     std::function<void(tcp::socket &, char *, std::size_t)> &handler
@@ -47,7 +47,7 @@ void server::Session::_handleRead(
     handleClient(handler);
 }
 
-void server::Session::handleClient(std::function<void(tcp::socket &, char *, std::size_t)> &handler)
+void ntw::Session::handleClient(std::function<void(tcp::socket &, char *, std::size_t)> &handler)
 {
     std::lock_guard<std::mutex> lock(_serverMutex);
 
@@ -64,12 +64,12 @@ void server::Session::handleClient(std::function<void(tcp::socket &, char *, std
     TCPServer
 */
 
-server::TCPServer::TCPServer(int port, std::size_t dataSize)
+ntw::TCPServer::TCPServer(int port, std::size_t dataSize)
     : _acc(_io, tcp::endpoint(tcp::v4(), port)), _dataSize(dataSize)
 {
 }
 
-server::TCPServer::~TCPServer()
+ntw::TCPServer::~TCPServer()
 {
     _io.stop();
     if (_thread.joinable()) {
@@ -82,7 +82,7 @@ server::TCPServer::~TCPServer()
     _mutex.unlock();
 }
 
-void server::TCPServer::sockWrite(tcp::socket &sock, const char *data, std::size_t size)
+void ntw::TCPServer::sockWrite(tcp::socket &sock, const char *data, std::size_t size)
 {
     std::cout << "SENT TO CLIENT SIZE:" << size << "\n";
     sock.async_write_some(asio::buffer(data, size), [](asio::error_code ec, std::size_t) {
@@ -93,14 +93,14 @@ void server::TCPServer::sockWrite(tcp::socket &sock, const char *data, std::size
     });
 }
 
-void server::TCPServer::registerCommand(std::function<void(tcp::socket &, char *, std::size_t)> func)
+void ntw::TCPServer::registerCommand(std::function<void(tcp::socket &, char *, std::size_t)> func)
 {
     _mutex.lock();
     _handler = std::move(func);
     _mutex.unlock();
 }
 
-void server::TCPServer::_handleAccept(asio::error_code ec, const std::shared_ptr<server::Session> &session)
+void ntw::TCPServer::_handleAccept(asio::error_code ec, const std::shared_ptr<ntw::Session> &session)
 {
     if (ec) {
         return;
@@ -114,7 +114,7 @@ void server::TCPServer::_handleAccept(asio::error_code ec, const std::shared_ptr
     _asioRun();
 }
 
-void server::TCPServer::_asioRun()
+void ntw::TCPServer::_asioRun()
 {
     auto session = std::make_shared<Session>(tcp::socket(_io), _mutex, _dataSize);
 
@@ -124,7 +124,7 @@ void server::TCPServer::_asioRun()
     });
 }
 
-void server::TCPServer::run()
+void ntw::TCPServer::run()
 {
     _thread = std::thread([this]() {
         _asioRun();
@@ -132,14 +132,14 @@ void server::TCPServer::run()
     });
 }
 
-void server::TCPServer::removeUser(std::size_t id)
+void ntw::TCPServer::removeUser(std::size_t id)
 {
     std::lock_guard<std::mutex> lock(_mutex);
 
     _session.erase(id);
 }
 
-void server::TCPServer::sendToAllUser(const char *data, std::size_t size)
+void ntw::TCPServer::sendToAllUser(const char *data, std::size_t size)
 {
     std::lock_guard<std::mutex> lock(_mutex);
 
@@ -150,7 +150,7 @@ void server::TCPServer::sendToAllUser(const char *data, std::size_t size)
     }
 }
 
-void server::TCPServer::addUser(tcp::socket &sock, std::size_t id)
+void ntw::TCPServer::addUser(tcp::socket &sock, std::size_t id)
 {
     std::lock_guard<std::mutex> lock(_mutex);
 
@@ -163,7 +163,7 @@ void server::TCPServer::addUser(tcp::socket &sock, std::size_t id)
     }
 }
 
-void server::TCPServer::sendToUser(std::size_t id, const char *data, std::size_t size)
+void ntw::TCPServer::sendToUser(std::size_t id, const char *data, std::size_t size)
 {
     std::lock_guard<std::mutex> lock(_mutex);
 

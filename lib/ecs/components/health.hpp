@@ -16,8 +16,8 @@ namespace ecs::component {
  * with an enemy
  */
 struct Health {
-    int max_hp;
-    int curr_hp;
+    int maxHp;
+    int currHp;
 };
 
 } // namespace ecs::component

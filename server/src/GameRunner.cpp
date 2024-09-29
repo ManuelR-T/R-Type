@@ -5,12 +5,11 @@
 ** game_runner
 */
 
-#include "GameProtocol.hpp"
 #include "GameRunner.hpp"
-#include "rtype_server.hpp"
+#include "RTypeServer.hpp"
 
 rts::GameRunner::GameRunner(int port)
-    : _port(port), _udpServer(port), _responseHandler([](const rt::UdpPacket &packet) { return packet.cmd; }),
+    : _port(port), _udpServer(port), _responseHandler([](const rt::UDPPacket &packet) { return packet.cmd; }),
       _window(sf::VideoMode(1000, 700), "R-Type") // ! for debug
 {
     rts::registerUdpResponse(_reg, _responseHandler);

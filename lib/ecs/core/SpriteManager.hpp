@@ -12,6 +12,8 @@
 #include <string>
 #include <unordered_map>
 
+namespace ecs {
+
 /**
  * @brief Manages loading and caching of textures to prevent duplication.
  *
@@ -49,3 +51,5 @@ class SpriteManager {
     private:
     std::unordered_map<std::string, sf::Texture> _textures; /**< Cache of loaded textures. */
 };
+
+} // namespace ecs

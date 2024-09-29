@@ -18,7 +18,7 @@
 
 using asio::ip::udp;
 
-namespace server {
+namespace ntw {
 
 /**
  *  @class UDPServer
@@ -27,7 +27,7 @@ namespace server {
  *
  *  The server handle commands that can be registered.
  */
-class UDPServer : public server::AsioServer {
+class UDPServer : public ntw::AsioServer {
     public:
     /**
      * @brief Constructor takes the param port that the server listens,
@@ -105,4 +105,4 @@ class UDPServer : public server::AsioServer {
     std::function<void(char *, std::size_t)> _handler;
     std::thread _recvThread;
 };
-} // namespace server
+} // namespace ntw

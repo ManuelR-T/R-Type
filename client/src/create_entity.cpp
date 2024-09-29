@@ -5,7 +5,8 @@
 ** create_entity
 */
 
-#include "GameProtocol.hpp"
+#include "RTypeClient.hpp"
+#include "RTypeUDPProtol.hpp"
 #include "components/animation.hpp"
 #include "components/controllable.hpp"
 #include "components/hitbox.hpp"
@@ -15,9 +16,8 @@
 #include "core/Registry.hpp"
 #include "components/ai_actor.hpp"
 #include "components/share_movement.hpp"
-#include "rtype_client.hpp"
 
-void rtc::createPlayer(ecs::Registry &reg, client::UDPClient &udpClient, SpriteManager &spriteManager)
+void rtc::createPlayer(ecs::Registry &reg, ntw::UDPClient &udpClient, ecs::SpriteManager &spriteManager)
 {
     auto player = reg.spawnSharedEntity(ecs::generateSharedEntityId());
     reg.addComponent(player, ecs::component::Position{400.f, 300.f});
@@ -25,18 +25,18 @@ void rtc::createPlayer(ecs::Registry &reg, client::UDPClient &udpClient, SpriteM
     reg.addComponent(player, ecs::component::Controllable{});
 
     ecs::component::Sprite playerSprite;
-    playerSprite.texture_id = "assets/typesheets/r-typesheet1.gif";
-    playerSprite.sprite_obj.setTexture(spriteManager.getTexture(playerSprite.texture_id));
-    playerSprite.sprite_obj.setPosition(400.f, 300.f);
+    playerSprite.textureId = "assets/typesheets/r-typesheet1.gif";
+    playerSprite.spriteObj.setTexture(spriteManager.getTexture(playerSprite.textureId));
+    playerSprite.spriteObj.setPosition(400.f, 300.f);
 
-    playerSprite.sprite_obj.setTextureRect(sf::IntRect(0, 0, 32, 16));
+    playerSprite.spriteObj.setTextureRect(sf::IntRect(0, 0, 32, 16));
     ecs::component::Animation playerAnimation;
     playerAnimation.frames["up"] = {{135, 2, 32, 16}};
     playerAnimation.frames["top"] = {{102, 2, 32, 16}};
     playerAnimation.frames["neutral"] = {{168, 2, 32, 16}};
     playerAnimation.frames["down"] = {{201, 2, 32, 16}};
     playerAnimation.frames["bottom"] = {{234, 2, 32, 16}};
-    playerAnimation.frame_time = 0.1f;
+    playerAnimation.frameTime = 0.1f;
     playerAnimation.updateState = [](ecs::Registry &reg, entity_t id, ecs::component::Animation &anim) {
         auto velOpt = reg.getComponent<ecs::component::Velocity>(id);
         if (!velOpt) {
@@ -79,24 +79,24 @@ void rtc::createPlayer(ecs::Registry &reg, client::UDPClient &udpClient, SpriteM
     reg.addComponent(player, ecs::component::Hitbox{32.f, 16.f});
     reg.addComponent(player, ecs::component::ShareMovement{});
 
-    rt::UdpPacket msg = {
-        .cmd = rt::UdpCommand::NEW_PLAYER,
-        .shared_entity_id = reg.getComponent<ecs::component::SharedEntity>(player).value().shared_entity_id
+    rt::UDPPacket msg = {
+        .cmd = rt::UDPCommand::NEW_PLAYER,
+        .sharedEntityId = reg.getComponent<ecs::component::SharedEntity>(player).value().sharedEntityId
     };
     udpClient.send(reinterpret_cast<const char *>(&msg), sizeof(msg));
 }
 
-void rtc::createStatic(ecs::Registry &reg, SpriteManager &spriteManager, float x, float y)
+void rtc::createStatic(ecs::Registry &reg, ecs::SpriteManager &spriteManager, float x, float y)
 {
     auto entity = reg.spawnEntity();
     reg.addComponent(entity, ecs::component::Position{x, y});
 
     ecs::component::Sprite entitySprite;
-    entitySprite.texture_id = "assets/typesheets/r-typesheet5.gif";
-    entitySprite.sprite_obj.setTexture(spriteManager.getTexture(entitySprite.texture_id));
-    entitySprite.sprite_obj.setPosition(x, y);
+    entitySprite.textureId = "assets/typesheets/r-typesheet5.gif";
+    entitySprite.spriteObj.setTexture(spriteManager.getTexture(entitySprite.textureId));
+    entitySprite.spriteObj.setPosition(x, y);
 
-    entitySprite.sprite_obj.setTextureRect(sf::IntRect(0, 0, 32, 32));
+    entitySprite.spriteObj.setTextureRect(sf::IntRect(0, 0, 32, 32));
     ecs::component::Animation entityAnimation;
     entityAnimation.frames["neutral"] = {
         {0, 0, 32, 32},
@@ -114,18 +114,18 @@ void rtc::createStatic(ecs::Registry &reg, SpriteManager &spriteManager, float x
     reg.addComponent(entity, ecs::component::Hitbox{32.f, 32.f});
 }
 
-void rtc::createAi(ecs::Registry &reg, SpriteManager &spriteManager, float x, float y)
+void rtc::createAi(ecs::Registry &reg, ecs::SpriteManager &spriteManager, float x, float y)
 {
     auto entity = reg.spawnEntity();
 
     reg.addComponent(entity, ecs::component::Position{x, y});
 
     ecs::component::Sprite entitySprite;
-    entitySprite.texture_id = "assets/typesheets/r-typesheet5.gif";
-    entitySprite.sprite_obj.setTexture(spriteManager.getTexture(entitySprite.texture_id));
-    entitySprite.sprite_obj.setPosition(x, y);
+    entitySprite.textureId = "assets/typesheets/r-typesheet5.gif";
+    entitySprite.spriteObj.setTexture(spriteManager.getTexture(entitySprite.textureId));
+    entitySprite.spriteObj.setPosition(x, y);
 
-    entitySprite.sprite_obj.setTextureRect(sf::IntRect(0, 0, 32, 32));
+    entitySprite.spriteObj.setTextureRect(sf::IntRect(0, 0, 32, 32));
     ecs::component::Animation entityAnimation;
     entityAnimation.frames["neutral"] = {
         {0, 0, 32, 32},
