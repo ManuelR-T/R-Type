@@ -11,7 +11,7 @@
 #include <source_location>
 
 namespace eng {
-void log_info(const std::string &msg, std::source_location info = std::source_location::current());
-void log_warning(const std::string &msg, std::source_location info = std::source_location::current());
-void log_error(const std::string &msg, std::source_location info = std::source_location::current());
+void logInfo(const std::string &msg, std::source_location info = std::source_location::current());
+void logWarning(const std::string &msg, std::source_location info = std::source_location::current());
+void logError(const std::string &msg, std::source_location info = std::source_location::current());
 } // namespace eng

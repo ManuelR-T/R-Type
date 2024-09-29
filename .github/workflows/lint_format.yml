@@ -14,6 +14,7 @@ jobs:
           - 'lib'
           - 'client/src'
           - 'server/src'
+          - 'include'
     steps:
     - uses: actions/checkout@v4
     - name: Run clang-format style check for C/C++/Protobuf programs.

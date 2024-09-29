@@ -9,7 +9,7 @@
 #include <format>
 #include <iostream>
 
-void eng::log_info(const std::string &msg, std::source_location info)
+void eng::logInfo(const std::string &msg, std::source_location info)
 {
     std::cerr << std::format(
         "\033[1m{}:\033[96m{}\033[0;1m: "
@@ -20,7 +20,7 @@ void eng::log_info(const std::string &msg, std::source_location info)
     );
 }
 
-void eng::log_warning(const std::string &msg, std::source_location info)
+void eng::logWarning(const std::string &msg, std::source_location info)
 {
     std::cerr << std::format(
         "\033[1m{}:\033[96m{}\033[0;1m: "
@@ -31,7 +31,7 @@ void eng::log_warning(const std::string &msg, std::source_location info)
     );
 }
 
-void eng::log_error(const std::string &msg, std::source_location info)
+void eng::logError(const std::string &msg, std::source_location info)
 {
     std::cerr << std::format(
         "\033[1m{}:\033[96m{}\033[0;1m: "
