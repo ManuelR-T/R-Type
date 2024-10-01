@@ -10,10 +10,10 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include "RoomManager.hpp"
 #include "TickRateManager.hpp"
-#include "UDPClient.hpp"
 #include "core/InputManager.hpp"
 #include "core/Registry.hpp"
 #include "core/SpriteManager.hpp"
+#include "udp/UDPClient.hpp"
 
 namespace rtc {
 

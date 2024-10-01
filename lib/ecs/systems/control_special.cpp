@@ -7,7 +7,7 @@
 
 #include "systems/control_special.hpp"
 #include "GameProtocol.hpp"
-#include "UDPClient.hpp"
+#include "udp/UDPClient.hpp"
 #include "components/animation.hpp"
 #include "components/controllable.hpp"
 #include "components/missile.hpp"

@@ -13,11 +13,9 @@
 #include <asio/ip/udp.hpp>
 #include <cstring>
 #include <functional>
-#if WIN32
-    #include <mingw.thread.h>
-#else
-    #include <thread>
-#endif
+
+#include <thread>
+
 #include <asio/error_code.hpp>
 #include <asio/ip/address_v6.hpp>
 

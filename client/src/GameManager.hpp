@@ -11,7 +11,7 @@
 #include "GameProtocol.hpp"
 #include "ResponseHandler.hpp"
 #include "RoomManager.hpp"
-#include "TCPClient.hpp"
+#include "tcp/TCPClient.hpp"
 #include "core/shared_entity.hpp"
 
 #include <imgui-SFML.h>

@@ -11,11 +11,8 @@
 
 #include <asio/ip/udp.hpp>
 
-#if WIN32
-    #include <mingw.thread.h>
-#else
-    #include <thread>
-#endif
+#include <thread>
+
 
 using asio::ip::udp;
 

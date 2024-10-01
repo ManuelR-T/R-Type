@@ -13,7 +13,7 @@
 #include <SFML/Graphics.hpp>
 #include <cstddef>
 #include <cstring>
-#include "TCPServer.hpp"
+#include "tcp/TCPServer.hpp"
 
 #include <iostream>
 

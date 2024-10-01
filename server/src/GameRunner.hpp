@@ -11,7 +11,7 @@
 #include <thread>
 #include "GameProtocol.hpp"
 #include "ResponseHandler.hpp"
-#include "UDPServer.hpp"
+#include "udp/UDPServer.hpp"
 #include "core/Registry.hpp"
 
 namespace rts {

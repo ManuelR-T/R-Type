@@ -1,5 +1,9 @@
 include(cmake/CPM.cmake)
 
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+
+set(SFML_USE_STATIC_STD_LIBS ON CACHE BOOL "" FORCE)
+
 CPMAddPackage("gh:SFML/SFML#2.6.x")
 
 CPMAddPackage(
@@ -25,10 +29,3 @@ CPMAddPackage(
   GIT_TAG "main"
 )
 
-if (WIN32)
-  CPMAddPackage(
-    NAME mingw_stdthreads
-    GIT_REPOSITORY "https://github.com/meganz/mingw-std-threads"
-    GIT_TAG "master"
-  )
-endif()
