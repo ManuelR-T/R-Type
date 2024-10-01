@@ -8,11 +8,11 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include <thread>
+#include <thread>p
 #include "RTypeUDPProtol.hpp"
 #include "ResponseHandler.hpp"
-#include "udp/UDPServer.hpp"
 #include "core/Registry.hpp"
+#include "udp/UDPServer.hpp"
 
 namespace rts {
 

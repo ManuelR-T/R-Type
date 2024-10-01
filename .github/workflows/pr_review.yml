@@ -23,11 +23,6 @@ jobs:
         sudo apt-get install -y libasio-dev flex bison javacc
         sudo apt-get install -y libsfml-dev
 
-    - name: doxygen
-      run: |
-        sudo apt-get install -y doxygen
-        doxygen doxy.conf
-
     - name: Set base_dir
       run: |
         echo "base_dir=$(pwd)" >> $GITHUB_ENV
