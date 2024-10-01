@@ -38,7 +38,7 @@ void rts::registerComponents(ecs::Registry &reg)
     reg.registerComponent<ecs::component::SharedEntity>();
     reg.registerComponent<ecs::component::Missile>();
     reg.registerComponent<ecs::component::AiActor>();
-    reg.registerComponent<ecs::component::tag<size_t>>();
+    reg.registerComponent<ecs::component::Tag<size_t>>();
 }
 
 void rts::registerSystems(ecs::Registry &reg, sf::RenderWindow &window, float &dt)

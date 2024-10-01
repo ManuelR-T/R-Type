@@ -23,7 +23,7 @@ concept Equalable = std::equality_comparable<T>;
  * from some side effects decided by the user.
  */
 template <Equalable T>
-struct tag {
+struct Tag {
     T tag;
 };
 
