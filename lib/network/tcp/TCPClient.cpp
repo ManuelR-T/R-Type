@@ -12,7 +12,6 @@
 #include <asio/ip/address_v4.hpp>
 #include <asio/socket_base.hpp>
 
-
 ntw::TCPClient::TCPClient(const std::string &host, int port, std::size_t sizeData)
     : _socket(_io), _host(host), _port(port), _sizeData(sizeData)
 {

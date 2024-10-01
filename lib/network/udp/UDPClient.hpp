@@ -13,7 +13,6 @@
 
 #include <thread>
 
-
 using asio::ip::udp;
 
 namespace ntw {
