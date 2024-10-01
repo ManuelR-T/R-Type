@@ -7,10 +7,11 @@
 
 #include "UDPClient.hpp"
 #include <asio/placeholders.hpp>
+#include <asio.hpp>
 #include <iostream>
 
 client::UDPClient::UDPClient(const std::string &host, int port)
-    : _endpoint(asio::ip::address::from_string(host), port), _sock(_io)
+    : _endpoint(asio::ip::make_address(host), port), _sock(_io)
 {
     _sock.open(udp::v4());
 }

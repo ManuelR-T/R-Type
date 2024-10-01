@@ -10,7 +10,7 @@ add_executable(r-type_client
 )
 
 target_compile_options(r-type_client PRIVATE -Wall -Wextra)
-target_link_libraries(r-type_client PRIVATE ECS PRIVATE NETWORK PRIVATE UTILS PRIVATE ARGPARSER PRIVATE ImGui-SFML::ImGui-SFML PRIVATE asio)
+target_link_libraries(r-type_client PRIVATE ECS PRIVATE NETWORK PRIVATE UTILS PRIVATE ARGPARSER PRIVATE ImGui-SFML::ImGui-SFML)
 include_directories(
     ${CMAKE_SOURCE_DIR}/lib/utils
     ${CMAKE_SOURCE_DIR}/lib/network/udp

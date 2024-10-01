@@ -10,7 +10,12 @@
 #include "AsioClient.hpp"
 
 #include <asio/ip/udp.hpp>
-#include <thread>
+
+#if WIN32
+    #include <mingw.thread.h>
+#else
+    #include <thread>
+#endif
 
 using asio::ip::udp;
 

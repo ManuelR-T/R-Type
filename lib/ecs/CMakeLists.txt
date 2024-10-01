@@ -27,4 +27,10 @@ CPMAddPackage(
     FIND_PACKAGE_ARGUMENTS "COMPONENTS system window graphics REQUIRED"
 )
 
+if(WIN32)
+    target_link_libraries(ECS PRIVATE mingw_stdthreads)
+    target_include_directories(ECS PRIVATE mingw_stdthreads)
+endif()
+
+
 target_link_libraries(ECS PUBLIC sfml-system sfml-window sfml-graphics)

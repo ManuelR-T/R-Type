@@ -30,7 +30,7 @@ log.bin
 # ? compilation database
 compile_commands.json
 
-build/
+build*/
 bin/
 .clangd
 
@@ -43,6 +43,7 @@ docs/doxygen
 CMakeDoxyfile.in
 CMakeDoxygenDefaults.cmake
 _deps
+CPM_modules
 
 # ? imgui
 imgui.ini

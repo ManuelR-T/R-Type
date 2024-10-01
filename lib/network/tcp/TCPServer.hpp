@@ -13,7 +13,12 @@
 #include <asio/ip/tcp.hpp>
 #include <functional>
 #include <list>
-#include <mutex>
+#if WIN32
+    #include "mingw.mutex.h"
+    #include "mingw.thread.h"
+#else
+    #include <mutex>
+#endif
 #include <unordered_map>
 
 using asio::ip::tcp;

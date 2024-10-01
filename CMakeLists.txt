@@ -10,7 +10,6 @@ include(cmake/CPM.cmake)
 
 include(cmake/dependencies.cmake)
 include(cmake/options.cmake)
-include(cmake/asio.cmake)
 
 add_subdirectory(lib)
 add_subdirectory(client)

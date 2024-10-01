@@ -11,7 +11,12 @@
 
 #include <asio.hpp>
 #include <asio/ip/tcp.hpp>
-#include <thread>
+
+#if WIN32
+    #include <mingw.thread.h>
+#else
+    #include <thread>
+#endif
 
 using asio::ip::tcp;
 

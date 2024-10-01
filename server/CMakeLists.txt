@@ -9,7 +9,7 @@ add_executable(r-type_server
 )
 
 target_compile_options(r-type_server PRIVATE -Wall -Wextra)
-target_link_libraries(r-type_server PRIVATE ECS PRIVATE NETWORK UTILS PRIVATE asio)
+target_link_libraries(r-type_server PRIVATE ECS PRIVATE NETWORK PRIVATE UTILS)
 include_directories(
     ${CMAKE_SOURCE_DIR}/lib/include
     ${CMAKE_SOURCE_DIR}/lib/network/udp
