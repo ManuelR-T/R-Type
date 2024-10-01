@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** R-Type
 ** File description:
-** rtype_client
+** RTypeClient
 */
 
 #pragma once
@@ -22,15 +22,15 @@ void registerSystems(
     ecs::Registry &reg,
     sf::RenderWindow &window,
     float &dt,
-    client::UDPClient &udpClient,
+    ntw::UDPClient &udpClient,
     ecs::InputManager &input,
-    TickRateManager &tickRateManager,
-    SpriteManager &spriteManager
+    ntw::TickRateManager &tickRateManager,
+    ecs::SpriteManager &spriteManager
 );
 
-void createPlayer(ecs::Registry &reg, client::UDPClient &udpClient, SpriteManager &spriteManager);
-void createStatic(ecs::Registry &reg, SpriteManager &spriteManager, float x, float y);
-void createAi(ecs::Registry &reg, SpriteManager &spriteManager, float x, float y);
+void createPlayer(ecs::Registry &reg, ntw::UDPClient &udpClient, ecs::SpriteManager &spriteManager);
+void createStatic(ecs::Registry &reg, ecs::SpriteManager &spriteManager, float x, float y);
+void createAi(ecs::Registry &reg, ecs::SpriteManager &spriteManager, float x, float y);
 
 void run(ecs::Registry &reg, const std::shared_ptr<sf::RenderWindow> &window, float &dt, ecs::InputManager &input);
 void runGui(const std::shared_ptr<sf::RenderWindow> &window, rtc::RoomManager &roomManager, bool &inLobby);

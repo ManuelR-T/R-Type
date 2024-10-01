@@ -2,18 +2,15 @@
 ** EPITECH PROJECT, 2024
 ** R-Type
 ** File description:
-** GameProtocol
+** RTypeTCPProtol
 */
 
 #pragma once
 
 #include <cstddef>
-#include "components/position.hpp"
-#include "components/velocity.hpp"
-#include "core/shared_entity.hpp"
 
 namespace rt {
-enum class TcpCommand : std::size_t {
+enum class TCPCommand : std::size_t {
     NONE,
 
     CL_NEW_USER,
@@ -45,8 +42,8 @@ enum class TcpCommand : std::size_t {
     SER_ROOM_READY
 };
 
-struct TcpPacket {
-    TcpCommand cmd = TcpCommand::NONE;
+struct TCPPacket {
+    TCPCommand cmd = TCPCommand::NONE;
 
     union {
         struct ClNewUser {
@@ -137,27 +134,4 @@ struct TcpPacket {
     } body = {};
 };
 
-} // namespace rt
-
-namespace rt {
-enum class UdpCommand : std::size_t {
-    NONE,
-    NEW_PLAYER,
-    NEW_ENTITY,
-    MOD_ENTITY,
-    DEL_ENTITY
-};
-
-struct UdpPacket {
-    UdpCommand cmd;
-
-    shared_entity_t shared_entity_id;
-
-    union {
-        struct ShareMovement {
-            ecs::component::Position pos;
-            ecs::component::Velocity vel;
-        } share_movement;
-    } body = {};
-};
 } // namespace rt

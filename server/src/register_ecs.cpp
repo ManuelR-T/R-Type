@@ -6,6 +6,7 @@
 */
 
 #include <SFML/Graphics.hpp>
+#include "RTypeServer.hpp"
 #include "components/animation.hpp"
 #include "components/controllable.hpp"
 #include "components/drawable.hpp"
@@ -21,7 +22,6 @@
 #include "components/ai_actor.hpp"
 #include "components/share_movement.hpp"
 #include "components/shared_entity.hpp"
-#include "rtype_server.hpp"
 #include "systems/missiles_stop.hpp"
 
 void rts::registerComponents(ecs::Registry &reg)

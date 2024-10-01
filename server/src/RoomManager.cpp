@@ -5,12 +5,13 @@
 ** room_manager
 */
 
-#include "GameRunner.hpp"
 #include "RoomManager.hpp"
+#include "GameRunner.hpp"
+#include "RTypeTCPProtol.hpp"
 
-void rts::RoomManager::createRoom(const std::string &name, server::TCPServer &tcpServer)
+void rts::RoomManager::createRoom(const std::string &name, ntw::TCPServer &tcpServer)
 {
-    rt::TcpPacket packet{.cmd = rt::TcpCommand::SER_ROOM_CREATED};
+    rt::TCPPacket packet{.cmd = rt::TCPCommand::SER_ROOM_CREATED};
 
     _rooms[name] = Room{};
 
@@ -18,9 +19,9 @@ void rts::RoomManager::createRoom(const std::string &name, server::TCPServer &tc
     tcpServer.sendToAllUser(reinterpret_cast<const char *>(&packet), sizeof(packet));
 }
 
-void rts::RoomManager::deleteRoom(const std::string &name, server::TCPServer &tcpServer)
+void rts::RoomManager::deleteRoom(const std::string &name, ntw::TCPServer &tcpServer)
 {
-    rt::TcpPacket packet{.cmd = rt::TcpCommand::SER_ROOM_DELETED};
+    rt::TCPPacket packet{.cmd = rt::TCPCommand::SER_ROOM_DELETED};
 
     _rooms.erase(name);
 
@@ -32,10 +33,10 @@ void rts::RoomManager::joinRoom(
     const std::string &name,
     std::size_t playerId,
     const std::string &playerName,
-    server::TCPServer &tcpServer
+    ntw::TCPServer &tcpServer
 )
 {
-    rt::TcpPacket packet{.cmd = rt::TcpCommand::SER_ROOM_JOINED};
+    rt::TCPPacket packet{.cmd = rt::TCPCommand::SER_ROOM_JOINED};
 
     _rooms.at(name).player[playerId] = PlayerLobby{.name = playerName, .ready = false};
 
@@ -44,9 +45,9 @@ void rts::RoomManager::joinRoom(
     tcpServer.sendToAllUser(reinterpret_cast<const char *>(&packet), sizeof(packet));
 }
 
-void rts::RoomManager::leaveRoom(const std::string &name, std::size_t playerId, server::TCPServer &tcpServer)
+void rts::RoomManager::leaveRoom(const std::string &name, std::size_t playerId, ntw::TCPServer &tcpServer)
 {
-    rt::TcpPacket packet{.cmd = rt::TcpCommand::SER_ROOM_LEAVED};
+    rt::TCPPacket packet{.cmd = rt::TCPCommand::SER_ROOM_LEAVED};
 
     std::memcpy(packet.body.ser_room_leaved.room_name, name.c_str(), name.size());
     std::memcpy(
@@ -59,9 +60,9 @@ void rts::RoomManager::leaveRoom(const std::string &name, std::size_t playerId, 
     tcpServer.sendToAllUser(reinterpret_cast<const char *>(&packet), sizeof(packet));
 }
 
-void rts::RoomManager::playerReady(const std::string &roomName, std::size_t playerId, server::TCPServer &tcpServer)
+void rts::RoomManager::playerReady(const std::string &roomName, std::size_t playerId, ntw::TCPServer &tcpServer)
 {
-    rt::TcpPacket packet{.cmd = rt::TcpCommand::SER_READY};
+    rt::TCPPacket packet{.cmd = rt::TCPCommand::SER_READY};
     bool allReady = true;
 
     std::memcpy(
@@ -98,20 +99,20 @@ void rts::RoomManager::playerReady(const std::string &roomName, std::size_t play
     server.wait();
 
     std::memset(reinterpret_cast<void *>(&packet), 0, sizeof(packet));
-    packet.cmd = rt::TcpCommand::SER_ROOM_READY;
+    packet.cmd = rt::TCPCommand::SER_ROOM_READY;
     packet.body.ser_room_ready.port = this->_nextPort++;
     for (const auto &[id, player] : _rooms.at(roomName).player) {
         tcpServer.sendToUser(id, reinterpret_cast<const char *>(&packet), sizeof(packet));
     }
     std::memset(reinterpret_cast<void *>(&packet), 0, sizeof(packet));
-    packet.cmd = rt::TcpCommand::SER_ROOM_IN_GAME;
+    packet.cmd = rt::TCPCommand::SER_ROOM_IN_GAME;
     std::memcpy(packet.body.ser_room_in_game.room_name, roomName.c_str(), roomName.size());
     tcpServer.sendToAllUser(reinterpret_cast<const char *>(&packet), sizeof(packet));
 }
 
-void rts::RoomManager::playerNotReady(const std::string &roomName, std::size_t playerId, server::TCPServer &tcpServer)
+void rts::RoomManager::playerNotReady(const std::string &roomName, std::size_t playerId, ntw::TCPServer &tcpServer)
 {
-    rt::TcpPacket packet{.cmd = rt::TcpCommand::SER_NOT_READY};
+    rt::TCPPacket packet{.cmd = rt::TCPCommand::SER_NOT_READY};
 
     std::memcpy(
         packet.body.ser_not_ready.player_name,
@@ -124,11 +125,11 @@ void rts::RoomManager::playerNotReady(const std::string &roomName, std::size_t p
     tcpServer.sendToAllUser(reinterpret_cast<const char *>(&packet), sizeof(packet));
 }
 
-void rts::RoomManager::sendListRoom(std::size_t playerId, server::TCPServer &tcpServer)
+void rts::RoomManager::sendListRoom(std::size_t playerId, ntw::TCPServer &tcpServer)
 {
     for (const auto &[name, content] : _rooms) {
         {
-            rt::TcpPacket packet{.cmd = rt::TcpCommand::SER_ROOM_LIST};
+            rt::TCPPacket packet{.cmd = rt::TCPCommand::SER_ROOM_LIST};
 
             std::memcpy(packet.body.ser_room_list.room_name, name.c_str(), name.size());
             tcpServer.sendToUser(playerId, reinterpret_cast<const char *>(&packet), sizeof(packet));
@@ -136,7 +137,7 @@ void rts::RoomManager::sendListRoom(std::size_t playerId, server::TCPServer &tcp
         bool isFullReady = !content.player.empty();
         for (const auto &[_, player] : content.player) {
             {
-                rt::TcpPacket packet{.cmd = rt::TcpCommand::SER_ROOM_CONTENT};
+                rt::TCPPacket packet{.cmd = rt::TCPCommand::SER_ROOM_CONTENT};
                 packet.body.ser_room_content.ready = player.ready;
                 std::memcpy(packet.body.ser_room_content.player_name, player.name.c_str(), player.name.size());
                 tcpServer.sendToUser(playerId, reinterpret_cast<const char *>(&packet), sizeof(packet));
@@ -146,7 +147,7 @@ void rts::RoomManager::sendListRoom(std::size_t playerId, server::TCPServer &tcp
             }
         }
         if (isFullReady) {
-            rt::TcpPacket packet{.cmd = rt::TcpCommand::SER_ROOM_IN_GAME};
+            rt::TCPPacket packet{.cmd = rt::TCPCommand::SER_ROOM_IN_GAME};
             std::memcpy(packet.body.ser_room_list.room_name, name.c_str(), name.size());
             tcpServer.sendToUser(playerId, reinterpret_cast<const char *>(&packet), sizeof(packet));
         }

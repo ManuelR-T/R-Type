@@ -16,7 +16,7 @@
 
 using asio::ip::udp;
 
-namespace client {
+namespace ntw {
 
 /**
  *  @class UDPClient
@@ -77,4 +77,4 @@ class UDPClient : public AsioClient {
     std::array<char, BUFF_SIZE> _buff;
     std::thread _recvThread;
 };
-} // namespace client
+} // namespace ntw

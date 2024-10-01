@@ -7,9 +7,9 @@
 
 #include "missiles_stop.hpp"
 
+#include "RTypeConst.hpp"
 #include "components/missile.hpp"
 #include "components/position.hpp"
-#include "rtype_const.hpp"
 
 void ecs::systems::missilesStop(ecs::Registry &reg)
 {

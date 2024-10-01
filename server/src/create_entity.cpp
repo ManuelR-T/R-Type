@@ -5,7 +5,6 @@
 ** create_entity
 */
 
-#include "GameProtocol.hpp"
 #include "components/drawable.hpp"
 #include "components/hitbox.hpp"
 #include "components/missile.hpp"
@@ -15,7 +14,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <cstring>
-#include "rtype_server.hpp"
+#include "RTypeServer.hpp"
 
 // ! It's a temporary file that will be delete when factory are setup
 
@@ -46,12 +45,12 @@ void rts::createStatic(ecs::Registry &reg, float x, float y)
     reg.addComponent(entity, ecs::component::Hitbox{50.f, 50.f});
 }
 
-void rts::createMissile(ecs::Registry &reg, const rt::UdpPacket &msg)
+void rts::createMissile(ecs::Registry &reg, const rt::UDPPacket &msg)
 {
-    auto missile = reg.spawnSharedEntity(msg.shared_entity_id);
+    auto missile = reg.spawnSharedEntity(msg.sharedEntityId);
 
-    const auto &pos = msg.body.share_movement.pos;
-    const auto &vel = msg.body.share_movement.vel;
+    const auto &pos = msg.body.shareMovement.pos;
+    const auto &vel = msg.body.shareMovement.vel;
 
     reg.addComponent(missile, ecs::component::Position{pos.x, pos.y});
     reg.addComponent(missile, ecs::component::Velocity{vel.vx, vel.vy});

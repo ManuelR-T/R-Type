@@ -8,7 +8,7 @@
 #include "ArgParser.hpp"
 #include <iostream>
 
-void ArgParser::addArgument(
+void eng::ArgParser::addArgument(
     const std::string &longName,
     std::optional<std::string> shortName,
     ArgType type,
@@ -30,7 +30,7 @@ void ArgParser::addArgument(
     }
 }
 
-bool ArgParser::parse(int argc, const char **argv)
+bool eng::ArgParser::parse(int argc, const char **argv)
 {
     for (int i = 1; i < argc; ++i) {
         std::string arg(argv[i]);
@@ -97,7 +97,7 @@ bool ArgParser::parse(int argc, const char **argv)
     return true;
 }
 
-void ArgParser::printHelp() const
+void eng::ArgParser::printHelp() const
 {
     std::cout << "Available arguments:\n";
     for (const auto &arg : _arguments) {
@@ -110,7 +110,7 @@ void ArgParser::printHelp() const
     }
 }
 
-bool ArgParser::_validateType(const std::string &value, ArgType type) const
+bool eng::ArgParser::_validateType(const std::string &value, ArgType type) const
 {
     std::istringstream iss(value);
     if (type == ArgType::INT) {
@@ -135,7 +135,7 @@ bool ArgParser::_validateType(const std::string &value, ArgType type) const
     return false;
 }
 
-std::string ArgParser::_argTypeToString(ArgType type) const
+std::string eng::ArgParser::_argTypeToString(ArgType type) const
 {
     switch (type) {
         case ArgType::INT:

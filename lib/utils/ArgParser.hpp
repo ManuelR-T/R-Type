@@ -16,6 +16,8 @@
 #include <string>
 #include <unordered_map>
 
+namespace eng {
+
 class ArgParser {
     public:
     enum class ArgType {
@@ -101,3 +103,5 @@ inline bool ArgParser::getValue<bool>(const std::string &longName) const
     }
     throw std::runtime_error("Argument is not defined or has no value: " + longName);
 }
+
+} // namespace eng

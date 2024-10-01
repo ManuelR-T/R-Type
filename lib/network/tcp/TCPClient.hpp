@@ -16,9 +16,9 @@
 
 using asio::ip::tcp;
 
-namespace client {
+namespace ntw {
 
-class TCPClient : public client::AsioClient {
+class TCPClient : public ntw::AsioClient {
     public:
     /**
      * @brief Constructor takes the param host of the server and the param port
@@ -59,4 +59,4 @@ class TCPClient : public client::AsioClient {
     std::function<void(const char *, std::size_t)> _recvHandler;
 };
 
-} // namespace client
+} // namespace ntw

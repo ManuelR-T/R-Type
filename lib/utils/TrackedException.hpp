@@ -9,7 +9,7 @@
 #include <source_location>
 #endif
 
-namespace my {
+namespace eng {
 
 class TrackedException : public std::exception {
 private:
@@ -36,5 +36,4 @@ public:
 
     [[nodiscard]] const char *what() const noexcept override;
 };
-
-} // namespace my
+} // namespace eng

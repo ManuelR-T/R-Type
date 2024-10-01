@@ -13,7 +13,7 @@ void ecs::systems::healthCheck(Registry &reg)
     auto &healths = reg.getComponents<ecs::component::Health>();
 
     for (size_t entityId = 0; entityId < healths.size(); entityId++) {
-        if (healths[entityId]->curr_hp <= 0) {
+        if (healths[entityId]->currHp <= 0) {
             reg.killEntity(entityId);
         }
     }

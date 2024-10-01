@@ -19,8 +19,8 @@ namespace ecs::component {
  * It holds the texture identifier and the SFML `Sprite` object, which can be used for drawing.
  */
 struct Sprite {
-    std::string texture_id; /**< Identifier for the texture used by the sprite. */
-    sf::Sprite sprite_obj;  /**< The SFML sprite object used for rendering. */
+    std::string textureId; /**< Identifier for the texture used by the sprite. */
+    sf::Sprite spriteObj;  /**< The SFML sprite object used for rendering. */
 };
 
 } // namespace ecs::component

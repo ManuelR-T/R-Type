@@ -10,7 +10,7 @@
 #include "IServer.hpp"
 #include <asio/io_context.hpp>
 
-namespace server {
+namespace ntw {
 
 /**
  *  @class AsioServer
@@ -27,4 +27,4 @@ class AsioServer : public IServer {
     virtual void _asioRun() = 0;
     asio::io_context _io;
 };
-} // namespace server
+} // namespace ntw

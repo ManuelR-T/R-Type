@@ -9,7 +9,7 @@
 
 #include <cstddef>
 
-namespace server {
+namespace ntw {
 constexpr std::size_t BUFF_SIZE = 4096;
 
 class IServer {
@@ -19,4 +19,4 @@ class IServer {
 
     virtual void run() = 0;
 };
-} // namespace server
+} // namespace ntw

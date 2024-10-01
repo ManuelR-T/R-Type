@@ -9,9 +9,9 @@
 #include <memory>
 #include "ArgParser.hpp"
 #include "GameManager.hpp"
+#include "RTypeClient.hpp"
 #include "core/InputManager.hpp"
 #include "core/Registry.hpp"
-#include "rtype_client.hpp"
 
 void rtc::run(ecs::Registry &reg, const std::shared_ptr<sf::RenderWindow> &window, float &dt, ecs::InputManager &input)
 {
@@ -33,11 +33,11 @@ void rtc::run(ecs::Registry &reg, const std::shared_ptr<sf::RenderWindow> &windo
 
 int main(int argc, const char *argv[])
 {
-    ArgParser argParser;
-    argParser.addArgument("ip", "i", ArgParser::ArgType::STRING, true, "Server IP address");
-    argParser.addArgument("port", "p", ArgParser::ArgType::INT, true, "Server port");
-    argParser.addArgument("player_name", "pn", ArgParser::ArgType::STRING, true, "Player name");
-    argParser.addArgument("help", "h", ArgParser::ArgType::BOOL, false, "Print this help message");
+    eng::ArgParser argParser;
+    argParser.addArgument("ip", "i", eng::ArgParser::ArgType::STRING, true, "Server IP address");
+    argParser.addArgument("port", "p", eng::ArgParser::ArgType::INT, true, "Server port");
+    argParser.addArgument("player_name", "pn", eng::ArgParser::ArgType::STRING, true, "Player name");
+    argParser.addArgument("help", "h", eng::ArgParser::ArgType::BOOL, false, "Print this help message");
 
     if (!argParser.parse(argc, argv)) {
         argParser.printHelp();

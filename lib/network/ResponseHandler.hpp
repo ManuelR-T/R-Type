@@ -14,6 +14,8 @@
 #include "TrackedException.hpp"
 #include <unordered_map>
 
+namespace ntw {
+
 template <typename CommandType, typename PacketType>
 class ResponseHandler {
     public:
@@ -33,14 +35,14 @@ class ResponseHandler {
         CommandType cmdType;
 
         if (size != sizeof(msg)) {
-            throw my::TrackedException("Recv msg with bad size: " + std::to_string(size) + '.');
+            throw eng::TrackedException("Recv msg with bad size: " + std::to_string(size) + '.');
         }
         std::memcpy(&msg, data, sizeof(msg));
         cmdType = _cmdTypeGetter(msg);
         if (_handler.contains(cmdType)) {
             _handler[cmdType](msg);
         } else {
-            throw my::TrackedException(
+            throw eng::TrackedException(
                 "Response without handler: " + std::to_string(static_cast<std::size_t>(cmdType)) + '.'
             );
         }
@@ -50,3 +52,5 @@ class ResponseHandler {
     std::unordered_map<CommandType, std::function<void(const PacketType &)>> _handler;
     std::function<CommandType(const PacketType &)> _cmdTypeGetter;
 };
+
+} // namespace ntw

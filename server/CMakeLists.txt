@@ -2,10 +2,10 @@ add_executable(r-type_server
     src/main.cpp
     src/register_ecs.cpp
     src/create_entity.cpp
-    src/game_runner.cpp
+    src/GameRunner.cpp
     src/register_tcp_response.cpp
     src/register_udp_response.cpp
-    src/room_manager.cpp
+    src/RoomManager.cpp
 )
 
 target_compile_options(r-type_server PRIVATE -Wall -Wextra)

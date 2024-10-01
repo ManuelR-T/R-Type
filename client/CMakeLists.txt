@@ -4,14 +4,14 @@ add_executable(r-type_client
     src/register_ecs.cpp
     src/setup_tcp_connection.cpp
     src/launch_game.cpp
-    src/room_manager.cpp
+    src/RoomManager.cpp
     src/register_tcp_response.cpp
     src/run_gui.cpp
 )
 
 target_compile_options(r-type_client PRIVATE -Wall -Wextra)
 
-target_link_libraries(r-type_client PRIVATE ECS NETWORK UTILS ARGPARSER ImGui-SFML::ImGui-SFML)
+target_link_libraries(r-type_client PRIVATE ECS NETWORK UTILS ImGui-SFML::ImGui-SFML)
 
 target_include_directories(r-type_client PRIVATE ${CMAKE_SOURCE_DIR}/include)
 

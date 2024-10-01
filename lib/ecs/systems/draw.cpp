@@ -20,7 +20,7 @@ void draw(Registry &reg, sf::RenderWindow &window)
 
     for (size_t i = 0; i < sprites.size(); ++i) {
         if (sprites.has(i) && sprites[i]) {
-            window.draw(sprites[i]->sprite_obj);
+            window.draw(sprites[i]->spriteObj);
         }
     }
 
