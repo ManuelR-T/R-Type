@@ -5,54 +5,55 @@
 ** argParser
 */
 
-#include "argParser.hpp"
+#include "ArgParser.hpp"
+#include <iostream>
 
-void ArgParser::addArgument(
-    const std::string &long_name,
-    std::optional<std::string> short_name,
+void eng::ArgParser::addArgument(
+    const std::string &longName,
+    std::optional<std::string> shortName,
     ArgType type,
     bool required,
     const std::string &description,
     std::optional<std::function<bool(const std::string &)>> validator
 )
 {
-    arguments_.emplace_back(
-        Argument{long_name, short_name, type, required, description, std::move(validator), std::nullopt}
+    _arguments.emplace_back(
+        Argument{longName, shortName, type, required, description, std::move(validator), std::nullopt}
     );
 
-    Argument *arg_ptr = &arguments_.back();
+    Argument *argPtr = &_arguments.back();
 
-    arg_map_[long_name] = arg_ptr;
+    _argMap[longName] = argPtr;
 
-    if (short_name) {
-        arg_map_[*short_name] = arg_ptr;
+    if (shortName) {
+        _argMap[*shortName] = argPtr;
     }
 }
 
-bool ArgParser::parse(int argc, const char **argv)
+bool eng::ArgParser::parse(int argc, const char **argv)
 {
     for (int i = 1; i < argc; ++i) {
         std::string arg(argv[i]);
 
         Argument *argument = nullptr;
-        std::string arg_name;
+        std::string argName;
 
         if (arg.rfind("--", 0) == 0) {
-            arg_name = arg.substr(2);
-            auto it = arg_map_.find(arg_name);
-            if (it != arg_map_.end()) {
+            argName = arg.substr(2);
+            auto it = _argMap.find(argName);
+            if (it != _argMap.end()) {
                 argument = it->second;
             } else {
-                std::cerr << "Unknown argument: --" << arg_name << std::endl;
+                std::cerr << "Unknown argument: --" << argName << std::endl;
                 return false;
             }
         } else if (arg.rfind('-', 0) == 0) {
-            arg_name = arg.substr(1);
-            auto it = arg_map_.find(arg_name);
-            if (it != arg_map_.end()) {
+            argName = arg.substr(1);
+            auto it = _argMap.find(argName);
+            if (it != _argMap.end()) {
                 argument = it->second;
             } else {
-                std::cerr << "Unknown argument: -" << arg_name << std::endl;
+                std::cerr << "Unknown argument: -" << argName << std::endl;
                 return false;
             }
         } else {
@@ -73,12 +74,12 @@ bool ArgParser::parse(int argc, const char **argv)
         }
     }
 
-    for (auto &arg : arguments_) {
+    for (auto &arg : _arguments) {
         if (arg.value) {
             std::string val = *arg.value;
-            if (!validateType(val, arg.type)) {
+            if (!_validateType(val, arg.type)) {
                 std::cerr << "Invalid type for argument " << arg.long_name
-                          << ". Expected type: " << argTypeToString(arg.type) << "." << std::endl;
+                          << ". Expected type: " << _argTypeToString(arg.type) << "." << std::endl;
                 return false;
             }
             if (arg.validator && !(*arg.validator)(val)) {
@@ -96,20 +97,20 @@ bool ArgParser::parse(int argc, const char **argv)
     return true;
 }
 
-void ArgParser::printHelp() const
+void eng::ArgParser::printHelp() const
 {
     std::cout << "Available arguments:\n";
-    for (const auto &arg : arguments_) {
+    for (const auto &arg : _arguments) {
         std::cout << "  ";
         if (arg.short_name) {
             std::cout << "-" << *arg.short_name << ", ";
         }
-        std::cout << "--" << arg.long_name << " (" << argTypeToString(arg.type) << ") "
+        std::cout << "--" << arg.long_name << " (" << _argTypeToString(arg.type) << ") "
                   << (arg.required ? "[required]" : "[optional]") << " : " << arg.description << std::endl;
     }
 }
 
-bool ArgParser::validateType(const std::string &value, ArgType type) const
+bool eng::ArgParser::_validateType(const std::string &value, ArgType type) const
 {
     std::istringstream iss(value);
     if (type == ArgType::INT) {
@@ -134,7 +135,7 @@ bool ArgParser::validateType(const std::string &value, ArgType type) const
     return false;
 }
 
-std::string ArgParser::argTypeToString(ArgType type) const
+std::string eng::ArgParser::_argTypeToString(ArgType type) const
 {
     switch (type) {
         case ArgType::INT:

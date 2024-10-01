@@ -5,27 +5,26 @@
 ** register_ecs
 */
 
-#include "rtype_server.hpp"
+#include "RTypeServer.hpp"
+#include "components/position.hpp"
+#include "components/velocity.hpp"
 
-void rts::register_udp_response(
-    ecs::registry &reg,
-    ecs::response_handler<rt::udp_command, rt::udp_packet> &response_handler
-)
+void rts::registerUdpResponse(ecs::Registry &reg, ntw::ResponseHandler<rt::UDPCommand, rt::UDPPacket> &responseHandler)
 {
-    response_handler.register_handler(rt::udp_command::NEW_PLAYER, [&reg](const rt::udp_packet &msg) {
-        rts::create_player(reg, msg.shared_entity_id);
+    responseHandler.registerHandler(rt::UDPCommand::NEW_PLAYER, [&reg](const rt::UDPPacket &msg) {
+        rts::createPlayer(reg, msg.sharedEntityId);
     });
 
-    response_handler.register_handler(rt::udp_command::MOD_ENTITY, [&reg](const rt::udp_packet &msg) {
+    responseHandler.registerHandler(rt::UDPCommand::MOD_ENTITY, [&reg](const rt::UDPPacket &msg) {
         try {
-            reg.get_component<ecs::component::position>(reg.get_local_entity().at(msg.shared_entity_id)).value() =
-                msg.body.share_movement.pos;
-            reg.get_component<ecs::component::velocity>(reg.get_local_entity().at(msg.shared_entity_id)).value() =
-                msg.body.share_movement.vel;
+            reg.getComponent<ecs::component::Position>(reg.getLocalEntity().at(msg.sharedEntityId)).value() =
+                msg.body.shareMovement.pos;
+            reg.getComponent<ecs::component::Velocity>(reg.getLocalEntity().at(msg.sharedEntityId)).value() =
+                msg.body.shareMovement.vel;
         } catch (...) {
         }
     });
-    response_handler.register_handler(rt::udp_command::NEW_ENTITY, [&reg](const rt::udp_packet &msg) {
-        rts::create_missile(reg, msg);
+    responseHandler.registerHandler(rt::UDPCommand::NEW_ENTITY, [&reg](const rt::UDPPacket &msg) {
+        rts::createMissile(reg, msg);
     });
 }

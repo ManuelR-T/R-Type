@@ -8,31 +8,31 @@
 #include "../components/share_movement.hpp"
 #include "../components/position.hpp"
 #include "../components/velocity.hpp"
-#include "../core/registry.hpp"
-#include "../core/zipper.hpp"
-#include "GameProtocol.hpp"
+#include "../core/Registry.hpp"
+#include "../core/Zipper.hpp"
+#include "RTypeUDPProtol.hpp"
+#include "UDPClient.hpp"
 #include "../components/shared_entity.hpp"
-#include "../systems/share_movement.hpp"
 
 namespace ecs::systems {
 
-void share_movement(registry &reg, client::UDPClient &udpClient)
+void shareMovement(Registry &reg, ntw::UDPClient &udpClient)
 {
-    auto &shared_mov = reg.get_components<ecs::component::share_movement>();
-    auto &positions = reg.get_components<ecs::component::position>();
-    auto &velocitys = reg.get_components<ecs::component::velocity>();
-    auto &shared_entity = reg.get_components<ecs::component::shared_entity>();
+    auto &sharedMov = reg.getComponents<ecs::component::ShareMovement>();
+    auto &positions = reg.getComponents<ecs::component::Position>();
+    auto &velocitys = reg.getComponents<ecs::component::Velocity>();
+    auto &sharedEntity = reg.getComponents<ecs::component::SharedEntity>();
 
-    zipper<
-        ecs::component::share_movement,
-        ecs::component::position,
-        ecs::component::velocity,
-        ecs::component::shared_entity>
-        zip(shared_mov, positions, velocitys, shared_entity);
+    Zipper<
+        ecs::component::ShareMovement,
+        ecs::component::Position,
+        ecs::component::Velocity,
+        ecs::component::SharedEntity>
+        zip(sharedMov, positions, velocitys, sharedEntity);
 
     for (auto [_, pos, vel, shared_entity] : zip) {
-        rt::udp_packet msg = {.cmd = rt::udp_command::MOD_ENTITY, .shared_entity_id = shared_entity.shared_entity_id};
-        msg.body.share_movement = {.pos = {pos.x, pos.y}, .vel = {.vx = vel.vx, .vy = vel.vy}};
+        rt::UDPPacket msg = {.cmd = rt::UDPCommand::MOD_ENTITY, .sharedEntityId = shared_entity.sharedEntityId};
+        msg.body.shareMovement = {.pos = {pos.x, pos.y}, .vel = {.vx = vel.vx, .vy = vel.vy}};
         udpClient.send(reinterpret_cast<const char *>(&msg), sizeof(msg));
     }
 }

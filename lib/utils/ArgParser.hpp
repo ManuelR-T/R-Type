@@ -9,13 +9,14 @@
 
 #include <algorithm>
 #include <functional>
-#include <iostream>
 #include <list>
 #include <optional>
 #include <sstream>
 #include <stdexcept>
 #include <string>
 #include <unordered_map>
+
+namespace eng {
 
 class ArgParser {
     public:
@@ -38,8 +39,8 @@ class ArgParser {
     };
 
     void addArgument(
-        const std::string &long_name,
-        std::optional<std::string> short_name = std::nullopt,
+        const std::string &longName,
+        std::optional<std::string> shortName = std::nullopt,
         ArgType type = ArgType::STRING,
         bool required = true,
         const std::string &description = "",
@@ -49,47 +50,47 @@ class ArgParser {
     bool parse(int argc, const char **argv);
 
     template <typename T>
-    T getValue(const std::string &long_name) const;
+    T getValue(const std::string &longName) const;
 
     void printHelp() const;
 
     private:
-    bool validateType(const std::string &value, ArgType type) const;
-    std::string argTypeToString(ArgType type) const;
+    bool _validateType(const std::string &value, ArgType type) const;
+    std::string _argTypeToString(ArgType type) const;
 
-    std::list<Argument> arguments_;
-    std::unordered_map<std::string, Argument *> arg_map_;
+    std::list<Argument> _arguments;
+    std::unordered_map<std::string, Argument *> _argMap;
 };
 
 template <typename T>
-T ArgParser::getValue(const std::string &long_name) const
+T ArgParser::getValue(const std::string &longName) const
 {
-    auto it = std::find_if(arguments_.begin(), arguments_.end(), [&](const Argument &arg) {
-        return arg.long_name == long_name;
+    auto it = std::find_if(_arguments.begin(), _arguments.end(), [&](const Argument &arg) {
+        return arg.long_name == longName;
     });
 
-    if (it != arguments_.end() && it->value) {
+    if (it != _arguments.end() && it->value) {
         T result;
         std::istringstream iss(*(it->value));
         iss >> result;
         if (iss.fail() || !iss.eof()) {
             throw std::runtime_error(
-                "Failed to convert argument value to the requested type for argument: " + long_name
+                "Failed to convert argument value to the requested type for argument: " + longName
             );
         }
         return result;
     }
-    throw std::runtime_error("Argument is not defined or has no value: " + long_name);
+    throw std::runtime_error("Argument is not defined or has no value: " + longName);
 }
 
 template <>
-inline bool ArgParser::getValue<bool>(const std::string &long_name) const
+inline bool ArgParser::getValue<bool>(const std::string &longName) const
 {
-    auto it = std::find_if(arguments_.begin(), arguments_.end(), [&](const Argument &arg) {
-        return arg.long_name == long_name;
+    auto it = std::find_if(_arguments.begin(), _arguments.end(), [&](const Argument &arg) {
+        return arg.long_name == longName;
     });
 
-    if (it != arguments_.end() && it->value) {
+    if (it != _arguments.end() && it->value) {
         std::string val = *(it->value);
         std::transform(val.begin(), val.end(), val.begin(), ::tolower);
         if (val == "true" || val == "1") {
@@ -97,8 +98,10 @@ inline bool ArgParser::getValue<bool>(const std::string &long_name) const
         } else if (val == "false" || val == "0") {
             return false;
         } else {
-            throw std::runtime_error("Invalid boolean value for argument: " + long_name);
+            throw std::runtime_error("Invalid boolean value for argument: " + longName);
         }
     }
-    throw std::runtime_error("Argument is not defined or has no value: " + long_name);
+    throw std::runtime_error("Argument is not defined or has no value: " + longName);
 }
+
+} // namespace eng

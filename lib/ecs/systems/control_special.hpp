@@ -8,9 +8,9 @@
 #pragma once
 
 #include <SFML/Window/Event.hpp>
-#include "core/registry.hpp"
+#include "core/InputManager.hpp"
+#include "core/Registry.hpp"
 #include "UDPClient.hpp"
-#include "core/input_manager.hpp"
 #include "core/SpriteManager.hpp"
 
 namespace ecs::systems {
@@ -29,6 +29,6 @@ namespace ecs::systems {
  * @param udp Udp client to send informations to server.
  * @param sprite_manager SpriteManager object that contains all the textures.
  */
-void control_special(registry &reg, ecs::input_manager &input, client::UDPClient &udp, SpriteManager &sprite_manager);
+void controlSpecial(Registry &reg, ecs::InputManager &input, ntw::UDPClient &udp, SpriteManager &spriteManager);
 
 } // namespace ecs::systems

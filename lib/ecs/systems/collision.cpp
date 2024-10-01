@@ -7,22 +7,20 @@
 
 #include <SFML/Graphics.hpp>
 #include <algorithm>
-#include <cstddef>
 #include <iostream>
 #include "components/controllable.hpp"
 #include "components/hitbox.hpp"
+#include "components/missile.hpp"
 #include "components/position.hpp"
 #include "components/velocity.hpp"
-#include "components/missile.hpp"
-#include "core/registry.hpp"
-#include "core/sparse_array.hpp"
+#include "core/Registry.hpp"
 
-static void resolve_collision(
-    ecs::registry &reg,
-    ecs::component::position &pos,
+static void resolveCollision(
+    ecs::Registry &reg,
+    ecs::component::Position &pos,
     size_t entity,
     const sf::FloatRect &intersection,
-    std::optional<ecs::component::velocity> &vel
+    std::optional<ecs::component::Velocity> &vel
 )
 {
     if (!vel) {
@@ -46,28 +44,28 @@ static void resolve_collision(
     }
 }
 
-static void resolve_tag_effect(ecs::registry &reg, size_t entityA, size_t entityB)
+static void resolve_tag_effect(ecs::Registry &reg, size_t entityA, size_t entityB)
 {
-    auto &missiles = reg.get_components<ecs::component::missile>();
+    auto &missiles = reg.getComponents<ecs::component::Missile>();
 
     if (missiles.has(entityA) && !missiles.has(entityB)) {
         std::cout << "Entity B is dead => " << entityB << std::endl;
-        reg.kill_entity(entityB);
+        reg.killEntity(entityB);
     }
     if (missiles.has(entityB) && !missiles.has(entityA)) {
         std::cout << "Entity A is dead => " << entityA << std::endl;
-        reg.kill_entity(entityA);
+        reg.killEntity(entityA);
     }
 }
 
 namespace ecs::systems {
 
-void collision(registry &reg)
+void collision(Registry &reg)
 {
-    auto &positions = reg.get_components<ecs::component::position>();
-    auto &hitboxes = reg.get_components<ecs::component::hitbox>();
-    auto &velocities = reg.get_components<ecs::component::velocity>();
-    auto &controllables = reg.get_components<ecs::component::controllable>();
+    auto &positions = reg.getComponents<ecs::component::Position>();
+    auto &hitboxes = reg.getComponents<ecs::component::Hitbox>();
+    auto &velocities = reg.getComponents<ecs::component::Velocity>();
+    auto &controllables = reg.getComponents<ecs::component::Controllable>();
 
     size_t maxEntity = std::max(positions.size(), hitboxes.size());
 
@@ -93,9 +91,9 @@ void collision(registry &reg)
                 bool entityBControllable = controllables.has(entityB);
 
                 if (entityAControllable && !entityBControllable) {
-                    resolve_collision(reg, posA, entityA, intersection, velocities[entityA]);
+                    resolveCollision(reg, posA, entityA, intersection, velocities[entityA]);
                 } else if (!entityAControllable && entityBControllable) {
-                    resolve_collision(reg, posB, entityB, intersection, velocities[entityB]);
+                    resolveCollision(reg, posB, entityB, intersection, velocities[entityB]);
                 }
                 // TODO: If both entities are controllable or both are non-controllable
                 resolve_tag_effect(reg, entityA, entityB);

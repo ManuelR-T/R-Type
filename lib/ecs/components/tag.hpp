@@ -9,11 +9,6 @@
 
 #include <concepts>
 
-enum test {
-    A,
-    B,
-};
-
 namespace ecs::component {
 
 template <typename T>

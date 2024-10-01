@@ -6,28 +6,28 @@
 */
 
 #include <SFML/Graphics.hpp>
-#include "../core/registry.hpp"
+#include "../core/Registry.hpp"
 #include "components/drawable.hpp"
 #include "components/position.hpp"
 #include "components/sprite.hpp"
-#include "core/zipper.hpp"
+#include "core/Zipper.hpp"
 
 namespace ecs::systems {
 
-void draw(registry &reg, sf::RenderWindow &window)
+void draw(Registry &reg, sf::RenderWindow &window)
 {
-    auto &sprites = reg.get_components<component::sprite>();
+    auto &sprites = reg.getComponents<component::Sprite>();
 
     for (size_t i = 0; i < sprites.size(); ++i) {
         if (sprites.has(i) && sprites[i]) {
-            window.draw(sprites[i]->sprite_obj);
+            window.draw(sprites[i]->spriteObj);
         }
     }
 
-    auto &positions = reg.get_components<ecs::component::position>();
-    auto &drawables = reg.get_components<ecs::component::drawable>();
+    auto &positions = reg.getComponents<ecs::component::Position>();
+    auto &drawables = reg.getComponents<ecs::component::Drawable>();
 
-    ecs::zipper<ecs::component::position, ecs::component::drawable> zip(positions, drawables);
+    ecs::Zipper<ecs::component::Position, ecs::component::Drawable> zip(positions, drawables);
 
     for (auto [pos, draw] : zip) {
         draw.shape.setPosition(pos.x, pos.y);

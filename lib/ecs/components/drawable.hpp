@@ -17,7 +17,7 @@ namespace ecs::component {
  * The `drawable` component contains a shape that can be rendered on the screen.
  * It utilizes SFML's `RectangleShape` to define the visual representation.
  */
-struct drawable {
+struct Drawable {
     sf::RectangleShape shape; /**< The shape used for rendering the entity */
 };
 

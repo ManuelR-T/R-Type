@@ -9,7 +9,7 @@
 
 #include <cstddef>
 
-namespace client {
+namespace ntw {
 constexpr std::size_t BUFF_SIZE = 4096;
 
 class IClient {
@@ -20,4 +20,4 @@ class IClient {
     virtual void run() = 0;
     virtual void send(const char *data, std::size_t size) = 0;
 };
-} // namespace client
+} // namespace ntw

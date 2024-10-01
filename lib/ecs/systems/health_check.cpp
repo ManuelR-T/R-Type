@@ -8,13 +8,13 @@
 #include "health_check.hpp"
 #include "components/health.hpp"
 
-void ecs::systems::health_check(registry &reg)
+void ecs::systems::healthCheck(Registry &reg)
 {
-    auto &healths = reg.get_components<ecs::component::health>();
+    auto &healths = reg.getComponents<ecs::component::Health>();
 
     for (size_t entityId = 0; entityId < healths.size(); entityId++) {
-        if (healths[entityId]->curr_hp <= 0) {
-            reg.kill_entity(entityId);
+        if (healths[entityId]->currHp <= 0) {
+            reg.killEntity(entityId);
         }
     }
 }

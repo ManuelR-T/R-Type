@@ -14,6 +14,6 @@ namespace ecs::component {
  *
  * An entity with this component is marked as an enemy.
  */
-struct enemy {};
+struct Enemy {};
 
 } // namespace ecs::component

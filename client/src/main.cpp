@@ -7,13 +7,13 @@
 
 #include <SFML/Graphics.hpp>
 #include <memory>
-#include "argParser.hpp"
-#include "core/registry.hpp"
-#include "core/input_manager.hpp"
-#include "game_manager.hpp"
-#include "rtype_client.hpp"
+#include "ArgParser.hpp"
+#include "GameManager.hpp"
+#include "RTypeClient.hpp"
+#include "core/InputManager.hpp"
+#include "core/Registry.hpp"
 
-void rtc::run(ecs::registry &reg, const std::shared_ptr<sf::RenderWindow> &window, float &dt, ecs::input_manager &input)
+void rtc::run(ecs::Registry &reg, const std::shared_ptr<sf::RenderWindow> &window, float &dt, ecs::InputManager &input)
 {
     sf::Clock clock;
 
@@ -27,17 +27,17 @@ void rtc::run(ecs::registry &reg, const std::shared_ptr<sf::RenderWindow> &windo
             }
             input.update(event);
         }
-        reg.run_systems();
+        reg.runSystems();
     }
 }
 
 int main(int argc, const char *argv[])
 {
-    ArgParser argParser;
-    argParser.addArgument("ip", "i", ArgParser::ArgType::STRING, true, "Server IP address");
-    argParser.addArgument("port", "p", ArgParser::ArgType::INT, true, "Server port");
-    argParser.addArgument("player_name", "pn", ArgParser::ArgType::STRING, true, "Player name");
-    argParser.addArgument("help", "h", ArgParser::ArgType::BOOL, false, "Print this help message");
+    eng::ArgParser argParser;
+    argParser.addArgument("ip", "i", eng::ArgParser::ArgType::STRING, true, "Server IP address");
+    argParser.addArgument("port", "p", eng::ArgParser::ArgType::INT, true, "Server port");
+    argParser.addArgument("player_name", "pn", eng::ArgParser::ArgType::STRING, true, "Player name");
+    argParser.addArgument("help", "h", eng::ArgParser::ArgType::BOOL, false, "Print this help message");
 
     if (!argParser.parse(argc, argv)) {
         argParser.printHelp();
@@ -50,10 +50,10 @@ int main(int argc, const char *argv[])
 
     auto ip = argParser.getValue<std::string>("ip");
     auto port = argParser.getValue<int>("port");
-    auto player_name = argParser.getValue<std::string>("player_name");
+    auto playerName = argParser.getValue<std::string>("player_name");
 
-    rtc::game_manager game(ip, port, player_name);
+    rtc::GameManager game(ip, port, playerName);
 
-    game.run_game();
+    game.runGame();
     return 0;
 }

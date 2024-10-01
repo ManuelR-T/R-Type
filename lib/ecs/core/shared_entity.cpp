@@ -8,7 +8,7 @@
 #include "shared_entity.hpp"
 #include <random>
 
-shared_entity_t ecs::generate_shared_entity_id()
+shared_entity_t ecs::generateSharedEntityId()
 {
     std::random_device rd;
     std::mt19937_64 gen(rd());

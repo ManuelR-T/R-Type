@@ -14,9 +14,10 @@ add_library(ECS STATIC
 
 target_include_directories(ECS PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/../include/
+    ${CMAKE_CURRENT_SOURCE_DIR}/../utils/
     ${CMAKE_CURRENT_SOURCE_DIR}/../network/
     ${CMAKE_CURRENT_SOURCE_DIR}/../network/udp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../include
 )
 
 CPMAddPackage(

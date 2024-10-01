@@ -7,8 +7,8 @@
 
 #pragma once
 
+#include "../core/Registry.hpp"
 #include "../core/SpriteManager.hpp"
-#include "../core/registry.hpp"
 
 namespace ecs::systems {
 
@@ -23,6 +23,6 @@ namespace ecs::systems {
  * @param dt The delta time since the last update, used to update animations.
  * @param sprite_manager Reference to the `SpriteManager` for texture access.
  */
-void sprite_system(registry &reg, float dt, SpriteManager &sprite_manager);
+void spriteSystem(Registry &reg, float dt, SpriteManager &spriteManager);
 
 } // namespace ecs::systems

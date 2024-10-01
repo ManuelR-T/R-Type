@@ -1,25 +1,24 @@
 Checks:
-  -*,
-  clang-analyzer-*,
-  modernize-*,
-  readability-*,
-  performance-*,
-  cppcoreguidelines-init-variables,
-  cppcoreguidelines-avoid-goto,
-  cppcoreguidelines-prefer-member-initializer,
-  -performance-enum-size,
-  -performance-move-constructor-init,
-  -performance-no-int-to-ptr,
-  -modernize-use-trailing-return-type,
-  -modernize-redundant-void-arg,
-  -modernize-macro-to-enum,
-  -readability-identifier-length,
-  -readability-magic-numbers,
-  -readability-else-after-return,
-  -readability-uppercase-literal-suffix,
-  -readability-identifier-naming,
-  -readability-implicit-bool-conversion,
-  -modernize-use-nodiscard,
+  -*
+  clang-analyzer-*
+  modernize-*
+  readability-*
+  performance-*
+  cppcoreguidelines-init-variables
+  cppcoreguidelines-avoid-goto
+  cppcoreguidelines-prefer-member-initializer
+  -performance-enum-size
+  -performance-move-constructor-init
+  -performance-no-int-to-ptr
+  -modernize-use-trailing-return-type
+  -modernize-redundant-void-arg
+  -modernize-macro-to-enum
+  -readability-identifier-length
+  -readability-magic-numbers
+  -readability-else-after-return
+  -readability-uppercase-literal-suffix
+  -readability-implicit-bool-conversion
+  -modernize-use-nodiscard
   -readability-suspicious-call-argument
   -readability-named-parameter
   -modernize-return-braced-init-list
@@ -28,3 +27,88 @@ Checks:
   -clang-diagnostic-error
   -readability-convert-member-functions-to-static
   -readability-function-cognitive-complexity
+
+CheckOptions:
+  - key: readability-identifier-naming.ClassCase
+    value: CamelCase
+  - key: readability-identifier-naming.ClassMemberCase
+    value: camelBack
+  - key: readability-identifier-naming.ClassMethodCase
+    value: camelBack
+  - key: readability-identifier-naming.ProtectedMemberCase
+    value: camelBack
+  - key: readability-identifier-naming.ProtectedMemberPrefix
+    value: _
+  - key: readability-identifier-naming.ProtectedMethodCase
+    value: camelBack
+  - key: readability-identifier-naming.ProtectedMethodPrefix
+    value: _
+  - key: readability-identifier-naming.PrivateMethodCase
+    value: camelBack
+  - key: readability-identifier-naming.PrivateMethodPrefix
+    value: _
+  - key: readability-identifier-naming.PrivateMemberCase
+    value: camelBack
+  - key: readability-identifier-naming.PrivateMemberPrefix
+    value: _
+  - key: readability-identifier-naming.ConstantMemberCase
+    value: camelBack
+  - key: readability-identifier-naming.ConstexprMethodCase
+    value: camelBack
+
+  - key: readability-identifier-naming.FunctionCase
+    value: camelBack
+  - key: readability-identifier-naming.ConstexprFunctionCase
+    value: camelBack
+
+  - key: readability-identifier-naming.VariableCase
+    value: camelBack
+  - key: readability-identifier-naming.ParameterCase
+    value: camelBack
+  - key: readability-identifier-naming.ParameterPackCase
+    value: camelBack
+  - key: readability-identifier-naming.ConstantParameterCase
+    value: camelBack
+  - key: readability-identifier-naming.ConstantPointerParameterCase
+    value: camelBack
+
+  - key: readability-identifier-naming.ConstexprVariableCase
+    value: UPPER_CASE
+  - key: readability-identifier-naming.GlobalConstantCase
+    value: UPPER_CASE
+  - key: readability-identifier-naming.GlobalConstantPointerCase
+    value: UPPER_CASE
+  - key: readability-identifier-naming.GlobalFunctionCase
+    value: camelBack
+  - key: readability-identifier-naming.GlobalPointerCase
+    value: UPPER_CASE
+  - key: readability-identifier-naming.GlobalVariableCase
+    value: UPPER_CASE
+  - key: readability-identifier-naming.MacroDefinitionCase
+    value: UPPER_CASE
+
+  - key: readability-identifier-naming.EnumCase
+    value: CamelCase
+  - key: readability-identifier-naming.ScopedEnumConstantCase
+    value: UPPER_CASE
+  - key: readability-identifier-naming.EnumConstantCase
+    value: UPPER_CASE
+
+  - key: readability-identifier-naming.StructCase
+    value: CamelCase
+
+  - key: readability-identifier-naming.UnionCase
+    value: CamelCase
+
+  - key: readability-identifier-naming.TypeTemplateParameterIgnoredRegexp
+    value: expr-type
+  - key: readability-identifier-naming.TemplateParameterCase
+    value: CamelCase
+
+  - key: readability-identifier-naming.TypeAliasCase
+    value: lower_case
+  - key: readability-identifier-naming.TypeAliasSuffix
+    value: _t
+
+  - key: readability-identifier-naming.NamespaceCase
+    value: lower_case

@@ -8,9 +8,9 @@
 #include "systems/ai_act.hpp"
 #include "components/ai_actor.hpp"
 
-void ecs::systems::ai_act(registry &reg)
+void ecs::systems::aiAct(Registry &reg)
 {
-    auto &actors = reg.get_components<ecs::component::ai_actor>();
+    auto &actors = reg.getComponents<ecs::component::AiActor>();
 
     for (size_t entityId = 0; entityId < actors.size(); entityId++) {
         if (actors[entityId]) {

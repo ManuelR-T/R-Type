@@ -7,10 +7,10 @@
 
 #pragma once
 
-#include "core/registry.hpp"
+#include "core/Registry.hpp"
 
 namespace ecs::systems {
 
-void missiles_stop(ecs::registry &reg);
+void missilesStop(ecs::Registry &reg);
 
 } // namespace ecs::systems

@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "core/registry.hpp"
+#include "core/Registry.hpp"
 
 namespace ecs::systems {
 
@@ -21,6 +21,6 @@ namespace ecs::systems {
  *
  * @param reg Reference to the registry managing entities and their components.
  */
-void collision(registry &reg);
+void collision(Registry &reg);
 
 } // namespace ecs::systems

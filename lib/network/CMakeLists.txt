@@ -5,4 +5,7 @@ add_library(NETWORK STATIC
     udp/UDPClient.cpp
 )
 
-target_include_directories(NETWORK PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(NETWORK PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/../utils
+)

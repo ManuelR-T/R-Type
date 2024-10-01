@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "core/registry.hpp"
+#include "core/Registry.hpp"
 
 namespace ecs::systems {
 
@@ -21,6 +21,6 @@ namespace ecs::systems {
  * @param reg Reference to the registry managing entities and their components.
  * @param dt The delta time since the last update, used to scale velocity.
  */
-void position(registry &reg, float dt);
+void position(Registry &reg, float dt);
 
 } // namespace ecs::systems

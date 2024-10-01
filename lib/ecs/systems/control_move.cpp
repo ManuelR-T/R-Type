@@ -10,34 +10,35 @@
 
 #include "components/controllable.hpp"
 #include "components/velocity.hpp"
-#include "core/registry.hpp"
-#include "core/zipper.hpp"
+#include "core/InputManager.hpp"
+#include "core/Registry.hpp"
+#include "core/Zipper.hpp"
 #include "control_move.hpp"
 
 namespace ecs::systems {
 
-void control_move(registry &reg, ecs::input_manager &input)
+void controlMove(Registry &reg, ecs::InputManager &input)
 {
-    auto &velocities = reg.get_components<ecs::component::velocity>();
-    auto &controllables = reg.get_components<ecs::component::controllable>();
+    auto &velocities = reg.getComponents<ecs::component::Velocity>();
+    auto &controllables = reg.getComponents<ecs::component::Controllable>();
 
     sf::Vector2f direction(0.f, 0.f);
-    if (input.is_key_pressed(sf::Keyboard::Up)) {
+    if (input.isKeyPressed(sf::Keyboard::Up)) {
         direction.y -= 1.f;
     }
-    if (input.is_key_pressed(sf::Keyboard::Down)) {
+    if (input.isKeyPressed(sf::Keyboard::Down)) {
         direction.y += 1.f;
     }
-    if (input.is_key_pressed(sf::Keyboard::Left)) {
+    if (input.isKeyPressed(sf::Keyboard::Left)) {
         direction.x -= 1.f;
     }
-    if (input.is_key_pressed(sf::Keyboard::Right)) {
+    if (input.isKeyPressed(sf::Keyboard::Right)) {
         direction.x += 1.f;
     }
 
     float speed = 100.0f;
 
-    zipper<ecs::component::velocity, ecs::component::controllable> zip(velocities, controllables);
+    Zipper<ecs::component::Velocity, ecs::component::Controllable> zip(velocities, controllables);
 
     for (auto [vel, _] : zip) {
         vel.vx = direction.x * speed;

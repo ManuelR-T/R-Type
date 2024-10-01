@@ -9,8 +9,8 @@
 
 #include <algorithm>
 #include <tuple>
-#include "sparse_array.hpp"
-#include "zipper_iterator.hpp"
+#include "SparseArray.hpp"
+#include "ZipperIterator.hpp"
 
 namespace ecs {
 /**
@@ -24,10 +24,10 @@ namespace ecs {
  * @tparam Components The types of components to include in the iteration.
  */
 template <typename... Components>
-class zipper {
+class Zipper {
     public:
     /** @brief Type alias for the zipper iterator. */
-    using iterator = zipper_iterator<Components...>;
+    using iterator_t = ZipperIterator<Components...>;
 
     /**
      * @brief Constructs a `zipper` with references to component arrays.
@@ -37,7 +37,7 @@ class zipper {
      *
      * @param arrays References to `sparse_array` instances for each component type.
      */
-    zipper(sparse_array<Components> &...arrays) : _arrays(arrays...) {}
+    Zipper(SparseArray<Components> &...arrays) : _arrays(arrays...) {}
 
     /**
      * @brief Returns an iterator to the beginning of the zipper.
@@ -48,10 +48,10 @@ class zipper {
      *
      * @return An `iterator` pointing to the first valid entity.
      */
-    iterator begin()
+    iterator_t begin()
     {
-        size_t max_size = get_max_size();
-        return iterator(0, max_size, _arrays);
+        size_t maxSize = _getMaxSize();
+        return iterator_t(0, maxSize, _arrays);
     }
 
     /**
@@ -62,10 +62,10 @@ class zipper {
      *
      * @return An `iterator` representing the end of the iteration range.
      */
-    iterator end()
+    iterator_t end()
     {
-        size_t max_size = get_max_size();
-        return iterator(max_size, max_size, _arrays);
+        size_t maxSize = _getMaxSize();
+        return iterator_t(maxSize, maxSize, _arrays);
     }
 
     private:
@@ -77,9 +77,9 @@ class zipper {
      *
      * @return The maximum size (`size_t`) among all component arrays.
      */
-    size_t get_max_size() const
+    size_t _getMaxSize() const
     {
-        return std::max({std::get<sparse_array<Components> &>(_arrays).size()...});
+        return std::max({std::get<SparseArray<Components> &>(_arrays).size()...});
     }
 
     /**
@@ -88,6 +88,6 @@ class zipper {
      * Stores references to each `sparse_array` corresponding to the component types. This
      * tuple is used by the `zipper_iterator` to access and traverse the components.
      */
-    std::tuple<sparse_array<Components> &...> _arrays;
+    std::tuple<SparseArray<Components> &...> _arrays;
 };
 } // namespace ecs

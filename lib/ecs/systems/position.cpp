@@ -7,17 +7,17 @@
 
 #include "../components/position.hpp"
 #include "../components/velocity.hpp"
-#include "../core/registry.hpp"
-#include "../core/zipper.hpp"
+#include "../core/Registry.hpp"
+#include "../core/Zipper.hpp"
 
 namespace ecs::systems {
 
-void position(registry &reg, float dt)
+void position(Registry &reg, float dt)
 {
-    auto &positions = reg.get_components<ecs::component::position>();
-    auto &velocities = reg.get_components<ecs::component::velocity>();
+    auto &positions = reg.getComponents<ecs::component::Position>();
+    auto &velocities = reg.getComponents<ecs::component::Velocity>();
 
-    zipper<ecs::component::position, ecs::component::velocity> zip(positions, velocities);
+    ecs::Zipper<ecs::component::Position, ecs::component::Velocity> zip(positions, velocities);
 
     for (auto [pos, vel] : zip) {
         pos.x += vel.vx * dt;

@@ -7,13 +7,14 @@
 
 #pragma once
 
+#include "SparseArray.hpp"
 #include "entity.hpp"
 #include "../components/shared_entity.hpp"
 #include "components/shared_entity.hpp"
 #include "shared_entity.hpp"
-#include "sparse_array.hpp"
 
 #include <any>
+#include <cstddef>
 #include <functional>
 #include <stdexcept>
 #include <string>
@@ -29,21 +30,21 @@ namespace ecs {
  * It handles the creation and destruction of entities, registration and management of components,
  * and the addition and execution of systems.
  */
-class registry {
+class Registry {
     public:
     /**
      * @brief Default constructor for the registry.
      *
      * Initializes the registry with no entities, components, or systems.
      */
-    registry() = default;
+    Registry() = default;
 
     /**
      * @brief Default destructor for the registry.
      *
      * Cleans up any resources used by the registry.
      */
-    ~registry() = default;
+    ~Registry() = default;
 
     /**
      * @brief Registers a new component type.
@@ -56,16 +57,16 @@ class registry {
      * @return A reference to the `sparse_array` managing the registered component type.
      */
     template <typename Component>
-    sparse_array<Component> &register_component()
+    SparseArray<Component> &registerComponent()
     {
         std::type_index typeIdx(typeid(Component));
-        if (_components_arrays.find(typeIdx) == _components_arrays.end()) {
-            _components_arrays[typeIdx] = sparse_array<Component>();
-            _erase_functions[typeIdx] = [](registry &reg, const entity_t &entity) {
-                reg.get_components<Component>().erase(static_cast<size_t>(entity));
+        if (_componentsArrays.find(typeIdx) == _componentsArrays.end()) {
+            _componentsArrays[typeIdx] = SparseArray<Component>();
+            _eraseFunctions[typeIdx] = [](Registry &reg, const entity_t &entity) {
+                reg.getComponents<Component>().erase(static_cast<std::size_t>(entity));
             };
         }
-        return std::any_cast<sparse_array<Component> &>(_components_arrays[typeIdx]);
+        return std::any_cast<SparseArray<Component> &>(_componentsArrays[typeIdx]);
     }
 
     /**
@@ -79,14 +80,14 @@ class registry {
      * @throws std::runtime_error If the component type is not registered.
      */
     template <typename Component>
-    sparse_array<Component> &get_components()
+    SparseArray<Component> &getComponents()
     {
         std::type_index typeIdx(typeid(Component));
-        auto it = _components_arrays.find(typeIdx);
-        if (it == _components_arrays.end()) {
+        auto it = _componentsArrays.find(typeIdx);
+        if (it == _componentsArrays.end()) {
             throw std::runtime_error(std::string("Component not registered: ") + typeid(Component).name());
         }
-        return std::any_cast<sparse_array<Component> &>(it->second);
+        return std::any_cast<SparseArray<Component> &>(it->second);
     }
 
     /**
@@ -100,14 +101,14 @@ class registry {
      * @throws std::runtime_error If the component type is not registered.
      */
     template <typename Component>
-    const sparse_array<Component> &get_components() const
+    const SparseArray<Component> &getComponents() const
     {
         std::type_index typeIdx(typeid(Component));
-        auto it = _components_arrays.find(typeIdx);
-        if (it == _components_arrays.end()) {
+        auto it = _componentsArrays.find(typeIdx);
+        if (it == _componentsArrays.end()) {
             throw std::runtime_error(std::string("Component not registered: ") + typeid(Component).name());
         }
-        return std::any_cast<const sparse_array<Component> &>(it->second);
+        return std::any_cast<const SparseArray<Component> &>(it->second);
     }
 
     /**
@@ -118,9 +119,9 @@ class registry {
      *
      * @return The identifier (`entity_t`) of the newly spawned entity.
      */
-    entity_t spawn_entity()
+    entity_t spawnEntity()
     {
-        entity_t entity(_next_entity_id++);
+        entity_t entity(_nextEntityId++);
         _entities.push_back(entity);
         return entity;
     }
@@ -134,20 +135,20 @@ class registry {
      * @param shared_entity_id The id of the shared_entity.
      * @return The identifier (`shared_entity_t`) of the newly spawned sharedentity.
      */
-    entity_t spawn_shared_entity(shared_entity_t shared_entity_id)
+    entity_t spawnSharedEntity(shared_entity_t sharedEntityId)
     {
-        entity_t entity(_next_entity_id++);
+        entity_t entity(_nextEntityId++);
         _entities.push_back(entity);
 
-        _shared_entity_tracker[shared_entity_id] = entity;
-        this->add_component(entity, ecs::component::shared_entity{shared_entity_id});
+        _sharedEntityTracker[sharedEntityId] = entity;
+        this->addComponent(entity, ecs::component::SharedEntity{sharedEntityId});
 
         return entity;
     }
 
-    const std::unordered_map<shared_entity_t, entity_t> &get_local_entity() const
+    const std::unordered_map<shared_entity_t, entity_t> &getLocalEntity() const
     {
-        return _shared_entity_tracker;
+        return _sharedEntityTracker;
     }
 
     /**
@@ -158,12 +159,12 @@ class registry {
      *
      * @param entity The identifier (`entity_t`) of the entity to destroy.
      */
-    void kill_entity(const entity_t &entity)
+    void killEntity(const entity_t &entity)
     {
-        for (auto &[typeIdx, eraseFunc] : _erase_functions) {
+        for (auto &[typeIdx, eraseFunc] : _eraseFunctions) {
             eraseFunc(*this, entity);
         }
-        _entities_to_destroy.push_back(entity);
+        _entitiesToDestroy.push_back(entity);
     }
 
     /**
@@ -178,10 +179,10 @@ class registry {
      * @return A reference to the inserted component within the `sparse_array`.
      */
     template <typename Component>
-    typename sparse_array<Component>::reference_type add_component(const entity_t &entity, Component &&component)
+    typename SparseArray<Component>::reference_type_t addComponent(const entity_t &entity, Component &&component)
     {
-        auto &array = get_components<Component>();
-        return array.insert_at(static_cast<size_t>(entity), std::forward<Component>(component));
+        auto &array = getComponents<Component>();
+        return array.insertAt(static_cast<std::size_t>(entity), std::forward<Component>(component));
     }
 
     /**
@@ -197,16 +198,16 @@ class registry {
      * @return A reference to the newly emplaced component within the `sparse_array`.
      */
     template <typename Component, typename... Params>
-    typename sparse_array<Component>::value_type &emplace_component(const entity_t &entity, Params &&...params)
+    typename SparseArray<Component>::value_type_t &emplaceComponent(const entity_t &entity, Params &&...params)
     {
-        auto &array = get_components<Component>();
-        return array.emplace_at(static_cast<size_t>(entity), std::forward<Params>(params)...);
+        auto &array = getComponents<Component>();
+        return array.emplace_at(static_cast<std::size_t>(entity), std::forward<Params>(params)...);
     }
 
     template <typename Component>
-    typename sparse_array<Component>::reference_type get_component(const entity_t &entity)
+    typename SparseArray<Component>::reference_type_t getComponent(const entity_t &entity)
     {
-        auto &array = get_components<Component>();
+        auto &array = getComponents<Component>();
         if (!array.has(static_cast<size_t>(entity))) {
             throw std::runtime_error("Component not found for this entity.");
         }
@@ -214,9 +215,9 @@ class registry {
     }
 
     template <typename Component>
-    typename sparse_array<Component>::const_reference_type get_component(const entity_t &entity) const
+    typename SparseArray<Component>::const_reference_type_t getComponent(const entity_t &entity) const
     {
-        const auto &array = get_components<Component>();
+        const auto &array = getComponents<Component>();
         if (!array.has(static_cast<size_t>(entity))) {
             throw std::runtime_error("Component not found for this entity.");
         }
@@ -233,9 +234,9 @@ class registry {
      * @param entity The identifier (`entity_t`) of the entity.
      */
     template <typename Component>
-    void remove_component(const entity_t &entity)
+    void removeComponent(const entity_t &entity)
     {
-        auto &array = get_components<Component>();
+        auto &array = getComponents<Component>();
         array.erase(static_cast<size_t>(entity));
     }
 
@@ -249,7 +250,7 @@ class registry {
      * @param system The system function to add.
      */
     template <typename Function>
-    void add_system(Function &&system)
+    void addSystem(Function &&system)
     {
         _systems.emplace_back(std::forward<Function>(system));
     }
@@ -260,7 +261,7 @@ class registry {
      * Iterates through all added systems and executes each one in sequence. Systems typically
      * contain the logic to process entities and their components.
      */
-    void run_systems()
+    void runSystems()
     {
         for (auto &system : _systems) {
             system();
@@ -269,15 +270,15 @@ class registry {
 
     private:
     std::unordered_map<std::type_index, std::any>
-        _components_arrays; /**< Stores component arrays indexed by their type */
-    std::unordered_map<std::type_index, std::function<void(registry &, const entity_t &)>>
-        _erase_functions;                        /**< Stores erase functions for each component type */
+        _componentsArrays; /**< Stores component arrays indexed by their type */
+    std::unordered_map<std::type_index, std::function<void(Registry &, const entity_t &)>>
+        _eraseFunctions;                         /**< Stores erase functions for each component type */
     std::vector<std::function<void()>> _systems; /**< List of systems to be executed */
     std::vector<entity_t> _entities;             /**< List of active entities */
-    std::vector<entity_t> _entities_to_destroy;  /**< Queue of entities marked for destruction */
-    std::size_t _next_entity_id = 0;             /**< The next available entity identifier */
+    std::vector<entity_t> _entitiesToDestroy;    /**< Queue of entities marked for destruction */
+    std::size_t _nextEntityId = 0;               /**< The next available entity identifier */
 
-    std::unordered_map<shared_entity_t, entity_t> _shared_entity_tracker;
+    std::unordered_map<shared_entity_t, entity_t> _sharedEntityTracker;
 };
 
 } // namespace ecs

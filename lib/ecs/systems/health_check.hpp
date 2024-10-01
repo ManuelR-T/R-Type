@@ -7,10 +7,10 @@
 
 #pragma once
 
-#include "core/registry.hpp"
+#include "core/Registry.hpp"
 
 namespace ecs::systems {
 
-void health_check(registry &reg);
+void healthCheck(Registry &reg);
 
 } // namespace ecs::systems

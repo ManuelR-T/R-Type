@@ -5,11 +5,13 @@
 ** run_gui
 */
 
-#include "game_manager.hpp"
-#include "rtype_client.hpp"
+#include "RTypeClient.hpp"
+#include "imgui.h"
+#include "core/shared_entity.hpp"
+#include "imgui-SFML.h"
 
 // ! This function is call when you click on a room in the lobby array.
-static void renderInsideRoom(const std::string &name, rtc::room_manager &room_manager)
+static void renderInsideRoom(const std::string &name, rtc::RoomManager &roomManager)
 {
     // ! Window
     ImVec2 windowSize(850, 600);
@@ -27,7 +29,7 @@ static void renderInsideRoom(const std::string &name, rtc::room_manager &room_ma
     ImGui::TableHeadersRow();
 
     // ! Action with table
-    for (const auto &current : room_manager.get_current_room_player()) {
+    for (const auto &current : roomManager.getCurrentRoomPlayer()) {
         ImGui::TableNextRow();
         ImGui::TableSetColumnIndex(0);
         ImGui::Text("%s", current.first.c_str());
@@ -45,7 +47,7 @@ static void renderInsideRoom(const std::string &name, rtc::room_manager &room_ma
         ImGui::SetCursorPos(buttonPos);
         if (ImGui::Button("Back to lobby", buttonSize)) {
             // ! send leave
-            room_manager.ask_to_leave_room();
+            roomManager.askToLeaveRoom();
         }
     }
 
@@ -57,14 +59,14 @@ static void renderInsideRoom(const std::string &name, rtc::room_manager &room_ma
     ImGui::SetCursorPos(buttonPos);
     if (ImGui::Button("Ready", buttonSize)) {
         // ! send ready
-        room_manager.ask_to_be_ready();
+        roomManager.askToBeReady();
     }
 
     ImGui::End();
 }
 
 // ! This function is call when you are on the lobby page.
-static void renderLobbyWindow(rtc::room_manager &room_manager)
+static void renderLobbyWindow(rtc::RoomManager &roomManager)
 {
     // ! Window
     ImVec2 windowSize(850, 600);
@@ -81,7 +83,7 @@ static void renderLobbyWindow(rtc::room_manager &room_manager)
     ImGui::TableHeadersRow();
 
     // ! Action with table
-    for (const auto &[room_name, room_data] : room_manager.get_rooms()) {
+    for (const auto &[room_name, room_data] : roomManager.getRooms()) {
         if (!room_data.joinable) {
             ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 0, 0, 255));
         }
@@ -89,14 +91,14 @@ static void renderLobbyWindow(rtc::room_manager &room_manager)
         ImGui::TableSetColumnIndex(0);
         if (ImGui::Button(room_name.c_str()) && room_data.joinable) {
             // ! send join room
-            room_manager.ask_to_join_room(room_name);
+            roomManager.askToJoinRoom(room_name);
         }
         ImGui::TableSetColumnIndex(1);
         ImGui::Text("%zu / 4", room_data.player.size());
         ImGui::TableSetColumnIndex(2);
         if (ImGui::Button((std::string("Delete##") + room_name).c_str()) && room_data.joinable) {
             // !send delete
-            room_manager.ask_to_delete_room(room_name);
+            roomManager.askToDeleteRoom(room_name);
         }
         if (!room_data.joinable) {
             ImGui::PopStyleColor();
@@ -111,18 +113,18 @@ static void renderLobbyWindow(rtc::room_manager &room_manager)
     ImGui::SetCursorPos(buttonPos);
     if (ImGui::Button("Create", buttonSize)) {
         // ! send create room
-        room_manager.ask_to_create_room("Room " + std::to_string(ecs::generate_shared_entity_id()));
+        roomManager.askToCreateRoom("Room " + std::to_string(ecs::generateSharedEntityId()));
     }
 
     ImGui::End();
 }
 
-void rtc::runGui(const std::shared_ptr<sf::RenderWindow> &window, rtc::room_manager &room_manager, bool &in_lobby)
+void rtc::runGui(const std::shared_ptr<sf::RenderWindow> &window, rtc::RoomManager &roomManager, bool &inLobby)
 {
     ImGui::SFML::Init(*window);
     sf::Clock dt;
 
-    while (window->isOpen() && in_lobby) {
+    while (window->isOpen() && inLobby) {
         sf::Event event;
         while (window->pollEvent(event)) {
             ImGui::SFML::ProcessEvent(event);
@@ -133,10 +135,10 @@ void rtc::runGui(const std::shared_ptr<sf::RenderWindow> &window, rtc::room_mana
         ImGui::SFML::Update(*window, dt.restart());
         window->clear();
 
-        if (room_manager.get_current_room().empty()) {
-            renderLobbyWindow(room_manager);
+        if (roomManager.getCurrentRoom().empty()) {
+            renderLobbyWindow(roomManager);
         } else {
-            renderInsideRoom(room_manager.get_current_room(), room_manager);
+            renderInsideRoom(roomManager.getCurrentRoom(), roomManager);
         }
 
         ImGui::SFML::Render(*window);

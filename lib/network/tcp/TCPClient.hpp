@@ -15,9 +15,9 @@
 
 using asio::ip::tcp;
 
-namespace client {
+namespace ntw {
 
-class TCPClient : public client::AsioClient {
+class TCPClient : public ntw::AsioClient {
     public:
     /**
      * @brief Constructor takes the param host of the server and the param port
@@ -25,7 +25,7 @@ class TCPClient : public client::AsioClient {
      * @param host Hostname of the server to connect.
      * @param port Port of the server the clients connect to.
      */
-    TCPClient(const std::string &host, int port, std::size_t size_data);
+    TCPClient(const std::string &host, int port, std::size_t sizeData);
 
     /**
      * @brief Destructor of the TCPClient Object
@@ -40,22 +40,22 @@ class TCPClient : public client::AsioClient {
 
     void send(const char *data, std::size_t size) override;
 
-    void register_handler(std::function<void(const char *, std::size_t)> handler);
+    void registerHandler(std::function<void(const char *, std::size_t)> handler);
 
     private:
     /**
      * @brief Recursive loop of asynchronous operations (read, write),
      *        handling the read and write on udp server.
      */
-    void asio_run() override;
+    void _asioRun() override;
 
-    std::thread thread_;
-    tcp::socket socket_;
-    std::string host_;
-    int port_;
-    std::size_t size_data_;
-    std::array<char, BUFF_SIZE> buff_;
-    std::function<void(const char *, std::size_t)> recv_handler_;
+    std::thread _thread;
+    tcp::socket _socket;
+    std::string _host;
+    int _port;
+    std::size_t _sizeData;
+    std::array<char, BUFF_SIZE> _buff;
+    std::function<void(const char *, std::size_t)> _recvHandler;
 };
 
-} // namespace client
+} // namespace ntw
