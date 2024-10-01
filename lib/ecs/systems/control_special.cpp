@@ -31,7 +31,7 @@ static void spawnMissile(
 {
     auto missile = reg.spawnSharedEntity(ecs::generateSharedEntityId());
 
-    reg.addComponent(missile, ecs::component::Position{playerPos.x  + 55, playerPos.y + 8});
+    reg.addComponent(missile, ecs::component::Position{playerPos.x + 55, playerPos.y + 8});
     reg.addComponent(missile, ecs::component::Velocity{50.f, 0});
     reg.addComponent(missile, ecs::component::Hitbox{16.0, 16.0});
 
