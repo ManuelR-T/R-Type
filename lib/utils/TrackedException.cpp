@@ -27,7 +27,7 @@ std::string eng::TrackedException::_indentExcepetion(const std::string &str)
 
 #ifdef _WIN32
 // On Windows, source location is not available, so we skip this part
-my::TrackedException::TrackedException(const std::string &message)
+eng::TrackedException::TrackedException(const std::string &message)
 {
     _message = _indentExcepetion(message);
 }
