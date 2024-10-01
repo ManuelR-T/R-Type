@@ -5,8 +5,8 @@
 ** log
 */
 
-#include <iostream>
 #include "Logger.hpp"
+#include <iostream>
 
 #if WIN32
 

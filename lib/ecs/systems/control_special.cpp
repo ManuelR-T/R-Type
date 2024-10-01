@@ -7,7 +7,6 @@
 
 #include "systems/control_special.hpp"
 #include "RTypeUDPProtol.hpp"
-#include "udp/UDPClient.hpp"
 #include "components/animation.hpp"
 #include "components/controllable.hpp"
 #include "components/missile.hpp"
@@ -18,6 +17,7 @@
 #include "core/Registry.hpp"
 #include "core/SpriteManager.hpp"
 #include "core/Zipper.hpp"
+#include "udp/UDPClient.hpp"
 #include "components/share_movement.hpp"
 #include "core/shared_entity.hpp"
 

@@ -10,8 +10,8 @@
 #include <SFML/Window/Event.hpp>
 #include "../core/InputManager.hpp"
 #include "../core/Registry.hpp"
-#include "udp/UDPClient.hpp"
 #include "core/SpriteManager.hpp"
+#include "udp/UDPClient.hpp"
 
 namespace ecs::systems {
 

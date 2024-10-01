@@ -35,7 +35,7 @@ eng::TrackedException::TrackedException(const std::string &message)
 std::string eng::TrackedException::_formatSrcLocation(const std::source_location &info)
 {
     return std::string("\n└ \033[1;95mexception throw from: \033[0;1m") + info.file_name() + ": \033[1m" +
-           _getFuncName(info.function_name()) + ": \033[1;96m" + std::to_string(info.line()) + "\033[0m";
+        _getFuncName(info.function_name()) + ": \033[1;96m" + std::to_string(info.line()) + "\033[0m";
 }
 
 eng::TrackedException::TrackedException(const std::string &message, std::source_location location)
