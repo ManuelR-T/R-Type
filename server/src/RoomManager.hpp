@@ -11,7 +11,7 @@
 #include <map>
 #include <string>
 #include <utility>
-#include "TCPServer.hpp"
+#include "tcp/TCPServer.hpp"
 
 namespace rts {
 class RoomManager {

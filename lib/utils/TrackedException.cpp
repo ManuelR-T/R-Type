@@ -1,10 +1,3 @@
-/*
-** EPITECH PROJECT, 2024
-** R-Type
-** File description:
-** TrackedException
-*/
-
 #include "TrackedException.hpp"
 #include <algorithm>
 
@@ -12,7 +5,7 @@ std::string eng::TrackedException::_getFuncName(const std::string &func)
 {
     std::string funcName;
 
-    for (int i = func.find_first_of('(') - 1; func[i] != ' ' && i >= 0; --i) {
+    for (int i = func.find_first_of('(') - 1; i >= 0 && func[i] != ' '; --i) {
         funcName.push_back(func[i]);
     }
     std::ranges::reverse(funcName.begin(), funcName.end());
@@ -32,6 +25,13 @@ std::string eng::TrackedException::_indentExcepetion(const std::string &str)
     return result;
 }
 
+#ifdef _WIN32
+// On Windows, source location is not available, so we skip this part
+eng::TrackedException::TrackedException(const std::string &message)
+{
+    _message = _indentExcepetion(message);
+}
+#else
 std::string eng::TrackedException::_formatSrcLocation(const std::source_location &info)
 {
     return std::string("\n└ \033[1;95mexception throw from: \033[0;1m") + info.file_name() + ": \033[1m" +
@@ -40,9 +40,10 @@ std::string eng::TrackedException::_formatSrcLocation(const std::source_location
 
 eng::TrackedException::TrackedException(const std::string &message, std::source_location location)
 {
-    _message += _indentExcepetion(message);
+    _message = _indentExcepetion(message);
     _message += _formatSrcLocation(location);
 }
+#endif
 
 const char *eng::TrackedException::what() const noexcept
 {

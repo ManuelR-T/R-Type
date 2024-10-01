@@ -11,8 +11,12 @@
 
 #include <asio.hpp>
 #include <asio/ip/tcp.hpp>
+#include <functional>
 #include <list>
+
 #include <mutex>
+
+#include <unordered_map>
 
 using asio::ip::tcp;
 

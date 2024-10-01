@@ -11,7 +11,7 @@
 #include "../core/Registry.hpp"
 #include "../core/Zipper.hpp"
 #include "RTypeUDPProtol.hpp"
-#include "UDPClient.hpp"
+#include "udp/UDPClient.hpp"
 #include "../components/shared_entity.hpp"
 
 namespace ecs::systems {

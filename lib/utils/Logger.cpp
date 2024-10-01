@@ -6,10 +6,30 @@
 */
 
 #include "Logger.hpp"
-#include <format>
 #include <iostream>
 
-void eng::logInfo(const std::string &msg, std::source_location info)
+#if WIN32
+
+void eng::info(const std::string &msg)
+{
+    std::cerr << "\033[96minfo: \033[0m" << msg << std::endl;
+}
+
+void eng::warning(const std::string &msg)
+{
+    std::cerr << "\033[95mwarning: \033[0m" << msg << std::endl;
+}
+
+void eng::error(const std::string &msg)
+{
+    std::cerr << "\033[91merror: \033[0m" << msg << std::endl;
+}
+
+#else
+
+    #include <format>
+
+void eng::info(const std::string &msg, std::source_location info)
 {
     std::cerr << std::format(
         "\033[1m{}:\033[96m{}\033[0;1m: "
@@ -20,7 +40,7 @@ void eng::logInfo(const std::string &msg, std::source_location info)
     );
 }
 
-void eng::logWarning(const std::string &msg, std::source_location info)
+void eng::warning(const std::string &msg, std::source_location info)
 {
     std::cerr << std::format(
         "\033[1m{}:\033[96m{}\033[0;1m: "
@@ -31,7 +51,7 @@ void eng::logWarning(const std::string &msg, std::source_location info)
     );
 }
 
-void eng::logError(const std::string &msg, std::source_location info)
+void eng::error(const std::string &msg, std::source_location info)
 {
     std::cerr << std::format(
         "\033[1m{}:\033[96m{}\033[0;1m: "
@@ -41,3 +61,5 @@ void eng::logError(const std::string &msg, std::source_location info)
         msg
     );
 }
+
+#endif

@@ -12,7 +12,10 @@
 #include <array>
 #include <asio/ip/udp.hpp>
 #include <cstring>
+#include <functional>
+
 #include <thread>
+
 #include <asio/error_code.hpp>
 #include <asio/ip/address_v6.hpp>
 

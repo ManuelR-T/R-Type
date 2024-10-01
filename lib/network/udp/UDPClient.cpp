@@ -6,11 +6,11 @@
 */
 
 #include "UDPClient.hpp"
+#include <asio.hpp>
 #include <asio/placeholders.hpp>
 #include <iostream>
 
-ntw::UDPClient::UDPClient(const std::string &host, int port)
-    : _endpoint(asio::ip::address::from_string(host), port), _sock(_io)
+ntw::UDPClient::UDPClient(const std::string &host, int port) : _endpoint(asio::ip::make_address(host), port), _sock(_io)
 {
     _sock.open(udp::v4());
 }

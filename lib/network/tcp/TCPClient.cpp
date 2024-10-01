@@ -6,8 +6,9 @@
 */
 
 #include "TCPClient.hpp"
-#include <cstddef>
+#include <functional>
 #include <iostream>
+#include <utility>
 #include <asio/ip/address_v4.hpp>
 #include <asio/socket_base.hpp>
 
@@ -15,7 +16,7 @@ ntw::TCPClient::TCPClient(const std::string &host, int port, std::size_t sizeDat
     : _socket(_io), _host(host), _port(port), _sizeData(sizeData)
 {
     auto end = tcp::endpoint();
-    _socket.connect(tcp::endpoint(asio::ip::address::from_string(host.c_str()), _port));
+    _socket.connect(tcp::endpoint(asio::ip::make_address(host), _port));
 }
 
 ntw::TCPClient::~TCPClient()
