@@ -21,7 +21,7 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y libasio-dev flex bison javacc
-        sudo apt-get install -y libsfml-dev
+        sudo apt-get install -y libsfml-dev libflac-dev
 
     - name: Set base_dir
       run: |
