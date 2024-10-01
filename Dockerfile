@@ -7,3 +7,4 @@ RUN apt install -y libasio-dev
 RUN apt install -y libsfml-dev
 RUN apt install -y flex
 RUN apt install -y bison
+RUN apt install -y libflac-dev
