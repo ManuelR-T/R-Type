@@ -6,19 +6,14 @@
 */
 
 #include "GameProtocol.hpp"
-#include "core/registry.hpp"
 #include "core/response_handler.hpp"
-#include "game_runner.hpp"
 #include "room_manager.hpp"
 #include "rtype_server.hpp"
+#include "TCPServer.hpp"
 
 #include <SFML/Graphics.hpp>
 #include <cstddef>
 #include <cstring>
-#include <thread>
-#include "TCPServer.hpp"
-#include "UDPServer.hpp"
-
 #include <iostream>
 
 int main()

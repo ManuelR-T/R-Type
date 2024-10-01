@@ -10,6 +10,7 @@
 
 #include "components/animation.hpp"
 #include "components/controllable.hpp"
+#include "components/hitbox.hpp"
 #include "components/missile.hpp"
 #include "components/position.hpp"
 #include "components/sprite.hpp"
@@ -27,8 +28,9 @@ static void spawn_missile(
 {
     auto missile = reg.spawn_shared_entity(ecs::generate_shared_entity_id());
 
-    reg.add_component(missile, ecs::component::position{playerPos.x + 10, playerPos.y + 10});
+    reg.add_component(missile, ecs::component::position{playerPos.x  + 55, playerPos.y + 8});
     reg.add_component(missile, ecs::component::velocity{50.f, 0});
+    reg.add_component(missile, ecs::component::hitbox{16.0, 16.0});
 
     ecs::component::sprite sprite;
     sprite.texture_id = "assets/typesheets/r-typesheet1.gif";

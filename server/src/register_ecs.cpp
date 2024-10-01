@@ -6,6 +6,7 @@
 */
 
 #include <SFML/Graphics.hpp>
+#include <cstddef>
 #include "GameProtocol.hpp"
 #include "components/animation.hpp"
 #include "components/controllable.hpp"
@@ -14,6 +15,7 @@
 #include "components/missile.hpp"
 #include "components/position.hpp"
 #include "components/sprite.hpp"
+#include "components/tag.hpp"
 #include "components/velocity.hpp"
 #include "core/registry.hpp"
 #include "systems/collision.hpp"
@@ -39,6 +41,7 @@ void rts::register_components(ecs::registry &reg)
     reg.register_component<ecs::component::shared_entity>();
     reg.register_component<ecs::component::missile>();
     reg.register_component<ecs::component::ai_actor>();
+    reg.register_component<ecs::component::tag<size_t>>();
 }
 
 void rts::register_systems(ecs::registry &reg, sf::RenderWindow &window, float &dt)

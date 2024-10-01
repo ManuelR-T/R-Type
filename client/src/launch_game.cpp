@@ -5,8 +5,12 @@
 ** launch_game
 */
 
-#include <memory>
+#include "core/constants.hpp"
 #include "game_manager.hpp"
+#include "rtype_client.hpp"
+
+#include <SFML/System.h>
+#include <SFML/Window/VideoMode.hpp>
 
 void rtc::game_manager::launch_game()
 {

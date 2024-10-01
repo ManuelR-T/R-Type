@@ -7,12 +7,13 @@
 
 #include <SFML/Graphics.hpp>
 #include <algorithm>
-#include "components/ally.hpp"
+#include <cstddef>
+#include <iostream>
 #include "components/controllable.hpp"
-#include "components/enemy.hpp"
 #include "components/hitbox.hpp"
 #include "components/position.hpp"
 #include "components/velocity.hpp"
+#include "components/missile.hpp"
 #include "core/registry.hpp"
 #include "core/sparse_array.hpp"
 
@@ -45,6 +46,20 @@ static void resolve_collision(
     }
 }
 
+static void resolve_tag_effect(ecs::registry &reg, size_t entityA, size_t entityB)
+{
+    auto &missiles = reg.get_components<ecs::component::missile>();
+
+    if (missiles.has(entityA) && !missiles.has(entityB)) {
+        std::cout << "Entity B is dead => " << entityB << std::endl;
+        reg.kill_entity(entityB);
+    }
+    if (missiles.has(entityB) && !missiles.has(entityA)) {
+        std::cout << "Entity A is dead => " << entityA << std::endl;
+        reg.kill_entity(entityA);
+    }
+}
+
 namespace ecs::systems {
 
 void collision(registry &reg)
@@ -54,22 +69,20 @@ void collision(registry &reg)
     auto &velocities = reg.get_components<ecs::component::velocity>();
     auto &controllables = reg.get_components<ecs::component::controllable>();
 
-    size_t maxSize = std::max(positions.size(), hitboxes.size());
+    size_t maxEntity = std::max(positions.size(), hitboxes.size());
 
-    for (size_t i = 0; i < maxSize; ++i) {
-        if (!positions.has(i) || !hitboxes.has(i)) {
+    for (size_t entityA = 0; entityA < maxEntity; ++entityA) {
+        if (!positions.has(entityA) || !hitboxes.has(entityA)) {
             continue;
         }
-        size_t entityA = i;
         auto &posA = *positions[entityA];
         auto &hbA = *hitboxes[entityA];
         sf::FloatRect rectA(posA.x, posA.y, hbA.width, hbA.height);
 
-        for (size_t j = i + 1; j < maxSize; ++j) {
-            if (!positions.has(j) || !hitboxes.has(j)) {
+        for (size_t entityB = entityA + 1; entityB < maxEntity; ++entityB) {
+            if (!positions.has(entityB) || !hitboxes.has(entityB)) {
                 continue;
             }
-            size_t entityB = j;
             auto &posB = *positions[entityB];
             auto &hbB = *hitboxes[entityB];
             sf::FloatRect rectB(posB.x, posB.y, hbB.width, hbB.height);
@@ -85,6 +98,7 @@ void collision(registry &reg)
                     resolve_collision(reg, posB, entityB, intersection, velocities[entityB]);
                 }
                 // TODO: If both entities are controllable or both are non-controllable
+                resolve_tag_effect(reg, entityA, entityB);
             }
         }
     }

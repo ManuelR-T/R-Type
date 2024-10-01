@@ -8,9 +8,7 @@
 #pragma once
 
 #include <map>
-#include <memory>
 #include <utility>
-#include "GameProtocol.hpp"
 #include "TCPClient.hpp"
 
 namespace rtc {

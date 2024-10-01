@@ -7,6 +7,29 @@
 
 #include "rtype_client.hpp"
 
+#include "components/animation.hpp"
+#include "components/controllable.hpp"
+#include "components/drawable.hpp"
+#include "components/hitbox.hpp"
+#include "components/missile.hpp"
+#include "components/position.hpp"
+#include "components/sprite.hpp"
+#include "components/tag.hpp"
+#include "components/velocity.hpp"
+#include "core/constants.hpp"
+#include "components/ai_actor.hpp"
+#include "components/share_movement.hpp"
+
+#include "systems/ai_act.hpp"
+#include "systems/control_move.hpp"
+#include "systems/control_special.hpp"
+#include "systems/missiles_stop.hpp"
+#include "systems/share_movement.hpp"
+#include "systems/sprite_system.hpp"
+#include "systems/position.hpp"
+#include "systems/collision.hpp"
+#include "systems/draw.hpp"
+
 void rtc::register_components(ecs::registry &reg)
 {
     reg.register_component<ecs::component::position>();
@@ -20,6 +43,7 @@ void rtc::register_components(ecs::registry &reg)
     reg.register_component<ecs::component::shared_entity>();
     reg.register_component<ecs::component::missile>();
     reg.register_component<ecs::component::ai_actor>();
+    reg.register_component<ecs::component::tag<size_t>>();
 }
 
 void rtc::register_systems(
@@ -35,7 +59,7 @@ void rtc::register_systems(
     tick_rate_manager.add_tick_rate(ecs::constants::movement_tick_rate);
     tick_rate_manager.add_tick_rate(10);
 
-    reg.add_system([&reg, &input, &udpClient]() { ecs::systems::control_move(reg, input); });
+    reg.add_system([&reg, &input]() { ecs::systems::control_move(reg, input); });
     reg.add_system([&reg, &input, &udpClient, &sprite_manager]() {
         ecs::systems::control_special(reg, input, udpClient, sprite_manager);
     });

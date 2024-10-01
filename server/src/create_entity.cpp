@@ -53,14 +53,14 @@ void rts::create_missile(ecs::registry &reg, const rt::udp_packet &msg)
     const auto &pos = msg.body.share_movement.pos;
     const auto &vel = msg.body.share_movement.vel;
 
-    reg.add_component(missile, ecs::component::position{pos.x, pos.y});
+    reg.add_component(missile, ecs::component::position{pos.x + 55, pos.y + 8});
     reg.add_component(missile, ecs::component::velocity{vel.vx, vel.vy});
+    reg.add_component(missile, ecs::component::hitbox{16.0, 16.0});
 
     ecs::component::drawable playerDrawable;
     playerDrawable.shape.setSize(sf::Vector2f(20.f, 20.f));
     playerDrawable.shape.setFillColor(sf::Color::Yellow);
     reg.add_component(missile, std::move(playerDrawable));
 
-    // reg.add_component(player, component::hitbox{50.f, 50.f});
     reg.add_component(missile, ecs::component::missile{});
 }

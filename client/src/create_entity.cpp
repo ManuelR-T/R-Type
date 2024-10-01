@@ -7,6 +7,12 @@
 
 #include "GameProtocol.hpp"
 #include "rtype_client.hpp"
+#include "components/animation.hpp"
+#include "components/controllable.hpp"
+#include "components/hitbox.hpp"
+#include "components/sprite.hpp"
+#include "components/ai_actor.hpp"
+#include "components/share_movement.hpp"
 
 void rtc::create_player(ecs::registry &reg, client::UDPClient &udpClient, SpriteManager &sprite_manager)
 {
