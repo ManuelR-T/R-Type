@@ -27,7 +27,6 @@ void rtc::GameManager::_launchGame()
         return;
     }
     ntw::UDPClient udpClient(_ip, _gamePort);
-    udpClient.run();
 
     ecs::Registry reg;
     float dt = 0.f;
@@ -38,6 +37,7 @@ void rtc::GameManager::_launchGame()
     rtc::registerComponents(reg);
     rtc::registerSystems(reg, *_window, dt, udpClient, inputManager, tickRateManager, spriteManager);
 
+    _setupUdpConnection(reg, spriteManager, udpClient);
     rtc::createPlayer(reg, udpClient, spriteManager);
 
     for (int i = 0; i < 20; ++i) {

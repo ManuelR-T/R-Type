@@ -55,14 +55,14 @@ void rtc::registerSystems(
 )
 {
     tickRateManager.addTickRate(rt::MOVEMENT_TICK_RATE);
-    tickRateManager.addTickRate(10);
+    tickRateManager.addTickRate(rt::AI_ACTING_TICK_RATE);
 
     reg.addSystem([&reg, &input]() { ecs::systems::controlMove(reg, input); });
     reg.addSystem([&reg, &input, &udpClient, &spriteManager]() {
         ecs::systems::controlSpecial(reg, input, udpClient, spriteManager);
     });
     reg.addSystem([&reg, &dt, &tickRateManager]() {
-        if (tickRateManager.needUpdate(10, dt)) {
+        if (tickRateManager.needUpdate(rt::AI_ACTING_TICK_RATE, dt)) {
             ecs::systems::aiAct(reg);
         }
     });

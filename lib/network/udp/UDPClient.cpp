@@ -17,8 +17,8 @@ ntw::UDPClient::UDPClient(const std::string &host, int port) : _endpoint(asio::i
 
 void ntw::UDPClient::_asioRun()
 {
-    _sock.async_receive_from(asio::buffer(_buff), _endpoint, [this](auto &&pH1, auto &&pH2) {
-        _handleRecv(std::forward<decltype(pH1)>(pH1), std::forward<decltype(pH2)>(pH2));
+    _sock.async_receive_from(asio::buffer(_buff), _endpoint, [this](asio::error_code ec, std::size_t bytes) {
+        _handleRecv(std::forward<decltype(ec)>(ec), std::forward<decltype(bytes)>(bytes));
     });
 }
 
@@ -28,7 +28,7 @@ void ntw::UDPClient::_handleRecv(asio::error_code ec, std::size_t bytes)
         std::cerr << "Receive error: " << ec.message() << std::endl;
         return;
     }
-
+    _recvHandler(_buff.data(), bytes);
     _asioRun();
 }
 

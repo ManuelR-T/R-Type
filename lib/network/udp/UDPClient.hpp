@@ -12,6 +12,7 @@
 #include <asio/ip/udp.hpp>
 
 #include <thread>
+#include <utility>
 
 using asio::ip::udp;
 
@@ -57,6 +58,11 @@ class UDPClient : public AsioClient {
      */
     void send(const char *data, std::size_t size) override;
 
+    void registerHandler(std::function<void(const char *, std::size_t)> handler)
+    {
+        _recvHandler = std::move(handler);
+    }
+
     private:
     /**
      * @brief Recursive loop of asynchronous operations (read, write),
@@ -75,5 +81,6 @@ class UDPClient : public AsioClient {
     udp::socket _sock;
     std::array<char, BUFF_SIZE> _buff;
     std::thread _recvThread;
+    std::function<void(const char *, std::size_t)> _recvHandler; // ! Do the handler of the responses with this
 };
 } // namespace ntw

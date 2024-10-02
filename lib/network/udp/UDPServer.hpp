@@ -106,6 +106,13 @@ class UDPServer : public ntw::AsioServer {
     void send(udp::endpoint &endpoint, const char *data, std::size_t size);
 
     /**
+     * @brief Send a message specified in @param data of size ( @param size ) to all the clients.
+     * @param data Bytes to send.
+     * @param size Number of bytes to send.
+     */
+    void sendAll(const char *data, std::size_t size);
+
+    /**
      * @brief Send a message specified in @param data of size ( @param size ) to all the clients except to
      *        @param endpoint specified.
      * @param data Bytes to send.

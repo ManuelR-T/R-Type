@@ -7,12 +7,13 @@
 
 #include "GameRunner.hpp"
 #include "RTypeServer.hpp"
+#include "RTypeUDPProtol.hpp"
 
 rts::GameRunner::GameRunner(int port)
-    : _port(port), _udpServer(port), _responseHandler([](const rt::UDPPacket &packet) { return packet.cmd; }),
+    : _port(port), _udpServer(port), _responseHandler([](const rt::UDPClientPacket &packet) { return packet.header.cmd; }),
       _window(sf::VideoMode(1000, 700), "R-Type") // ! for debug
 {
-    rts::registerUdpResponse(_reg, _responseHandler);
+    rts::registerUdpResponse(_reg, _responseHandler, _datasToSend);
     _udpServer.registerCommand([this](char *data, std::size_t size) {
         this->_responseHandler.handleResponse(data, size);
     });
@@ -20,7 +21,7 @@ rts::GameRunner::GameRunner(int port)
 
     _window.setFramerateLimit(60); // ! for debug
     rts::registerComponents(_reg);
-    rts::registerSystems(_reg, _window, _dt);
+    rts::registerSystems(_reg, _window, _dt, _tickRateManager, _udpServer, _datasToSend);
 
     // * create static
     for (int i = 0; i < 10; ++i) {

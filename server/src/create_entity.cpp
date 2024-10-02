@@ -5,6 +5,7 @@
 ** create_entity
 */
 
+#include "RTypeUDPProtol.hpp"
 #include "components/drawable.hpp"
 #include "components/hitbox.hpp"
 #include "components/missile.hpp"
@@ -45,12 +46,12 @@ void rts::createStatic(ecs::Registry &reg, float x, float y)
     reg.addComponent(entity, ecs::component::Hitbox{50.f, 50.f});
 }
 
-void rts::createMissile(ecs::Registry &reg, const rt::UDPPacket &msg)
+void rts::createMissile(ecs::Registry &reg, const rt::UDPClientPacket &msg)
 {
-    auto missile = reg.spawnSharedEntity(msg.sharedEntityId);
+    auto missile = reg.spawnSharedEntity(msg.body.sharedEntityId);
 
-    const auto &pos = msg.body.shareMovement.pos;
-    const auto &vel = msg.body.shareMovement.vel;
+    const auto &pos = msg.body.b.newEntityData.moveData.pos;
+    const auto &vel = msg.body.b.newEntityData.moveData.vel;
 
     reg.addComponent(missile, ecs::component::Position{pos.x + 55, pos.y + 8});
     reg.addComponent(missile, ecs::component::Velocity{vel.vx, vel.vy});

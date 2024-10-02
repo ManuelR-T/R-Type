@@ -47,6 +47,13 @@ void ntw::UDPServer::send(udp::endpoint &to, const char *data, std::size_t size)
     });
 }
 
+void ntw::UDPServer::sendAll(const char *data, std::size_t size)
+{
+    for (auto &[_, end]: _cliEndpoints) {
+        send(end, data, size);
+    }
+}
+
 void ntw::UDPServer::sendAllExcept(const char *data, std::size_t size, udp::endpoint &endpoint)
 {
     for (auto &[_, end]: _cliEndpoints) {

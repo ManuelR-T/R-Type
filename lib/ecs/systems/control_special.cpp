@@ -29,53 +29,14 @@ static void spawnMissile(
     ecs::SpriteManager &spriteManager
 )
 {
-    auto missile = reg.spawnSharedEntity(ecs::generateSharedEntityId());
-
-    reg.addComponent(missile, ecs::component::Position{playerPos.x + 55, playerPos.y + 8});
-    reg.addComponent(missile, ecs::component::Velocity{50.f, 0});
-    reg.addComponent(missile, ecs::component::Hitbox{16.0, 16.0});
-
-    ecs::component::Sprite sprite;
-    sprite.textureId = "assets/typesheets/r-typesheet1.gif";
-    sprite.spriteObj.setTexture(spriteManager.getTexture(sprite.textureId));
-    sprite.spriteObj.setPosition({playerPos.x + 10, playerPos.y + 10});
-    sprite.spriteObj.setTextureRect(sf::IntRect(0, 0, 16, 16));
-    reg.addComponent(missile, std::move(sprite));
-
-    ecs::component::Animation anim;
-    anim.frames["neutral"] = {
-        {182, 248, 16, 16},
-        {200, 240, 16, 16},
-        {216, 240, 16, 16},
-        {232, 240, 16, 16},
-        {248, 240, 16, 16},
-        {268, 240, 16, 16},
-        {284, 240, 16, 16},
-        {300, 240, 16, 16},
-        {316, 240, 16, 16},
-        {334, 248, 16, 16},
-        {316, 256, 16, 16},
-        {300, 256, 16, 16},
-        {284, 256, 16, 16},
-        {268, 256, 16, 16},
-        {248, 256, 16, 16},
-        {232, 256, 16, 16},
-        {216, 256, 16, 16},
-        {200, 256, 16, 16},
+    // Create Missile in create_entities !
+    rt::UDPClientPacket msg = {
+        .header = {.magic = 4242, .cmd = rt::UDPCommand::NEW_ENTITY},
+        .body = {.sharedEntityId = ecs::generateSharedEntityId()},
     };
-    anim.frames["right"] = {{334, 248, 16, 16}};
-    anim.state = "right";
-    reg.addComponent(missile, std::move(anim));
-
-    // reg.addComponent(player, component::hitbox{50.f, 50.f});
-    reg.addComponent(missile, ecs::component::Missile{});
-    reg.addComponent(missile, ecs::component::ShareMovement{});
-
-    rt::UDPPacket msg = {
-        .cmd = rt::UDPCommand::NEW_ENTITY,
-        .sharedEntityId = reg.getComponent<ecs::component::SharedEntity>(missile).value().sharedEntityId
+    msg.body.b.newEntityData = {
+        .type = 1, .moveData = {.pos = {playerPos.x + 10, playerPos.y + 10}, .vel = {.vx = 50.f, .vy = 0}}
     };
-    msg.body.shareMovement = {.pos = {playerPos.x + 10, playerPos.y + 10}, .vel = {.vx = 50.f, .vy = 0}};
     udp.send(reinterpret_cast<const char *>(&msg), sizeof(msg));
 }
 
