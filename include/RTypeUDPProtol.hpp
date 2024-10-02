@@ -7,29 +7,63 @@
 
 #pragma once
 
+#include <sys/types.h>
+#include <vector>
 #include "components/position.hpp"
 #include "components/velocity.hpp"
 #include "core/shared_entity.hpp"
 
 namespace rt {
-enum class UDPCommand : std::size_t {
+enum class UDPCommand : u_int8_t {
     NONE,
     NEW_PLAYER,
     NEW_ENTITY,
     MOD_ENTITY,
+    MOD_ENTITES,
     DEL_ENTITY
 };
 
-struct UDPPacket {
+/**
+ * ! Later on we could have a timestamp member variable
+ *   or an id to check late packets
+*/
+struct UDPHeader {
+    size_t magic;
     UDPCommand cmd;
+};
+
+struct UDPBody {
+    struct ShareMovement {
+        ecs::component::Position pos;
+        ecs::component::Velocity vel;
+    };
+
+    struct NewEntityData {
+        char type; // ! One byte for the type of entity, depend on factory too
+        ShareMovement moveData;
+    };
 
     shared_entity_t sharedEntityId;
-
     union {
-        struct ShareMovement {
-            ecs::component::Position pos;
-            ecs::component::Velocity vel;
-        } shareMovement;
-    } body = {};
+        ShareMovement shareMovement;
+        NewEntityData newEntityData;
+    } b = {};
 };
+
+struct UDPServerPacket {
+    UDPHeader header;
+
+    /* 
+     * Actually the same as UDPClientPacket because later on we will have pointer
+     * and size to send multiple datas at the same time
+     */
+    UDPBody body;
+};
+
+struct UDPClientPacket {
+    UDPHeader header;
+
+    UDPBody body;
+};
+
 } // namespace rt

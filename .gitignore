@@ -27,6 +27,9 @@ log.bin
 # ? vscode
 .vscode/
 
+# ? clion
+.idea/
+
 # ? compilation database
 compile_commands.json
 
@@ -44,6 +47,7 @@ CMakeDoxyfile.in
 CMakeDoxygenDefaults.cmake
 _deps
 CPM_modules
+cmake-build-debug/
 
 # ? imgui
 imgui.ini
