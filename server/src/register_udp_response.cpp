@@ -31,11 +31,9 @@ void rts::registerUdpResponse(
         }
     });
     responseHandler.registerHandler(rt::UDPCommand::NEW_ENTITY, [&reg, &datasToSend](const rt::UDPClientPacket &msg) {
-        rt::UDPServerPacket pack = {
-            .header = {.magic = 0x43434343, .cmd = rt::UDPCommand::NEW_ENTITY},
-            .body = std::move(msg.body)
-        };
-        datasToSend.push_back(pack);
+        datasToSend.push_back(rt::UDPServerPacket(
+            {.header = {.magic = 0x43434343, .cmd = rt::UDPCommand::NEW_ENTITY}, .body = std::move(msg.body)}
+        ));
         rts::createMissile(reg, msg);
     });
 }

@@ -29,6 +29,7 @@ log.bin
 
 # ? clion
 .idea/
+peda-session*
 
 # ? compilation database
 compile_commands.json

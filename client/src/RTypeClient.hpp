@@ -8,6 +8,7 @@
 #pragma once
 
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <list>
 #include "RoomManager.hpp"
 #include "TickRateManager.hpp"
 #include "core/InputManager.hpp"
@@ -25,7 +26,8 @@ void registerSystems(
     ntw::UDPClient &udpClient,
     ecs::InputManager &input,
     ntw::TickRateManager &tickRateManager,
-    ecs::SpriteManager &spriteManager
+    ecs::SpriteManager &spriteManager,
+    std::list<std::function<void ()>> &_servModifierQueue
 );
 
 void createPlayer(ecs::Registry &reg, ntw::UDPClient &udpClient, ecs::SpriteManager &spriteManager);

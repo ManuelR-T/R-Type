@@ -5,6 +5,7 @@
 ** register_ecs
 */
 
+#include <list>
 #include "RTypeClient.hpp"
 #include "RTypeConst.hpp"
 #include "TickRateManager.hpp"
@@ -51,11 +52,13 @@ void rtc::registerSystems(
     ntw::UDPClient &udpClient,
     ecs::InputManager &input,
     ntw::TickRateManager &tickRateManager,
-    ecs::SpriteManager &spriteManager
+    ecs::SpriteManager &spriteManager,
+    std::list<std::function<void ()>> &_servModifierQueue
 )
 {
     tickRateManager.addTickRate(rt::MOVEMENT_TICK_RATE);
     tickRateManager.addTickRate(rt::AI_ACTING_TICK_RATE);
+    tickRateManager.addTickRate(25);
 
     reg.addSystem([&reg, &input]() { ecs::systems::controlMove(reg, input); });
     reg.addSystem([&reg, &input, &udpClient, &spriteManager]() {
@@ -79,5 +82,13 @@ void rtc::registerSystems(
         window.clear();
         ecs::systems::draw(reg, window);
         window.display();
+    });
+    reg.addSystem([&_servModifierQueue, &tickRateManager, &dt]() {
+        if (tickRateManager.needUpdate(25, dt)) {
+            while (!_servModifierQueue.empty()) {
+                _servModifierQueue.front()();
+                _servModifierQueue.pop_front();
+            }
+        }
     });
 }

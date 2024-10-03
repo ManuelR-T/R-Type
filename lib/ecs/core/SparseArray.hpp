@@ -11,6 +11,7 @@
 #include <optional>
 #include <stdexcept>
 #include <vector>
+#include <format>
 
 namespace ecs {
 /**
@@ -111,7 +112,7 @@ class SparseArray {
     reference_type_t operator[](size_type_t idx)
     {
         if (idx >= _data.size()) {
-            throw std::out_of_range("Index out of range in sparse_array");
+            throw std::out_of_range(std::format("Index ({}) out of range in sparse_array", idx));
         }
         return _data[idx];
     }
@@ -129,7 +130,7 @@ class SparseArray {
     const_reference_type_t operator[](size_type_t idx) const
     {
         if (idx >= _data.size()) {
-            throw std::out_of_range("Index out of range in sparse_array");
+            throw std::out_of_range(std::format("Index ({}) out of range in sparse_array", idx));
         }
         return _data[idx];
     }

@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <functional>
+#include <list>
 #include <memory>
 #include "RTypeTCPProtol.hpp"
 #include "RTypeUDPProtol.hpp"
@@ -35,6 +37,7 @@ class GameManager {
     ntw::ResponseHandler<rt::TCPCommand, rt::TCPPacket> _tcpResponseHandler;
     ntw::ResponseHandler<rt::UDPCommand, rt::UDPServerPacket> _udpResponseHandler;
 
+    std::list<std::function<void ()>> _servModifierQueue;
     std::shared_ptr<sf::RenderWindow> _window;
 
     void _registerTcpResponse();
