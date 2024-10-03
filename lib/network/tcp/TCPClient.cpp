@@ -12,8 +12,7 @@
 #include <asio/ip/address_v4.hpp>
 #include <asio/socket_base.hpp>
 
-ntw::TCPClient::TCPClient(const std::string &host, int port, std::size_t sizeData)
-    : _socket(_io), _host(host), _port(port), _sizeData(sizeData)
+ntw::TCPClient::TCPClient(const std::string &host, int port) : _socket(_io), _host(host), _port(port)
 {
     auto end = tcp::endpoint();
     _socket.connect(tcp::endpoint(asio::ip::make_address(host), _port));
@@ -55,7 +54,7 @@ void ntw::TCPClient::registerHandler(std::function<void(const char *, std::size_
 void ntw::TCPClient::_asioRun()
 {
     std::cout << "Start receiving data from server!" << std::endl;
-    _socket.async_receive(asio::buffer(_buff, _sizeData), [&](const asio::error_code &ec, std::size_t bytes) {
+    _socket.async_receive(asio::buffer(_buff, _buff.size()), [&](const asio::error_code &ec, std::size_t bytes) {
         if (!ec) {
             this->_recvHandler(_buff.data(), bytes);
             _asioRun();

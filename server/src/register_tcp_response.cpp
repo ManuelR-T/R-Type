@@ -5,59 +5,71 @@
 ** register_ecs
 */
 
+#include <any>
+#include <functional>
+#include <vector>
 #include "RTypeServer.hpp"
+#include "RTypeTCPProtol.hpp"
+#include "TCPResponseHandler.hpp"
 
 void rts::registerTcpResponse(
     rts::RoomManager &roomManager,
     ntw::TCPServer &tcpServer,
-    ntw::ResponseHandler<rt::TCPCommand, rt::TCPPacket> &responseHandler
+    rt::TCPResponseHandler &responseHandler
 )
 {
-    responseHandler.registerHandler(rt::TCPCommand::CL_DISCONNECT_USER, [&tcpServer](const rt::TCPPacket &packet) {
-        tcpServer.removeUser(packet.body.cl_new_user.user_id);
-    });
-    responseHandler.registerHandler(
+    responseHandler.registerHandler<rt::TCPData::CL_NEW_USER>(
+        rt::TCPCommand::CL_NEW_USER,
+        [&tcpServer](const rt::TCPPacket<rt::TCPData::CL_NEW_USER> &packet, const std::vector<std::any> &arg) {
+            tcpServer.addUser(std::any_cast<std::reference_wrapper<tcp::socket>>(arg.at(0)).get(), packet.data.user_id);
+        }
+    );
+    responseHandler.registerHandler<rt::TCPData::CL_DISCONNECT_USER>(
+        rt::TCPCommand::CL_DISCONNECT_USER,
+        [&tcpServer](const rt::TCPPacket<rt::TCPData::CL_DISCONNECT_USER> &packet) {
+            tcpServer.removeUser(packet.data.user_id);
+        }
+    );
+    responseHandler.registerHandler<rt::TCPData::CL_CREATE_ROOM>(
         rt::TCPCommand::CL_CREATE_ROOM,
-        [&roomManager, &tcpServer](const rt::TCPPacket &packet) {
-            roomManager.createRoom(packet.body.cl_create_room.room_name, tcpServer);
+        [&roomManager, &tcpServer](const rt::TCPPacket<rt::TCPData::CL_CREATE_ROOM> &packet) {
+            roomManager.createRoom(packet.data.room_name, tcpServer);
         }
     );
-    responseHandler.registerHandler(
+    responseHandler.registerHandler<rt::TCPData::CL_DELETE_ROOM>(
         rt::TCPCommand::CL_DELETE_ROOM,
-        [&roomManager, &tcpServer](const rt::TCPPacket &packet) {
-            roomManager.deleteRoom(packet.body.cl_delete_room.room_name, tcpServer);
+        [&roomManager, &tcpServer](const rt::TCPPacket<rt::TCPData::CL_DELETE_ROOM> &packet) {
+            roomManager.deleteRoom(packet.data.room_name, tcpServer);
         }
     );
-    responseHandler.registerHandler(
+    responseHandler.registerHandler<rt::TCPData::CL_JOIN_ROOM>(
         rt::TCPCommand::CL_JOIN_ROOM,
-        [&roomManager, &tcpServer](const rt::TCPPacket &packet) {
-            roomManager.joinRoom(
-                packet.body.cl_join_room.room_name,
-                packet.body.cl_join_room.user_id,
-                packet.body.cl_join_room.user_name,
-                tcpServer
-            );
+        [&roomManager, &tcpServer](const rt::TCPPacket<rt::TCPData::CL_JOIN_ROOM> &packet) {
+            roomManager.joinRoom(packet.data.room_name, packet.data.user_id, packet.data.user_name, tcpServer);
         }
     );
-    responseHandler.registerHandler(
+    responseHandler.registerHandler<rt::TCPData::CL_LEAVE_ROOM>(
         rt::TCPCommand::CL_LEAVE_ROOM,
-        [&roomManager, &tcpServer](const rt::TCPPacket &packet) {
-            roomManager.leaveRoom(packet.body.cl_leave_room.room_name, packet.body.cl_leave_room.user_id, tcpServer);
+        [&roomManager, &tcpServer](const rt::TCPPacket<rt::TCPData::CL_LEAVE_ROOM> &packet) {
+            roomManager.leaveRoom(packet.data.room_name, packet.data.user_id, tcpServer);
         }
     );
-    responseHandler.registerHandler(rt::TCPCommand::CL_READY, [&roomManager, &tcpServer](const rt::TCPPacket &packet) {
-        roomManager.playerReady(packet.body.cl_ready.room_name, packet.body.cl_ready.user_id, tcpServer);
-    });
-    responseHandler.registerHandler(
+    responseHandler.registerHandler<rt::TCPData::CL_READY>(
+        rt::TCPCommand::CL_READY,
+        [&roomManager, &tcpServer](const rt::TCPPacket<rt::TCPData::CL_READY> &packet) {
+            roomManager.playerReady(packet.data.room_name, packet.data.user_id, tcpServer);
+        }
+    );
+    responseHandler.registerHandler<rt::TCPData::CL_NOT_READY>(
         rt::TCPCommand::CL_NOT_READY,
-        [&roomManager, &tcpServer](const rt::TCPPacket &packet) {
-            roomManager.playerNotReady(packet.body.cl_not_ready.room_name, packet.body.cl_not_ready.user_id, tcpServer);
+        [&roomManager, &tcpServer](const rt::TCPPacket<rt::TCPData::CL_NOT_READY> &packet) {
+            roomManager.playerNotReady(packet.data.room_name, packet.data.user_id, tcpServer);
         }
     );
-    responseHandler.registerHandler(
+    responseHandler.registerHandler<rt::TCPData::CL_ROOM_LIST>(
         rt::TCPCommand::CL_ROOM_LIST,
-        [&roomManager, &tcpServer](const rt::TCPPacket &packet) {
-            roomManager.sendListRoom(packet.body.cl_room_list.user_id, tcpServer);
+        [&roomManager, &tcpServer](const rt::TCPPacket<rt::TCPData::CL_ROOM_LIST> &packet) {
+            roomManager.sendListRoom(packet.data.user_id, tcpServer);
         }
     );
 }

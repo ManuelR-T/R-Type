@@ -26,7 +26,7 @@ class TCPClient : public ntw::AsioClient {
      * @param host Hostname of the server to connect.
      * @param port Port of the server the clients connect to.
      */
-    TCPClient(const std::string &host, int port, std::size_t sizeData);
+    TCPClient(const std::string &host, int port);
 
     /**
      * @brief Destructor of the TCPClient Object
@@ -54,7 +54,6 @@ class TCPClient : public ntw::AsioClient {
     tcp::socket _socket;
     std::string _host;
     int _port;
-    std::size_t _sizeData;
     std::array<char, BUFF_SIZE> _buff;
     std::function<void(const char *, std::size_t)> _recvHandler;
 };

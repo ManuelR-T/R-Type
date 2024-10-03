@@ -24,10 +24,7 @@ namespace ntw {
 
 class Session : public std::enable_shared_from_this<Session> {
     public:
-    Session(tcp::socket &&sock, std::mutex &serverMutex, std::size_t dataSize)
-        : _sock(std::move(sock)), _serverMutex(serverMutex), _dataSize(dataSize)
-    {
-    }
+    Session(tcp::socket &&sock, std::mutex &serverMutex) : _sock(std::move(sock)), _serverMutex(serverMutex) {}
 
     virtual ~Session() = default;
 
@@ -47,13 +44,12 @@ class Session : public std::enable_shared_from_this<Session> {
 
     tcp::socket _sock;
     std::mutex &_serverMutex;
-    std::size_t _dataSize;
     std::array<char, BUFF_SIZE> _buff;
 };
 
 class TCPServer : public ntw::AsioServer {
     public:
-    TCPServer(int port, std::size_t dataSize);
+    TCPServer(int port);
     ~TCPServer() override;
 
     void run() override;
@@ -75,7 +71,6 @@ class TCPServer : public ntw::AsioServer {
 
     void _handleAccept(asio::error_code ec, const std::shared_ptr<Session> &session);
 
-    std::size_t _dataSize;
     std::thread _thread;
     asio::io_context _io;
     tcp::acceptor _acc;

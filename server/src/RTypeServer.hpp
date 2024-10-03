@@ -8,10 +8,10 @@
 #pragma once
 
 #include <SFML/Graphics/RenderWindow.hpp>
-#include "RTypeTCPProtol.hpp"
 #include "RTypeUDPProtol.hpp"
 #include "ResponseHandler.hpp"
 #include "RoomManager.hpp"
+#include "TCPResponseHandler.hpp"
 #include "core/Registry.hpp"
 
 namespace rts {
@@ -22,7 +22,7 @@ void registerUdpResponse(ecs::Registry &reg, ntw::ResponseHandler<rt::UDPCommand
 void registerTcpResponse(
     rts::RoomManager &roomManager,
     ntw::TCPServer &tcpServer,
-    ntw::ResponseHandler<rt::TCPCommand, rt::TCPPacket> &responseHandler
+    rt::TCPResponseHandler &responseHandler
 );
 
 // ! will be replace by factory
