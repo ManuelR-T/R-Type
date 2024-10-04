@@ -32,9 +32,9 @@ void eng::logError(const std::string &msg)
 void eng::logInfo(const std::string &msg, std::source_location info)
 {
     std::cerr << std::format(
-        "\033[1m{}:\033[96m{}\033[0;1m: "
+        "\033[2m{}:\033[96m{}\033[0;2m: "
         "\033[96minfo: \033[0m{}\n",
-        info.file_name(),
+        std::string(info.file_name()).substr(std::string(info.file_name()).find_last_of('/') + 1),
         info.line(),
         msg
     );

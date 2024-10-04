@@ -8,7 +8,7 @@
 #pragma once
 
 #include <SFML/Graphics/RenderWindow.hpp>
-
+#include <list>
 #include "RTypeUDPProtol.hpp"
 #include "ResponseHandler.hpp"
 #include "RoomManager.hpp"

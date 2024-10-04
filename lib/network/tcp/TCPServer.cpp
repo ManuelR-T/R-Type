@@ -6,12 +6,12 @@
 */
 
 #include "TCPServer.hpp"
-
 #include <asio/placeholders.hpp>
 #include <exception>
 #include <functional>
 #include <iostream>
 #include <memory>
+#include <string>
 #include <utility>
 #include "../../utils/Logger.hpp"
 #include <asio/completion_condition.hpp>
@@ -29,11 +29,10 @@ void ntw::Session::_handleRead(
 {
     if (ec) {
         if (ec == asio::error::eof || ec == asio::error::connection_reset) {
-            std::cerr << "Client disconnected: " << ec.message() << std::endl; // ! log
-            return;
+            eng::logInfo("Client disconnected.");
+            _closeHandler(_id);
         } else {
-            std::cerr << "Error on receive: " << ec.message() << std::endl; // ! log::error
-            return;
+            eng::logWarning(ec.message());
         }
         return;
     }
@@ -54,7 +53,6 @@ void ntw::Session::handleClient(std::function<void(tcp::socket &, char *, std::s
 {
     std::lock_guard<std::mutex> lock(_serverMutex);
 
-    std::cout << "Session start !\n";
     _sock.async_receive(
         asio::buffer(_buff, _buff.size()),
         [that = this->shared_from_this(), &handler](asio::error_code ec, std::size_t bytes) {
@@ -84,10 +82,10 @@ ntw::TCPServer::~TCPServer()
 
 void ntw::TCPServer::sockWrite(tcp::socket &sock, const char *data, std::size_t size)
 {
-    std::cout << "SENT TO CLIENT SIZE:" << size << "\n";
+    eng::logInfo("Send " + std::to_string(size) + " bytes to client.");
     sock.async_write_some(asio::buffer(data, size), [](asio::error_code ec, std::size_t) {
         if (ec) {
-            std::cout << "FAIL TO SEND DATA TO USER !";
+            eng::logWarning("Fail to send data to client: " + ec.message() + ".");
             return;
         }
     });
@@ -100,14 +98,21 @@ void ntw::TCPServer::registerCommand(std::function<void(tcp::socket &, char *, s
     _mutex.unlock();
 }
 
+void ntw::TCPServer::registerDisconnectionHandler(std::function<void(std::size_t)> func)
+{
+    _mutex.lock();
+    _disconnectionHandler = std::move(func);
+    _mutex.unlock();
+}
+
 void ntw::TCPServer::_handleAccept(asio::error_code ec, const std::shared_ptr<ntw::Session> &session)
 {
     if (ec) {
+        eng::logWarning("Fail to accept client: " + ec.message() + ".");
         return;
     }
-
     _mutex.lock();
-    this->_freeSession.push_back(session);
+    this->_session[session->socket().native_handle()] = session;
     _mutex.unlock();
 
     session->handleClient(_handler);
@@ -116,10 +121,10 @@ void ntw::TCPServer::_handleAccept(asio::error_code ec, const std::shared_ptr<nt
 
 void ntw::TCPServer::_asioRun()
 {
-    auto session = std::make_shared<Session>(tcp::socket(_io), _mutex);
+    auto session = std::make_shared<Session>(tcp::socket(_io), _mutex, [this](std::size_t id) { removeUser(id); });
 
     _acc.async_accept(session->socket(), [this, session](asio::error_code ec) {
-        std::cout << "Accepted\n";
+        eng::logInfo("New client connected.");
         _handleAccept(ec, session);
     });
 }
@@ -134,9 +139,12 @@ void ntw::TCPServer::run()
 
 void ntw::TCPServer::removeUser(std::size_t id)
 {
-    std::lock_guard<std::mutex> lock(_mutex);
-
+    _mutex.lock();
     _session.erase(id);
+    _mutex.unlock();
+    if (_disconnectionHandler) {
+        _disconnectionHandler(id);
+    }
 }
 
 void ntw::TCPServer::sendToAllUser(const char *data, std::size_t size)
@@ -153,14 +161,11 @@ void ntw::TCPServer::sendToAllUser(const char *data, std::size_t size)
 void ntw::TCPServer::addUser(tcp::socket &sock, std::size_t id)
 {
     std::lock_guard<std::mutex> lock(_mutex);
+    std::shared_ptr<ntw::Session> tmp = _session.at(sock.native_handle());
 
-    for (auto it = _freeSession.begin(); it != _freeSession.end(); ++it) {
-        if ((*it)->socket().native_handle() == sock.native_handle()) {
-            _session[id] = *it;
-            _freeSession.erase(it);
-            break;
-        }
-    }
+    _session.erase(sock.native_handle());
+    _session[id] = tmp;
+    _session.at(id)->id() = id;
 }
 
 void ntw::TCPServer::sendToUser(std::size_t id, const char *data, std::size_t size)
@@ -172,9 +177,9 @@ void ntw::TCPServer::sendToUser(std::size_t id, const char *data, std::size_t si
         if (session->socket().is_open()) {
             sockWrite(session->socket(), data, size);
         } else {
-            std::cerr << "SOCKET NOT OPEN !!!!!!!" << id << std::endl; // ! put log::error
+            eng::logWarning("Trying to send data to a closed socker: " + std::to_string(id) + ".");
         }
     } else {
-        std::cerr << "No session found for ID: " << id << std::endl; // ! put log::error
+        eng::logWarning("No session found for: " + std::to_string(id) + ".");
     }
 }

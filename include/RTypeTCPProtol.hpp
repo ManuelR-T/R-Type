@@ -15,7 +15,6 @@ enum class TCPCommand : std::size_t {
     NONE,
 
     CL_NEW_USER,
-    CL_DISCONNECT_USER,
 
     CL_CREATE_ROOM,
     SER_ROOM_CREATED,
@@ -46,10 +45,6 @@ enum class TCPCommand : std::size_t {
 
 namespace rt::TCPData {
 struct CL_NEW_USER {
-    std::size_t user_id = 0;
-};
-
-struct CL_DISCONNECT_USER {
     std::size_t user_id = 0;
 };
 

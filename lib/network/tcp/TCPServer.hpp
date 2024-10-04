@@ -7,15 +7,12 @@
 
 #pragma once
 
-#include "../AsioServer.hpp"
-
 #include <asio.hpp>
 #include <asio/ip/tcp.hpp>
+#include <cstddef>
 #include <functional>
-#include <list>
-
 #include <mutex>
-
+#include "../AsioServer.hpp"
 #include <unordered_map>
 
 using asio::ip::tcp;
@@ -24,7 +21,10 @@ namespace ntw {
 
 class Session : public std::enable_shared_from_this<Session> {
     public:
-    Session(tcp::socket &&sock, std::mutex &serverMutex) : _sock(std::move(sock)), _serverMutex(serverMutex) {}
+    Session(tcp::socket &&sock, std::mutex &serverMutex, const std::function<void(std::size_t)> &closeHandler)
+        : _sock(std::move(sock)), _serverMutex(serverMutex), _closeHandler(closeHandler), _id(sock.native_handle())
+    {
+    }
 
     virtual ~Session() = default;
 
@@ -33,6 +33,11 @@ class Session : public std::enable_shared_from_this<Session> {
     tcp::socket &socket()
     {
         return _sock;
+    }
+
+    std::size_t &id()
+    {
+        return _id;
     }
 
     private:
@@ -45,6 +50,8 @@ class Session : public std::enable_shared_from_this<Session> {
     tcp::socket _sock;
     std::mutex &_serverMutex;
     std::array<char, BUFF_SIZE> _buff;
+    const std::function<void(std::size_t)> _closeHandler;
+    std::size_t _id;
 };
 
 class TCPServer : public ntw::AsioServer {
@@ -55,6 +62,7 @@ class TCPServer : public ntw::AsioServer {
     void run() override;
 
     void registerCommand(std::function<void(tcp::socket &, char *, std::size_t)> func);
+    void registerDisconnectionHandler(std::function<void(std::size_t)> func);
 
     void sockWrite(tcp::socket &sock, const char *data, std::size_t size);
 
@@ -75,8 +83,8 @@ class TCPServer : public ntw::AsioServer {
     asio::io_context _io;
     tcp::acceptor _acc;
     std::function<void(tcp::socket &, char *, std::size_t)> _handler;
+    std::function<void(std::size_t)> _disconnectionHandler;
     std::mutex _mutex;
     std::unordered_map<size_t, std::shared_ptr<Session>> _session;
-    std::list<std::shared_ptr<Session>> _freeSession;
 };
 } // namespace ntw

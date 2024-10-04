@@ -58,9 +58,6 @@ class GameManager {
 
     ~GameManager()
     {
-        rt::TCPPacket<rt::TCPData::CL_DISCONNECT_USER> packet{.cmd = rt::TCPCommand::CL_DISCONNECT_USER};
-        packet.data.user_id = _userId;
-        _tcpClient.send(reinterpret_cast<const char *>(&packet), sizeof(packet));
         ImGui::SFML::Shutdown();
     }
 

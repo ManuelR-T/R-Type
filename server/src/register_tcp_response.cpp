@@ -6,6 +6,7 @@
 */
 
 #include <any>
+#include <cstddef>
 #include <functional>
 #include <vector>
 #include "RTypeServer.hpp"
@@ -18,16 +19,13 @@ void rts::registerTcpResponse(
     rt::TCPResponseHandler &responseHandler
 )
 {
+    tcpServer.registerDisconnectionHandler([&roomManager, &tcpServer](std::size_t user_id) {
+        roomManager.playerDisconnected(user_id, tcpServer);
+    });
     responseHandler.registerHandler<rt::TCPData::CL_NEW_USER>(
         rt::TCPCommand::CL_NEW_USER,
         [&tcpServer](const rt::TCPPacket<rt::TCPData::CL_NEW_USER> &packet, const std::vector<std::any> &arg) {
             tcpServer.addUser(std::any_cast<std::reference_wrapper<tcp::socket>>(arg.at(0)).get(), packet.data.user_id);
-        }
-    );
-    responseHandler.registerHandler<rt::TCPData::CL_DISCONNECT_USER>(
-        rt::TCPCommand::CL_DISCONNECT_USER,
-        [&tcpServer](const rt::TCPPacket<rt::TCPData::CL_DISCONNECT_USER> &packet) {
-            tcpServer.removeUser(packet.data.user_id);
         }
     );
     responseHandler.registerHandler<rt::TCPData::CL_CREATE_ROOM>(
