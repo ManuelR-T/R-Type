@@ -29,7 +29,7 @@ enum class UDPCommand : u_int8_t {
  *   or an id to check late packets
 */
 struct UDPHeader {
-    size_t magic;
+    size_t magic = 0x42424242;
     UDPCommand cmd;
 };
 

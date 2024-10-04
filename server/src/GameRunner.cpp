@@ -27,7 +27,7 @@ rts::GameRunner::GameRunner(int port)
     // * create static
     for (int i = 0; i < 10; ++i) {
         _datasToSend.push_back(rt::UDPServerPacket(
-            {.header = {.magic = 0x43434343, .cmd = rt::UDPCommand::NEW_ENTITY},
+            {.header = {.cmd = rt::UDPCommand::NEW_ENTITY},
              .body = {.sharedEntityId = 0, .b = {.newEntityData = {0, {{100.f * i, 100.f * i}, {0}}}}}}
         ));
         rts::createStatic(_reg, 100.f * i, 100.f * i);

@@ -81,7 +81,7 @@ void rtc::createPlayer(ecs::Registry &reg, ntw::UDPClient &udpClient, ecs::Sprit
     reg.addComponent(player, ecs::component::ShareMovement{});
 
     rt::UDPClientPacket msg = {
-        .header = {.magic = 4242, .cmd = rt::UDPCommand::NEW_PLAYER},
+        .header = {.cmd = rt::UDPCommand::NEW_PLAYER},
         .body = {.sharedEntityId = reg.getComponent<ecs::component::SharedEntity>(player).value().sharedEntityId}
     };
     udpClient.send(reinterpret_cast<const char *>(&msg), sizeof(msg));

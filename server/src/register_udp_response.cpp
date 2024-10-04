@@ -43,9 +43,9 @@ void rts::registerUdpResponse(
     responseHandler.registerHandler(
         rt::UDPCommand::NEW_ENTITY,
         [&reg, &datasToSend, &networkCallbacks](const rt::UDPClientPacket &msg) {
-            datasToSend.push_back(rt::UDPServerPacket(
-                {.header = {.magic = 0x43434343, .cmd = rt::UDPCommand::NEW_ENTITY}, .body = std::move(msg.body)}
-            ));
+            datasToSend.push_back(
+                rt::UDPServerPacket({.header = {.cmd = rt::UDPCommand::NEW_ENTITY}, .body = std::move(msg.body)})
+            );
             networkCallbacks.push_back([&reg, msg]() { rts::createMissile(reg, msg); });
         }
     );

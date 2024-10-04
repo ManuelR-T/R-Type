@@ -31,7 +31,7 @@ static void spawnMissile(
 {
     // Create Missile in create_entities !
     rt::UDPClientPacket msg = {
-        .header = {.magic = 4242, .cmd = rt::UDPCommand::NEW_ENTITY},
+        .header = {.cmd = rt::UDPCommand::NEW_ENTITY},
         .body = {.sharedEntityId = ecs::generateSharedEntityId()},
     };
     msg.body.b.newEntityData = {

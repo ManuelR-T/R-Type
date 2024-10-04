@@ -49,9 +49,9 @@ static void share_server_movements(ecs::Registry &reg, std::list<rt::UDPServerPa
         rt::UDPBody body = {
             .sharedEntityId = shared_entity.sharedEntityId, .b = {.shareMovement = {.pos = pos, .vel = vel}}
         };
-        datasToSend.push_back(rt::UDPServerPacket(
-            {.header = {.magic = 0x43434343, .cmd = rt::UDPCommand::MOVE_ENTITY}, .body = std::move(body)}
-        ));
+        datasToSend.push_back(
+            rt::UDPServerPacket({.header = {.cmd = rt::UDPCommand::MOVE_ENTITY}, .body = std::move(body)})
+        );
     }
 }
 

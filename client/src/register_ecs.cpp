@@ -58,7 +58,7 @@ void rtc::registerSystems(
 {
     tickRateManager.addTickRate(rt::MOVEMENT_TICK_RATE);
     tickRateManager.addTickRate(rt::AI_ACTING_TICK_RATE);
-    tickRateManager.addTickRate(25);
+    tickRateManager.addTickRate(rt::CALL_NETWORK_CALLBACKS_TICK_RATE);
 
     reg.addSystem([&reg, &input]() { ecs::systems::controlMove(reg, input); });
     reg.addSystem([&reg, &input, &udpClient, &spriteManager]() {
@@ -84,7 +84,7 @@ void rtc::registerSystems(
         window.display();
     });
     reg.addSystem([&_networkCallbacks, &tickRateManager, &dt]() {
-        if (tickRateManager.needUpdate(25, dt)) {
+        if (tickRateManager.needUpdate(rt::CALL_NETWORK_CALLBACKS_TICK_RATE, dt)) {
             while (!_networkCallbacks.empty()) {
                 _networkCallbacks.front()();
                 _networkCallbacks.pop_front();
