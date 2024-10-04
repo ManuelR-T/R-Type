@@ -23,10 +23,11 @@ void rts::RoomManager::deleteRoom(const std::string &name, ntw::TCPServer &tcpSe
 {
     rt::TCPPacket<rt::TCPData::SER_ROOM_DELETED> packet{.cmd = rt::TCPCommand::SER_ROOM_DELETED};
 
-    _rooms.erase(name);
-
-    std::memcpy(packet.data.room_name, name.c_str(), name.size());
-    tcpServer.sendToAllUser(reinterpret_cast<const char *>(&packet), sizeof(packet));
+    if (_rooms.empty()) {
+        _rooms.erase(name);
+        std::memcpy(packet.data.room_name, name.c_str(), name.size());
+        tcpServer.sendToAllUser(reinterpret_cast<const char *>(&packet), sizeof(packet));
+    }
 }
 
 void rts::RoomManager::joinRoom(

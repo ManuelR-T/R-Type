@@ -96,7 +96,8 @@ static void renderLobbyWindow(rtc::RoomManager &roomManager)
         ImGui::TableSetColumnIndex(1);
         ImGui::Text("%zu / 4", room_data.player.size());
         ImGui::TableSetColumnIndex(2);
-        if (ImGui::Button((std::string("Delete##") + room_name).c_str()) && room_data.joinable) {
+        if (ImGui::Button((std::string("Delete##") + room_name).c_str()) && room_data.joinable &&
+            room_data.player.empty()) {
             // !send delete
             roomManager.askToDeleteRoom(room_name);
         }
