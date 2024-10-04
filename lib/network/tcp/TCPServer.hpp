@@ -22,7 +22,7 @@ namespace ntw {
 class Session : public std::enable_shared_from_this<Session> {
     public:
     Session(tcp::socket &&sock, std::mutex &serverMutex, const std::function<void(std::size_t)> &closeHandler)
-        : _sock(std::move(sock)), _serverMutex(serverMutex), _closeHandler(closeHandler), _id(sock.native_handle())
+        : _sock(std::move(sock)), _serverMutex(serverMutex), _closeHandler(closeHandler), _id(_sock.native_handle())
     {
     }
 
