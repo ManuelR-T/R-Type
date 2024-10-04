@@ -27,7 +27,7 @@ enum class UDPCommand : u_int8_t {
 /**
  * ! Later on we could have a timestamp member variable
  *   or an id to check late packets
-*/
+ */
 struct UDPHeader {
     size_t magic = 0x42424242;
     UDPCommand cmd;
@@ -45,6 +45,7 @@ struct UDPBody {
     };
 
     shared_entity_t sharedEntityId;
+
     union {
         ShareMovement shareMovement;
         NewEntityData newEntityData;
@@ -54,7 +55,7 @@ struct UDPBody {
 struct UDPServerPacket {
     UDPHeader header;
 
-    /* 
+    /*
      * Actually the same as UDPClientPacket because later on we will have pointer
      * and size to send multiple datas at the same time
      */
