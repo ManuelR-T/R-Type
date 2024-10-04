@@ -10,6 +10,7 @@ add_library(ECS STATIC
     systems/health_check.cpp
     systems/ai_act.cpp
     core/shared_entity.cpp
+    factory/EntityFactory.cpp
 )
 
 target_include_directories(ECS PUBLIC
@@ -17,4 +18,4 @@ target_include_directories(ECS PUBLIC
     ${CMAKE_SOURCE_DIR}/include
 )
 
-target_link_libraries(ECS PUBLIC NETWORK sfml-system sfml-window sfml-graphics)
+target_link_libraries(ECS PUBLIC nlohmann_json NETWORK sfml-system sfml-window sfml-graphics)

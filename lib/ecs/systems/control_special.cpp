@@ -43,7 +43,7 @@ static void spawnMissile(
     reg.addComponent(missile, std::move(sprite));
 
     ecs::component::Animation anim;
-    anim.frames["neutral"] = {
+    anim.frames["idle"] = {
         {182, 248, 16, 16},
         {200, 240, 16, 16},
         {216, 240, 16, 16},

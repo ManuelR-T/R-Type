@@ -1,0 +1,80 @@
+{
+    "type": "local",
+    "components": {
+        "Position": {
+            "x": 100.0,
+            "y": 200.0
+        },
+        "Sprite": {
+            "textureId": "assets/typesheets/r-typesheet5.gif",
+            "textureRect": {
+                "x": 0,
+                "y": 0,
+                "width": 32,
+                "height": 32
+            },
+            "position": {
+                "x": 100.0,
+                "y": 200.0
+            }
+        },
+        "Animation": {
+            "frames": {
+                "idle": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "width": 32,
+                        "height": 32
+                    },
+                    {
+                        "x": 32,
+                        "y": 0,
+                        "width": 32,
+                        "height": 32
+                    },
+                    {
+                        "x": 64,
+                        "y": 0,
+                        "width": 32,
+                        "height": 32
+                    },
+                    {
+                        "x": 96,
+                        "y": 0,
+                        "width": 32,
+                        "height": 32
+                    },
+                    {
+                        "x": 128,
+                        "y": 0,
+                        "width": 32,
+                        "height": 32
+                    },
+                    {
+                        "x": 160,
+                        "y": 0,
+                        "width": 32,
+                        "height": 32
+                    },
+                    {
+                        "x": 192,
+                        "y": 0,
+                        "width": 32,
+                        "height": 32
+                    },
+                    {
+                        "x": 224,
+                        "y": 0,
+                        "width": 32,
+                        "height": 32
+                    }
+                ]
+            }
+        },
+        "Hitbox": {
+            "width": 32.0,
+            "height": 32.0
+        }
+    }
+}

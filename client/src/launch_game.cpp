@@ -14,6 +14,7 @@
 #include "core/InputManager.hpp"
 #include "core/Registry.hpp"
 #include "core/SpriteManager.hpp"
+#include "factory/EntityFactory.hpp"
 #include "udp/UDPClient.hpp"
 
 void rtc::GameManager::_launchGame()
@@ -23,9 +24,10 @@ void rtc::GameManager::_launchGame()
 
     runGui(_window, _roomManager, _inLobby);
 
-    if (_inLobby) { // if lobby is true we are outsie of lobby the window has been closed
+    if (_inLobby) {
         return;
     }
+
     ntw::UDPClient udpClient(_ip, _gamePort);
     udpClient.run();
 
@@ -38,7 +40,9 @@ void rtc::GameManager::_launchGame()
     rtc::registerComponents(reg);
     rtc::registerSystems(reg, *_window, dt, udpClient, inputManager, tickRateManager, spriteManager);
 
-    rtc::createPlayer(reg, udpClient, spriteManager);
+    ecs::EntityFactory entityFactory(reg,spriteManager,udpClient);
+
+    entityFactory.createEntityFromJSON("assets/player.json");
 
     for (int i = 0; i < 20; ++i) {
         rtc::createStatic(reg, spriteManager, 48.f * i, 48.f * i);

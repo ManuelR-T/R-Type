@@ -28,7 +28,7 @@ struct Animation {
     float frameTime = 0.2f;        /**< Duration of each frame in seconds. */
     float elapsedTime = 0.0f;      /**< Time elapsed since the last frame change. */
     size_t currentFrame = 0;       /**< Index of the current frame in the animation. */
-    std::string state = "neutral"; /**< State of the animation. */
+    std::string state = "idle"; /**< State of the animation. */
     std::function<void(Registry &, entity_t, ecs::component::Animation &)> updateState =
         [](Registry &, entity_t, ecs::component::Animation &) {}; /**< Update the state of the animation. */
 };

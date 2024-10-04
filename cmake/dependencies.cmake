@@ -29,3 +29,20 @@ CPMAddPackage(
   GIT_TAG "main"
 )
 
+CPMAddPackage(
+  NAME nlohmann_json
+  GITHUB_REPOSITORY nlohmann/json
+  GIT_TAG v3.11.3
+  )
+
+# CPMAddPackage(
+#     NAME sol2
+#     GITHUB_REPOSITORY ThePhD/sol2
+#     GIT_TAG v3.3.0
+# )
+
+# CPMAddPackage(
+#     NAME lua_static
+#     GITHUB_REPOSITORY walterschell/Lua
+#     GIT_TAG v5.4.5
+# )

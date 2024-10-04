@@ -1,0 +1,74 @@
+{
+    "type": "shared",
+    "components": {
+        "position": {
+            "x": 400.0,
+            "y": 300.0
+        },
+        "velocity": {
+            "vx": 0.0,
+            "vy": 0.0
+        },
+        "controllable": {},
+        "sprite": {
+            "texture": "assets/typesheets/r-typesheet1.gif",
+            "initial_frame": {
+                "x": 0,
+                "y": 0,
+                "width": 32,
+                "height": 16
+            }
+        },
+        "animation": {
+            "frames": {
+                "up": [
+                    {
+                        "x": 135,
+                        "y": 2,
+                        "width": 32,
+                        "height": 16
+                    }
+                ],
+                "top": [
+                    {
+                        "x": 102,
+                        "y": 2,
+                        "width": 32,
+                        "height": 16
+                    }
+                ],
+                "idle": [
+                    {
+                        "x": 168,
+                        "y": 2,
+                        "width": 32,
+                        "height": 16
+                    }
+                ],
+                "down": [
+                    {
+                        "x": 201,
+                        "y": 2,
+                        "width": 32,
+                        "height": 16
+                    }
+                ],
+                "bottom": [
+                    {
+                        "x": 234,
+                        "y": 2,
+                        "width": 32,
+                        "height": 16
+                    }
+                ]
+            },
+            "frame_time": 0.1,
+            "update_state": "player"
+        },
+        "hitbox": {
+            "width": 32.0,
+            "height": 16.0
+        },
+        "share_movement": {}
+    }
+}
