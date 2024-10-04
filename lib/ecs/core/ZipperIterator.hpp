@@ -135,7 +135,7 @@ class ZipperIterator {
      * @return `true` if all components are present, `false` otherwise.
      */
     template <std::size_t... Is>
-    bool _allPresentImpl(std::index_sequence<Is...> seq) const
+    bool _allPresentImpl(std::index_sequence<Is...>) const
     {
         return (... && _isPresent<Is>());
     }
@@ -164,7 +164,7 @@ class ZipperIterator {
      * @return A tuple containing references to the components of the current entity.
      */
     template <std::size_t... Is>
-    reference_t _getComponents(std::index_sequence<Is...> seq)
+    reference_t _getComponents(std::index_sequence<Is...>)
     {
         return std::tie(*std::get<Is>(_arrays)[_index]...);
     }

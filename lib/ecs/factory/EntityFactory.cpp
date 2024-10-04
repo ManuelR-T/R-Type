@@ -1,5 +1,6 @@
 #include "EntityFactory.hpp"
 #include <fstream>
+#include <iostream>
 
 #include "../components/animation.hpp"
 #include "../components/controllable.hpp"
@@ -8,6 +9,7 @@
 #include "../components/sprite.hpp"
 #include "../components/velocity.hpp"
 #include "components/share_movement.hpp"
+#include "RTypeUDPProtol.hpp"
 
 namespace ecs {
 
@@ -18,6 +20,7 @@ EntityFactory::EntityFactory(ecs::Registry &reg, SpriteManager &spriteManager, n
 
 entity_t EntityFactory::createEntityFromJSON(const std::string &jsonFilePath)
 {
+    std::cout << "Creating entity from JSON: " << jsonFilePath << std::endl;
     std::ifstream file(jsonFilePath);
     if (!file.is_open()) {
         throw std::runtime_error("Failed to open entity JSON file: " + jsonFilePath);
@@ -27,17 +30,25 @@ entity_t EntityFactory::createEntityFromJSON(const std::string &jsonFilePath)
 
     std::string entityType = entityJson["type"].get<std::string>();
     entity_t entity;
-    if (entityType == "shared")
+    bool isShared = entityType == "shared";
+    if (isShared)
         entity = _registry.spawnSharedEntity(generateSharedEntityId());
     else
         entity = _registry.spawnEntity();
-
-    addComponentsFromJSON(entity, entityJson["components"]);
-
+    addComponentsFromJSON(entity, entityJson["components"], isShared);
+    if (_registry.getComponent<ecs::component::SharedEntity>(entity) != std::nullopt && isShared && entityJson.contains("network_command")) {
+        std::cout << "Adding shared entity component" << std::endl;
+        rt::UDPClientPacket msg = {
+            .header = {.cmd = entityJson["network_command"].get<rt::UDPCommand>()},
+            .body =
+                {.sharedEntityId = _registry.getComponent<ecs::component::SharedEntity>(entity).value().sharedEntityId}
+        };
+        _udpClient.send(reinterpret_cast<const char *>(&msg), sizeof(msg));
+    }
     return entity;
 }
 
-void EntityFactory::addComponentsFromJSON(entity_t entity, const nlohmann::json &componentsJson)
+void EntityFactory::addComponentsFromJSON(entity_t entity, const nlohmann::json &componentsJson, bool isShared)
 {
     if (componentsJson.contains("position")) {
         auto posJson = componentsJson["position"];
@@ -107,10 +118,6 @@ void EntityFactory::addComponentsFromJSON(entity_t entity, const nlohmann::json 
 
     if (componentsJson.contains("share_movement")) {
         _registry.addComponent(entity, ecs::component::ShareMovement{});
-    }
-
-    if (componentsJson.contains("shared_entity")) {
-        _registry.addComponent(entity, ecs::component::SharedEntity{entity});
     }
 }
 

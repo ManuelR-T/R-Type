@@ -63,7 +63,7 @@ class EntityFactory {
              }},
     };
 
-    void addComponentsFromJSON(entity_t entity, const nlohmann::json &componentsJson);
+    void addComponentsFromJSON(entity_t entity, const nlohmann::json &componentsJson, bool isShared = false);
 };
 
 } // namespace ecs

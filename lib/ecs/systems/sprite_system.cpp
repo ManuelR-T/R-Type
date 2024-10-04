@@ -6,6 +6,7 @@
 */
 
 #include "sprite_system.hpp"
+#include <iostream>
 #include "../components/animation.hpp"
 #include "../components/position.hpp"
 #include "../components/sprite.hpp"
@@ -37,6 +38,11 @@ void spriteSystem(Registry &reg, float dt, SpriteManager &spriteManager)
         if (anim_comp.elapsedTime >= anim_comp.frameTime) {
             anim_comp.updateState(reg, id, anim_comp);
             anim_comp.elapsedTime = 0.0f;
+            auto size = anim_comp.frames[anim_comp.state].size();
+            if (size == 0) {
+                std::cout << "No frames for state " << anim_comp.state << std::endl;
+                continue;
+            }
             anim_comp.currentFrame = (anim_comp.currentFrame + 1) % anim_comp.frames[anim_comp.state].size();
             sprite_comp.spriteObj.setTextureRect(anim_comp.frames[anim_comp.state][anim_comp.currentFrame]);
         }

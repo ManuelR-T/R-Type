@@ -34,7 +34,7 @@ void rtc::createPlayer(ecs::Registry &reg, ntw::UDPClient &udpClient, ecs::Sprit
     ecs::component::Animation playerAnimation;
     playerAnimation.frames["up"] = {{135, 2, 32, 16}};
     playerAnimation.frames["top"] = {{102, 2, 32, 16}};
-    playerAnimation.frames["neutral"] = {{168, 2, 32, 16}};
+    playerAnimation.frames["idle"] = {{168, 2, 32, 16}};
     playerAnimation.frames["down"] = {{201, 2, 32, 16}};
     playerAnimation.frames["bottom"] = {{234, 2, 32, 16}};
     playerAnimation.frameTime = 0.1f;
@@ -51,18 +51,18 @@ void rtc::createPlayer(ecs::Registry &reg, ntw::UDPClient &udpClient, ecs::Sprit
         if (vy > 0) {
             if (state == "up" || state == "top") {
                 state = "top";
-            } else if (state == "neutral") {
+            } else if (state == "idle") {
                 state = "up";
             } else {
-                state = "neutral";
+                state = "idle";
             }
         } else if (vy < 0) {
             if (state == "down" || state == "bottom") {
                 state = "bottom";
-            } else if (state == "neutral") {
+            } else if (state == "idle") {
                 state = "down";
             } else {
-                state = "neutral";
+                state = "idle";
             }
         } else {
             if (state == "top") {
@@ -70,7 +70,7 @@ void rtc::createPlayer(ecs::Registry &reg, ntw::UDPClient &udpClient, ecs::Sprit
             } else if (state == "bottom") {
                 state = "down";
             } else {
-                state = "neutral";
+                state = "idle";
             }
         }
     };
@@ -99,7 +99,7 @@ void rtc::createStatic(ecs::Registry &reg, ecs::SpriteManager &spriteManager, fl
 
     entitySprite.spriteObj.setTextureRect(sf::IntRect(0, 0, 32, 32));
     ecs::component::Animation entityAnimation;
-    entityAnimation.frames["neutral"] = {
+    entityAnimation.frames["idle"] = {
         {0, 0, 32, 32},
         {32, 0, 32, 32},
         {64, 0, 32, 32},
@@ -128,7 +128,7 @@ void rtc::createAi(ecs::Registry &reg, ecs::SpriteManager &spriteManager, float 
 
     entitySprite.spriteObj.setTextureRect(sf::IntRect(0, 0, 32, 32));
     ecs::component::Animation entityAnimation;
-    entityAnimation.frames["neutral"] = {
+    entityAnimation.frames["idle"] = {
         {0, 0, 32, 32},
         {32, 0, 32, 32},
         {64, 0, 32, 32},
@@ -178,7 +178,7 @@ void rtc::createMissile(
     reg.addComponent(missile, std::move(sprite));
 
     ecs::component::Animation anim;
-    anim.frames["neutral"] = {
+    anim.frames["idle"] = {
         {182, 248, 16, 16},
         {200, 240, 16, 16},
         {216, 240, 16, 16},
