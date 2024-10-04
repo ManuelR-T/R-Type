@@ -5,37 +5,25 @@
 ** main
 */
 
-#include "RTypeServer.hpp"
-#include "RTypeTCPProtol.hpp"
-#include "ResponseHandler.hpp"
-#include "RoomManager.hpp"
-
 #include <SFML/Graphics.hpp>
 #include <cstddef>
 #include <cstring>
-#include "tcp/TCPServer.hpp"
-
 #include <iostream>
+#include <vector>
+#include "RTypeServer.hpp"
+#include "RoomManager.hpp"
+#include "TCPResponseHandler.hpp"
+#include "tcp/TCPServer.hpp"
 
 int main()
 {
-    ntw::TCPServer tcpServer(8080, sizeof(rt::TCPPacket));
+    ntw::TCPServer tcpServer(8080);
     rts::RoomManager roomManager;
-    ntw::ResponseHandler<rt::TCPCommand, rt::TCPPacket> responseHandler([](const rt::TCPPacket &packet) {
-        return packet.cmd;
-    });
+    rt::TCPResponseHandler responseHandler;
 
     rts::registerTcpResponse(roomManager, tcpServer, responseHandler);
-    tcpServer.registerCommand([&responseHandler, &tcpServer](tcp::socket &sock, char *data, std::size_t size) {
-        rt::TCPCommand newUserCmd = rt::TCPCommand::CL_NEW_USER;
-
-        if (std::memcmp(data, &newUserCmd, sizeof(rt::TCPCommand)) == 0) {
-            rt::TCPPacket packet{};
-            std::memcpy(&packet, data, sizeof(packet));
-            tcpServer.addUser(sock, packet.body.cl_new_user.user_id);
-        } else {
-            responseHandler.handleResponse(data, size);
-        }
+    tcpServer.registerCommand([&responseHandler](tcp::socket &sock, char *data, std::size_t size) {
+        responseHandler.handleResponse(data, size, {std::ref(sock)});
     });
 
     tcpServer.run();

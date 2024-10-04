@@ -6,6 +6,7 @@
 */
 
 #include "GameManager.hpp"
+#include "RTypeTCPProtol.hpp"
 
 void rtc::GameManager::_setupTcpConnection()
 {
@@ -17,13 +18,13 @@ void rtc::GameManager::_setupTcpConnection()
     _tcpClient.run();
 
     {
-        rt::TCPPacket packet{.cmd = rt::TCPCommand::CL_NEW_USER};
-        packet.body.cl_new_user.user_id = _userId;
+        rt::TCPPacket<rt::TCPData::CL_NEW_USER> packet{.cmd = rt::TCPCommand::CL_NEW_USER};
+        packet.data.user_id = _userId;
         _tcpClient.send(reinterpret_cast<const char *>(&packet), sizeof(packet));
     }
     {
-        rt::TCPPacket packet{.cmd = rt::TCPCommand::CL_ROOM_LIST};
-        packet.body.cl_room_list.user_id = _userId;
+        rt::TCPPacket<rt::TCPData::CL_ROOM_LIST> packet{.cmd = rt::TCPCommand::CL_ROOM_LIST};
+        packet.data.user_id = _userId;
         _tcpClient.send(reinterpret_cast<const char *>(&packet), sizeof(packet));
     }
 }

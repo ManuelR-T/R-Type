@@ -12,9 +12,9 @@
 #if WIN32
 
 namespace eng {
-void info(const std::string &msg);
-void warning(const std::string &msg);
-void error(const std::string &msg);
+void logInfo(const std::string &msg);
+void logWarning(const std::string &msg);
+void logError(const std::string &msg);
 } // namespace eng
 
 #else
@@ -22,9 +22,9 @@ void error(const std::string &msg);
     #include <source_location>
 
 namespace eng {
-void info(const std::string &msg, std::source_location info = std::source_location::current());
-void warning(const std::string &msg, std::source_location info = std::source_location::current());
-void error(const std::string &msg, std::source_location info = std::source_location::current());
+void logInfo(const std::string &msg, std::source_location info = std::source_location::current());
+void logWarning(const std::string &msg, std::source_location info = std::source_location::current());
+void logError(const std::string &msg, std::source_location info = std::source_location::current());
 } // namespace eng
 
 #endif

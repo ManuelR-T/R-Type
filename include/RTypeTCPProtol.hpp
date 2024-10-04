@@ -8,6 +8,7 @@
 #pragma once
 
 #include <cstddef>
+#include "RTypeConst.hpp"
 
 namespace rt {
 enum class TCPCommand : std::size_t {
@@ -41,97 +42,104 @@ enum class TCPCommand : std::size_t {
     SER_ROOM_IN_GAME,
     SER_ROOM_READY
 };
+} // namespace rt
 
-struct TCPPacket {
-    TCPCommand cmd = TCPCommand::NONE;
-
-    union {
-        struct ClNewUser {
-            std::size_t user_id = 0;
-        } cl_new_user;
-
-        struct ClDisconnectUser {
-            std::size_t user_id = 0;
-        } cl_disconnect_user;
-
-        struct ClCreateRoom {
-            char room_name[32] = {0};
-        } cl_create_room;
-
-        struct SerRoomCreated {
-            char room_name[32] = {0};
-        } ser_room_created;
-
-        struct ClDeleteRoom {
-            char room_name[32] = {0};
-        } cl_delete_room;
-
-        struct SerRoomDeleted {
-            char room_name[32] = {0};
-        } ser_room_deleted;
-
-        struct ClJoinRoom {
-            char room_name[32] = {0};
-            char user_name[32] = {0};
-            std::size_t user_id = 0;
-        } cl_join_room;
-
-        struct SerRoomJoined {
-            char room_name[32] = {0};
-            char player_name[32] = {0};
-        } ser_room_joined;
-
-        struct ClLeaveRoom {
-            char room_name[32] = {0};
-            std::size_t user_id = 0;
-        } cl_leave_room;
-
-        struct SerRoomLeaved {
-            char room_name[32] = {0};
-            char player_name[32] = {0};
-        } ser_room_leaved;
-
-        struct ClReady {
-            char room_name[32] = {0};
-            std::size_t user_id = 0;
-        } cl_ready;
-
-        struct SerReady {
-            char room_name[32] = {0};
-            char player_name[32] = {0};
-        } ser_ready;
-
-        struct ClNotReady {
-            char room_name[32] = {0};
-            std::size_t user_id = 0;
-        } cl_not_ready;
-
-        struct SerNotReady {
-            char room_name[32] = {0};
-            char player_name[32] = {0};
-        } ser_not_ready;
-
-        struct ClRoomList {
-            std::size_t user_id = 0;
-        } cl_room_list;
-
-        struct SerRoomList {
-            char room_name[32] = {0};
-        } ser_room_list;
-
-        struct SerRoomContent {
-            char player_name[32] = {0};
-            bool ready = false;
-        } ser_room_content;
-
-        struct SerRoomInGame {
-            char room_name[32] = {0};
-        } ser_room_in_game;
-
-        struct SerRoomReady {
-            int port;
-        } ser_room_ready;
-    } body = {};
+namespace rt::TCPData {
+struct CL_NEW_USER {
+    std::size_t user_id = 0;
 };
 
+struct CL_DISCONNECT_USER {
+    std::size_t user_id = 0;
+};
+
+struct CL_CREATE_ROOM {
+    char room_name[32] = {0};
+};
+
+struct SER_ROOM_CREATED {
+    char room_name[32] = {0};
+};
+
+struct CL_DELETE_ROOM {
+    char room_name[32] = {0};
+};
+
+struct SER_ROOM_DELETED {
+    char room_name[32] = {0};
+};
+
+struct CL_JOIN_ROOM {
+    char room_name[32] = {0};
+    char user_name[32] = {0};
+    std::size_t user_id = 0;
+};
+
+struct SER_ROOM_JOINED {
+    char room_name[32] = {0};
+    char player_name[32] = {0};
+};
+
+struct CL_LEAVE_ROOM {
+    char room_name[32] = {0};
+    std::size_t user_id = 0;
+};
+
+struct SER_ROOM_LEAVED {
+    char room_name[32] = {0};
+    char player_name[32] = {0};
+};
+
+struct CL_READY {
+    char room_name[32] = {0};
+    std::size_t user_id = 0;
+};
+
+struct SER_READY {
+    char room_name[32] = {0};
+    char player_name[32] = {0};
+};
+
+struct CL_NOT_READY {
+    char room_name[32] = {0};
+    std::size_t user_id = 0;
+};
+
+struct SER_NOT_READY {
+    char room_name[32] = {0};
+    char player_name[32] = {0};
+};
+
+struct CL_ROOM_LIST {
+    std::size_t user_id = 0;
+};
+
+struct SER_ROOM_LIST {
+    char room_name[32] = {0};
+};
+
+struct SER_ROOM_CONTENT {
+    char player_name[32] = {0};
+    bool ready = false;
+};
+
+struct SER_ROOM_IN_GAME {
+    char room_name[32] = {0};
+};
+
+struct SER_ROOM_READY {
+    int port;
+};
+} // namespace rt::TCPData
+
+namespace rt {
+
+template <typename T>
+struct TCPPacket {
+    std::size_t magic = rt::TCP_MAGIC;
+    std::size_t size = sizeof(*this);
+    TCPCommand cmd;
+
+    T data{};
+};
 } // namespace rt

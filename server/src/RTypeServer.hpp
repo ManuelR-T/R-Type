@@ -10,11 +10,11 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 
 #include "udp/UDPServer.hpp"
-#include "RTypeTCPProtol.hpp"
 #include "RTypeUDPProtol.hpp"
 #include "ResponseHandler.hpp"
 #include "RoomManager.hpp"
 #include "TickRateManager.hpp"
+#include "TCPResponseHandler.hpp"
 #include "core/Registry.hpp"
 
 namespace rts {
@@ -38,7 +38,7 @@ void registerUdpResponse(
 void registerTcpResponse(
     rts::RoomManager &roomManager,
     ntw::TCPServer &tcpServer,
-    ntw::ResponseHandler<rt::TCPCommand, rt::TCPPacket> &responseHandler
+    rt::TCPResponseHandler &responseHandler
 );
 
 // ! will be replace by factory

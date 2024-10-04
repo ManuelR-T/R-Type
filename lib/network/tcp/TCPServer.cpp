@@ -13,6 +13,7 @@
 #include <iostream>
 #include <memory>
 #include <utility>
+#include "../../utils/Logger.hpp"
 #include <asio/completion_condition.hpp>
 #include <asio/error_code.hpp>
 
@@ -40,6 +41,7 @@ void ntw::Session::_handleRead(
         try {
             handler(_sock, _buff.data(), bytes);
         } catch (std::exception &err) {
+            eng::logError(err.what());
             std::cerr << "No such command: ";
             std::cerr.write(_buff.data(), bytes);
             std::cerr << std::endl;
@@ -54,7 +56,7 @@ void ntw::Session::handleClient(std::function<void(tcp::socket &, char *, std::s
 
     std::cout << "Session start !\n";
     _sock.async_receive(
-        asio::buffer(_buff, _dataSize),
+        asio::buffer(_buff, _buff.size()),
         [that = this->shared_from_this(), &handler](asio::error_code ec, std::size_t bytes) {
             that->_handleRead(ec, bytes, handler);
         }
@@ -65,10 +67,7 @@ void ntw::Session::handleClient(std::function<void(tcp::socket &, char *, std::s
     TCPServer
 */
 
-ntw::TCPServer::TCPServer(int port, std::size_t dataSize)
-    : _acc(_io, tcp::endpoint(tcp::v4(), port)), _dataSize(dataSize)
-{
-}
+ntw::TCPServer::TCPServer(int port) : _acc(_io, tcp::endpoint(tcp::v4(), port)) {}
 
 ntw::TCPServer::~TCPServer()
 {
@@ -117,7 +116,7 @@ void ntw::TCPServer::_handleAccept(asio::error_code ec, const std::shared_ptr<nt
 
 void ntw::TCPServer::_asioRun()
 {
-    auto session = std::make_shared<Session>(tcp::socket(_io), _mutex, _dataSize);
+    auto session = std::make_shared<Session>(tcp::socket(_io), _mutex);
 
     _acc.async_accept(session->socket(), [this, session](asio::error_code ec) {
         std::cout << "Accepted\n";
