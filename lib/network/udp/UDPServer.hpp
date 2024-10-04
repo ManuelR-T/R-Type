@@ -35,7 +35,7 @@ namespace ntw {
 class UDPServer : public ntw::AsioServer {
     /**
      * @brief Type that represent a client id useful to identify a specific client.
-    */
+     */
     using client_id = size_t;
 
     public:

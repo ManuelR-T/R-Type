@@ -14,12 +14,12 @@
 #include "RTypeUDPProtol.hpp"
 #include "ResponseHandler.hpp"
 #include "RoomManager.hpp"
-#include "core/Registry.hpp"
 #include "TCPResponseHandler.hpp"
+#include "core/Registry.hpp"
+#include "core/SpriteManager.hpp"
 #include "tcp/TCPClient.hpp"
 #include "udp/UDPClient.hpp"
 #include "core/shared_entity.hpp"
-#include "core/SpriteManager.hpp"
 
 #include <imgui-SFML.h>
 
@@ -38,7 +38,7 @@ class GameManager {
     rt::TCPResponseHandler _tcpResponseHandler;
     ntw::ResponseHandler<rt::UDPCommand, rt::UDPServerPacket> _udpResponseHandler;
 
-    std::list<std::function<void ()>> _networkCallbacks;
+    std::list<std::function<void()>> _networkCallbacks;
     std::shared_ptr<sf::RenderWindow> _window;
 
     void _registerTcpResponse();
@@ -50,8 +50,8 @@ class GameManager {
 
     public:
     GameManager(const std::string &ip, int port, const std::string &playerName)
-        : _ip(ip), _playerName(playerName), _tcpClient(ip, port),
-          _userId(ecs::generateSharedEntityId()), _roomManager(_tcpClient, _userId, playerName),
+        : _ip(ip), _playerName(playerName), _tcpClient(ip, port), _userId(ecs::generateSharedEntityId()),
+          _roomManager(_tcpClient, _userId, playerName),
           _udpResponseHandler([](const rt::UDPServerPacket &packet) { return packet.header.cmd; })
     {
     }

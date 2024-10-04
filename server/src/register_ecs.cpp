@@ -78,7 +78,7 @@ void rts::registerSystems(
     ntw::TickRateManager &tickRateManager,
     ntw::UDPServer &udpServer,
     std::list<rt::UDPServerPacket> &datasToSend,
-    std::list<std::function<void ()>> &networkCallbacks
+    std::list<std::function<void()>> &networkCallbacks
 )
 {
     tickRateManager.addTickRate(rt::SEND_PACKETS_TICK_RATE);

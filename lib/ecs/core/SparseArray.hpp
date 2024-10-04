@@ -8,10 +8,10 @@
 #pragma once
 
 #include <algorithm>
+#include <format>
 #include <optional>
 #include <stdexcept>
 #include <vector>
-#include <format>
 
 namespace ecs {
 /**

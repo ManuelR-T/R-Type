@@ -27,7 +27,7 @@ void ntw::UDPServer::_handleRecv(udp::endpoint &, asio::error_code ec, std::size
 
 void ntw::UDPServer::_handleEndpoint(udp::endpoint endpoint)
 {
-    for (auto &[_, end]: _cliEndpoints) {
+    for (auto &[_, end] : _cliEndpoints) {
         if (endpoint == end) {
             return;
         }
@@ -49,14 +49,14 @@ void ntw::UDPServer::send(udp::endpoint &to, const char *data, std::size_t size)
 
 void ntw::UDPServer::sendAll(const char *data, std::size_t size)
 {
-    for (auto &[_, end]: _cliEndpoints) {
+    for (auto &[_, end] : _cliEndpoints) {
         send(end, data, size);
     }
 }
 
 void ntw::UDPServer::sendAllExcept(const char *data, std::size_t size, udp::endpoint &endpoint)
 {
-    for (auto &[_, end]: _cliEndpoints) {
+    for (auto &[_, end] : _cliEndpoints) {
         if (end == endpoint) {
             continue;
         }
@@ -66,9 +66,9 @@ void ntw::UDPServer::sendAllExcept(const char *data, std::size_t size, udp::endp
 
 void ntw::UDPServer::sendAllExcept(const char *data, std::size_t size, std::initializer_list<udp::endpoint> endpoints)
 {
-    for (auto &[_, cli_end]: _cliEndpoints) {
+    for (auto &[_, cli_end] : _cliEndpoints) {
         bool isValidEndpoint = true;
-        for (auto banned: endpoints) {
+        for (auto banned : endpoints) {
             if (banned == cli_end) {
                 isValidEndpoint = false;
                 break;

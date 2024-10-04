@@ -27,7 +27,7 @@ void registerSystems(
     ecs::InputManager &input,
     ntw::TickRateManager &tickRateManager,
     ecs::SpriteManager &spriteManager,
-    std::list<std::function<void ()>> &_networkCallbacks
+    std::list<std::function<void()>> &_networkCallbacks
 );
 
 void createPlayer(ecs::Registry &reg, ntw::UDPClient &udpClient, ecs::SpriteManager &spriteManager);

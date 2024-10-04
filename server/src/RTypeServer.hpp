@@ -9,13 +9,13 @@
 
 #include <SFML/Graphics/RenderWindow.hpp>
 
-#include "udp/UDPServer.hpp"
 #include "RTypeUDPProtol.hpp"
 #include "ResponseHandler.hpp"
 #include "RoomManager.hpp"
-#include "TickRateManager.hpp"
 #include "TCPResponseHandler.hpp"
+#include "TickRateManager.hpp"
 #include "core/Registry.hpp"
+#include "udp/UDPServer.hpp"
 
 namespace rts {
 
@@ -27,7 +27,7 @@ void registerSystems(
     ntw::TickRateManager &tick_rate_manager,
     ntw::UDPServer &udpServer,
     std::list<rt::UDPServerPacket> &datasToSend,
-    std::list<std::function<void ()>> &networkCallbacks
+    std::list<std::function<void()>> &networkCallbacks
 );
 void registerUdpResponse(
     ecs::Registry &reg,

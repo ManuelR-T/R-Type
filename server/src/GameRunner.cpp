@@ -10,7 +10,8 @@
 #include "RTypeUDPProtol.hpp"
 
 rts::GameRunner::GameRunner(int port)
-    : _port(port), _udpServer(port), _responseHandler([](const rt::UDPClientPacket &packet) { return packet.header.cmd; }),
+    : _port(port), _udpServer(port),
+      _responseHandler([](const rt::UDPClientPacket &packet) { return packet.header.cmd; }),
       _window(sf::VideoMode(1000, 700), "R-Type") // ! for debug
 {
     rts::registerUdpResponse(_reg, _responseHandler, _datasToSend, _networkCallbacks);

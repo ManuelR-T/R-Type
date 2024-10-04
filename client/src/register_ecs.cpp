@@ -53,7 +53,7 @@ void rtc::registerSystems(
     ecs::InputManager &input,
     ntw::TickRateManager &tickRateManager,
     ecs::SpriteManager &spriteManager,
-    std::list<std::function<void ()>> &_networkCallbacks
+    std::list<std::function<void()>> &_networkCallbacks
 )
 {
     tickRateManager.addTickRate(rt::MOVEMENT_TICK_RATE);
