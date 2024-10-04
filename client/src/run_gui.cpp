@@ -54,8 +54,7 @@ static void renderInsideRoom(const std::string &name, rtc::RoomManager &roomMana
     // ! ready button
     ImVec2 buttonSize(200, 50);
     ImVec2 windowContentRegionMax = ImGui::GetWindowContentRegionMax();
-    ImVec2 buttonPos =
-        ImVec2(20, windowContentRegionMax.y - buttonSize.y - 20);
+    ImVec2 buttonPos = ImVec2(20, windowContentRegionMax.y - buttonSize.y - 20);
     ImGui::SetCursorPos(buttonPos);
     if (ImGui::Button("Ready", buttonSize)) {
         // ! send ready
