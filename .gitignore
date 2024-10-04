@@ -27,6 +27,10 @@ log.bin
 # ? vscode
 .vscode/
 
+# ? clion
+.idea/
+peda-session*
+
 # ? compilation database
 compile_commands.json
 
@@ -44,6 +48,7 @@ CMakeDoxyfile.in
 CMakeDoxygenDefaults.cmake
 _deps
 CPM_modules
+cmake-build-debug/
 CPackConfig.cmake
 CPackSourceConfig.cmake
 cpm-package-lock.cmake

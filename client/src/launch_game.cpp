@@ -29,7 +29,6 @@ void rtc::GameManager::_launchGame()
     }
 
     ntw::UDPClient udpClient(_ip, _gamePort);
-    udpClient.run();
 
     ecs::Registry reg;
     float dt = 0.f;
@@ -38,15 +37,12 @@ void rtc::GameManager::_launchGame()
     ecs::SpriteManager spriteManager;
 
     rtc::registerComponents(reg);
-    rtc::registerSystems(reg, *_window, dt, udpClient, inputManager, tickRateManager, spriteManager);
+    rtc::registerSystems(reg, *_window, dt, udpClient, inputManager, tickRateManager, spriteManager, _networkCallbacks);
 
+    _setupUdpConnection(reg, spriteManager, udpClient);
     ecs::EntityFactory entityFactory(reg,spriteManager,udpClient);
 
     entityFactory.createEntityFromJSON("assets/player.json");
-
-    for (int i = 0; i < 20; ++i) {
-        rtc::createStatic(reg, spriteManager, 48.f * i, 48.f * i);
-    }
 
     run(reg, _window, dt, inputManager);
 }

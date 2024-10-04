@@ -3,9 +3,11 @@ add_executable(r-type_client
     src/create_entity.cpp
     src/register_ecs.cpp
     src/setup_tcp_connection.cpp
+    src/setup_udp_connection.cpp
     src/launch_game.cpp
     src/RoomManager.cpp
     src/register_tcp_response.cpp
+    src/register_udp_response.cpp
     src/run_gui.cpp
 )
 

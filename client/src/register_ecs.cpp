@@ -5,6 +5,7 @@
 ** register_ecs
 */
 
+#include <list>
 #include "RTypeClient.hpp"
 #include "RTypeConst.hpp"
 #include "TickRateManager.hpp"
@@ -51,18 +52,20 @@ void rtc::registerSystems(
     ntw::UDPClient &udpClient,
     ecs::InputManager &input,
     ntw::TickRateManager &tickRateManager,
-    ecs::SpriteManager &spriteManager
+    ecs::SpriteManager &spriteManager,
+    std::list<std::function<void()>> &_networkCallbacks
 )
 {
     tickRateManager.addTickRate(rt::MOVEMENT_TICK_RATE);
-    tickRateManager.addTickRate(10);
+    tickRateManager.addTickRate(rt::AI_ACTING_TICK_RATE);
+    tickRateManager.addTickRate(rt::CALL_NETWORK_CALLBACKS_TICK_RATE);
 
     reg.addSystem([&reg, &input]() { ecs::systems::controlMove(reg, input); });
     reg.addSystem([&reg, &input, &udpClient, &spriteManager]() {
         ecs::systems::controlSpecial(reg, input, udpClient, spriteManager);
     });
     reg.addSystem([&reg, &dt, &tickRateManager]() {
-        if (tickRateManager.needUpdate(10, dt)) {
+        if (tickRateManager.needUpdate(rt::AI_ACTING_TICK_RATE, dt)) {
             ecs::systems::aiAct(reg);
         }
     });
@@ -79,5 +82,13 @@ void rtc::registerSystems(
         window.clear();
         ecs::systems::draw(reg, window);
         window.display();
+    });
+    reg.addSystem([&_networkCallbacks, &tickRateManager, &dt]() {
+        if (tickRateManager.needUpdate(rt::CALL_NETWORK_CALLBACKS_TICK_RATE, dt)) {
+            while (!_networkCallbacks.empty()) {
+                _networkCallbacks.front()();
+                _networkCallbacks.pop_front();
+            }
+        }
     });
 }
