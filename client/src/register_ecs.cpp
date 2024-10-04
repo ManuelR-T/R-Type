@@ -53,7 +53,7 @@ void rtc::registerSystems(
     ecs::InputManager &input,
     ntw::TickRateManager &tickRateManager,
     ecs::SpriteManager &spriteManager,
-    std::list<std::function<void ()>> &_servModifierQueue
+    std::list<std::function<void ()>> &_networkCallbacks
 )
 {
     tickRateManager.addTickRate(rt::MOVEMENT_TICK_RATE);
@@ -83,11 +83,11 @@ void rtc::registerSystems(
         ecs::systems::draw(reg, window);
         window.display();
     });
-    reg.addSystem([&_servModifierQueue, &tickRateManager, &dt]() {
+    reg.addSystem([&_networkCallbacks, &tickRateManager, &dt]() {
         if (tickRateManager.needUpdate(25, dt)) {
-            while (!_servModifierQueue.empty()) {
-                _servModifierQueue.front()();
-                _servModifierQueue.pop_front();
+            while (!_networkCallbacks.empty()) {
+                _networkCallbacks.front()();
+                _networkCallbacks.pop_front();
             }
         }
     });

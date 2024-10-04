@@ -32,7 +32,7 @@ void shareMovement(Registry &reg, ntw::UDPClient &udpClient)
 
     for (auto [_, pos, vel, shared_entity] : zip) {
         rt::UDPClientPacket msg = {
-            .header = {.magic = 4242, .cmd = rt::UDPCommand::MOD_ENTITY},
+            .header = {.magic = 4242, .cmd = rt::UDPCommand::MOVE_ENTITY},
             .body = {.sharedEntityId = shared_entity.sharedEntityId}
         };
         msg.body.b.shareMovement = {.pos = {pos.x, pos.y}, .vel = {.vx = vel.vx, .vy = vel.vy}};

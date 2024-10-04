@@ -8,7 +8,6 @@
 #pragma once
 
 #include <sys/types.h>
-#include <vector>
 #include "components/position.hpp"
 #include "components/velocity.hpp"
 #include "core/shared_entity.hpp"
@@ -18,6 +17,8 @@ enum class UDPCommand : u_int8_t {
     NONE,
     NEW_PLAYER,
     NEW_ENTITY,
+    MOVE_ENTITY,
+
     MOD_ENTITY,
     MOD_ENTITES,
     DEL_ENTITY

@@ -37,7 +37,7 @@ class GameManager {
     ntw::ResponseHandler<rt::TCPCommand, rt::TCPPacket> _tcpResponseHandler;
     ntw::ResponseHandler<rt::UDPCommand, rt::UDPServerPacket> _udpResponseHandler;
 
-    std::list<std::function<void ()>> _servModifierQueue;
+    std::list<std::function<void ()>> _networkCallbacks;
     std::shared_ptr<sf::RenderWindow> _window;
 
     void _registerTcpResponse();

@@ -35,14 +35,10 @@ void rtc::GameManager::_launchGame()
     ecs::SpriteManager spriteManager;
 
     rtc::registerComponents(reg);
-    rtc::registerSystems(reg, *_window, dt, udpClient, inputManager, tickRateManager, spriteManager, _servModifierQueue);
+    rtc::registerSystems(reg, *_window, dt, udpClient, inputManager, tickRateManager, spriteManager, _networkCallbacks);
 
     _setupUdpConnection(reg, spriteManager, udpClient);
     rtc::createPlayer(reg, udpClient, spriteManager);
-
-    for (int i = 0; i < 20; ++i) {
-        rtc::createStatic(reg, spriteManager, 48.f * i, 48.f * i);
-    }
 
     run(reg, _window, dt, inputManager);
 }

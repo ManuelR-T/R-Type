@@ -26,12 +26,14 @@ void registerSystems(
     float &dt,
     ntw::TickRateManager &tick_rate_manager,
     ntw::UDPServer &udpServer,
-    std::list<rt::UDPServerPacket> &datasToSend
+    std::list<rt::UDPServerPacket> &datasToSend,
+    std::list<std::function<void ()>> &networkCallbacks
 );
 void registerUdpResponse(
     ecs::Registry &reg,
     ntw::ResponseHandler<rt::UDPCommand, rt::UDPClientPacket> &responseHandler,
-    std::list<rt::UDPServerPacket> &datasToSend
+    std::list<rt::UDPServerPacket> &datasToSend,
+    std::list<std::function<void()>> &networkCallbacks
 );
 void registerTcpResponse(
     rts::RoomManager &roomManager,

@@ -6,6 +6,7 @@
 */
 
 #include <SFML/Graphics.hpp>
+#include <functional>
 #include "RTypeConst.hpp"
 #include "RTypeServer.hpp"
 #include "RTypeUDPProtol.hpp"
@@ -20,6 +21,7 @@
 #include "components/tag.hpp"
 #include "components/velocity.hpp"
 #include "core/Registry.hpp"
+#include "core/Zipper.hpp"
 #include "systems/collision.hpp"
 #include "systems/draw.hpp"
 #include "systems/position.hpp"
@@ -28,6 +30,30 @@
 #include "components/share_movement.hpp"
 #include "components/shared_entity.hpp"
 #include "systems/missiles_stop.hpp"
+
+static void share_server_movements(ecs::Registry &reg, std::list<rt::UDPServerPacket> &datasToSend)
+{
+    auto &sharedMov = reg.getComponents<ecs::component::ShareMovement>();
+    auto &positions = reg.getComponents<ecs::component::Position>();
+    auto &velocitys = reg.getComponents<ecs::component::Velocity>();
+    auto &sharedEntity = reg.getComponents<ecs::component::SharedEntity>();
+
+    ecs::Zipper<
+        ecs::component::ShareMovement,
+        ecs::component::Position,
+        ecs::component::Velocity,
+        ecs::component::SharedEntity>
+        zip(sharedMov, positions, velocitys, sharedEntity);
+
+    for (auto [_, pos, vel, shared_entity] : zip) {
+        rt::UDPBody body = {
+            .sharedEntityId = shared_entity.sharedEntityId, .b = {.shareMovement = {.pos = pos, .vel = vel}}
+        };
+        datasToSend.push_back(rt::UDPServerPacket(
+            {.header = {.magic = 0x43434343, .cmd = rt::UDPCommand::MOVE_ENTITY}, .body = std::move(body)}
+        ));
+    }
+}
 
 void rts::registerComponents(ecs::Registry &reg)
 {
@@ -51,11 +77,18 @@ void rts::registerSystems(
     float &dt,
     ntw::TickRateManager &tickRateManager,
     ntw::UDPServer &udpServer,
-    std::list<rt::UDPServerPacket> &datasToSend
+    std::list<rt::UDPServerPacket> &datasToSend,
+    std::list<std::function<void ()>> &networkCallbacks
 )
 {
     tickRateManager.addTickRate(rt::SEND_PACKETS_TICK_RATE);
 
+    reg.addSystem([&networkCallbacks]() {
+        while (!networkCallbacks.empty()) {
+            networkCallbacks.front()();
+            networkCallbacks.pop_front();
+        }
+    });
     reg.addSystem([&reg, &dt]() { ecs::systems::position(reg, dt); });
     reg.addSystem([&reg]() { ecs::systems::collision(reg); });
     reg.addSystem([&reg, &window]() { // ! for debug
@@ -64,8 +97,9 @@ void rts::registerSystems(
         window.display();
     });
     reg.addSystem([&reg]() { ecs::systems::missilesStop(reg); });
-    reg.addSystem([&datasToSend, &udpServer, &tickRateManager, &dt]() {
+    reg.addSystem([&datasToSend, &udpServer, &tickRateManager, &dt, &reg]() {
         if (tickRateManager.needUpdate(rt::SEND_PACKETS_TICK_RATE, dt)) {
+            share_server_movements(reg, datasToSend);
             while (!datasToSend.empty()) {
                 udpServer.sendAll(reinterpret_cast<const char *>(&datasToSend.front()), sizeof(rt::UDPServerPacket));
                 datasToSend.pop_front();
