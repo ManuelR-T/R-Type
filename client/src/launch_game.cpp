@@ -39,8 +39,8 @@ void rtc::GameManager::_launchGame()
     rtc::registerComponents(reg);
     rtc::registerSystems(reg, *_window, dt, udpClient, inputManager, tickRateManager, spriteManager, _networkCallbacks);
 
-    _setupUdpConnection(reg, spriteManager, udpClient);
     ecs::EntityFactory entityFactory(reg,spriteManager,udpClient);
+    _setupUdpConnection(reg, udpClient, entityFactory);
 
     entityFactory.createEntityFromJSON("assets/player.json");
 

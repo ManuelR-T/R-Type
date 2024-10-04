@@ -16,10 +16,10 @@
 #include "RoomManager.hpp"
 #include "TCPResponseHandler.hpp"
 #include "core/Registry.hpp"
-#include "core/SpriteManager.hpp"
 #include "tcp/TCPClient.hpp"
 #include "udp/UDPClient.hpp"
 #include "core/shared_entity.hpp"
+#include "factory/EntityFactory.hpp"
 
 #include <imgui-SFML.h>
 
@@ -42,10 +42,10 @@ class GameManager {
     std::shared_ptr<sf::RenderWindow> _window;
 
     void _registerTcpResponse();
-    void _registerUdpResponse(ecs::Registry &reg, ecs::SpriteManager &spriteManager);
+    void _registerUdpResponse(ecs::Registry &reg, ecs::EntityFactory &entityFactory);
 
     void _setupTcpConnection();
-    void _setupUdpConnection(ecs::Registry &reg, ecs::SpriteManager &spriteManager, ntw::UDPClient &udpClient);
+    void _setupUdpConnection(ecs::Registry &reg, ntw::UDPClient &udpClient, ecs::EntityFactory &entityFactory);
     void _launchGame();
 
     public:

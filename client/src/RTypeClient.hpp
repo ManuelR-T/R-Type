@@ -30,17 +30,6 @@ void registerSystems(
     std::list<std::function<void()>> &_networkCallbacks
 );
 
-void createPlayer(ecs::Registry &reg, ntw::UDPClient &udpClient, ecs::SpriteManager &spriteManager);
-void createStatic(ecs::Registry &reg, ecs::SpriteManager &spriteManager, float x, float y);
-void createAi(ecs::Registry &reg, ecs::SpriteManager &spriteManager, float x, float y);
-void createMissile(
-    ecs::Registry &reg,
-    ecs::SpriteManager &spriteManager,
-    shared_entity_t sharedEntityId,
-    float x,
-    float y
-);
-
 void run(ecs::Registry &reg, const std::shared_ptr<sf::RenderWindow> &window, float &dt, ecs::InputManager &input);
 void runGui(const std::shared_ptr<sf::RenderWindow> &window, rtc::RoomManager &roomManager, bool &inLobby);
 } // namespace rtc

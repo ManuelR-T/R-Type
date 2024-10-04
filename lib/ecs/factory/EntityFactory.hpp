@@ -16,7 +16,7 @@ class EntityFactory {
     public:
     EntityFactory(ecs::Registry &reg, ecs::SpriteManager &spriteManager, ntw::UDPClient &udpClient);
 
-    entity_t createEntityFromJSON(const std::string &jsonFilePath);
+    entity_t createEntityFromJSON(const std::string &jsonFilePath, int x = INT32_MAX, int y = INT32_MAX, entity_t = UINT_MAX);
 
     private:
     ecs::Registry &_registry;
@@ -61,9 +61,10 @@ class EntityFactory {
                      }
                  }
              }},
+            {"none", [](ecs::Registry &, entity_t, ecs::component::Animation &) {}},
     };
 
-    void addComponentsFromJSON(entity_t entity, const nlohmann::json &componentsJson, bool isShared = false);
+    void addComponentsFromJSON(entity_t entity, const nlohmann::json &componentsJson, bool isShared = false, int x = INT32_MAX, int y = INT32_MAX);
 };
 
 } // namespace ecs

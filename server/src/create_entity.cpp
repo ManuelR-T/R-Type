@@ -26,11 +26,11 @@ void rts::createPlayer(ecs::Registry &reg, shared_entity_t sharedEntityId)
 
     reg.addComponent(player, ecs::component::Velocity{0.f, 0.f});
     ecs::component::Drawable playerDrawable;
-    playerDrawable.shape.setSize(sf::Vector2f(50.f, 50.f));
+    playerDrawable.shape.setSize(sf::Vector2f(32.f, 16.f));
     playerDrawable.shape.setFillColor(sf::Color::Blue);
     reg.addComponent(player, std::move(playerDrawable));
 
-    reg.addComponent(player, ecs::component::Hitbox{50.f, 50.f});
+    reg.addComponent(player, ecs::component::Hitbox{32.f, 16.f});
 }
 
 void rts::createStatic(ecs::Registry &reg, float x, float y)
@@ -39,11 +39,11 @@ void rts::createStatic(ecs::Registry &reg, float x, float y)
     reg.addComponent(entity, ecs::component::Position{x, y});
 
     ecs::component::Drawable entityDrawable;
-    entityDrawable.shape.setSize(sf::Vector2f(50.f, 50.f));
-    entityDrawable.shape.setFillColor(sf::Color::Red);
+    entityDrawable.shape.setSize(sf::Vector2f(16.f, 16.f));
+    entityDrawable.shape.setFillColor(sf);
     reg.addComponent(entity, std::move(entityDrawable));
 
-    reg.addComponent(entity, ecs::component::Hitbox{50.f, 50.f});
+    reg.addComponent(entity, ecs::component::Hitbox{16.f, 16.f});
 }
 
 void rts::createMissile(ecs::Registry &reg, const rt::UDPClientPacket &msg)

@@ -1,0 +1,54 @@
+/*
+** EPITECH PROJECT, 2024
+** R-Type
+** File description:
+** create_entity
+*/
+
+// #include "RTypeClient.hpp"
+// #include "components/animation.hpp"
+// #include "components/position.hpp"
+// #include "components/sprite.hpp"
+// #include "core/Registry.hpp"
+// #include "components/ai_actor.hpp"
+
+// void rtc::createAi(ecs::Registry &reg, ecs::SpriteManager &spriteManager, float x, float y)
+// {
+//     auto entity = reg.spawnEntity();
+
+//     reg.addComponent(entity, ecs::component::Position{x, y});
+
+//     ecs::component::Sprite entitySprite;
+//     entitySprite.textureId = "assets/typesheets/r-typesheet5.gif";
+//     entitySprite.spriteObj.setTexture(spriteManager.getTexture(entitySprite.textureId));
+//     entitySprite.spriteObj.setPosition(x, y);
+
+//     entitySprite.spriteObj.setTextureRect(sf::IntRect(0, 0, 32, 32));
+//     ecs::component::Animation entityAnimation;
+//     entityAnimation.frames["idle"] = {
+//         {0, 0, 32, 32},
+//         {32, 0, 32, 32},
+//         {64, 0, 32, 32},
+//         {96, 0, 32, 32},
+//         {128, 0, 32, 32},
+//         {160, 0, 32, 32},
+//         {192, 0, 32, 32},
+//         {224, 0, 32, 32}
+//     };
+
+//     reg.addComponent(entity, std::move(entityAnimation));
+//     reg.addComponent(entity, std::move(entitySprite));
+
+//     auto func = [](ecs::Registry &reg, entity_t e) {
+//         auto &pos = reg.getComponent<ecs::component::Position>(e);
+//         auto &val = reg.getComponent<ecs::component::AiActor>(e)->val;
+
+//         if (val) {
+//             pos->y += 20;
+//         } else {
+//             pos->y -= 20;
+//         }
+//         val = !val;
+//     };
+//     reg.addComponent(entity, ecs::component::AiActor{true, std::move(func)});
+// }

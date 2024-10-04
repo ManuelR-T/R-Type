@@ -224,6 +224,23 @@ class Registry {
         return array[static_cast<size_t>(entity)];
     }
 
+
+    /**
+     * @brief Checks if an entity has a specific component.
+     *
+     * This template function checks if the specified entity has the specified component
+     * by querying the corresponding `sparse_array`.
+     * @tparam Component The type of the component to check for.
+     * @param entity The identifier (`entity_t`) of the entity.
+     * @return `true` if the entity has the component, `false` otherwise.
+     */
+    template<typename Component>
+    bool hasComponent(const entity_t &entity) const
+    {
+        const auto &array = getComponents<Component>();
+        return array.has(static_cast<size_t>(entity));
+    }
+
     /**
      * @brief Removes a component from an entity.
      *

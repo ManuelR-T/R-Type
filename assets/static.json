@@ -1,24 +1,20 @@
 {
     "type": "local",
     "components": {
-        "Position": {
+        "position": {
             "x": 100.0,
             "y": 200.0
         },
-        "Sprite": {
-            "textureId": "assets/typesheets/r-typesheet5.gif",
-            "textureRect": {
+        "sprite": {
+            "texture": "assets/typesheets/r-typesheet5.gif",
+            "initial_frame": {
                 "x": 0,
                 "y": 0,
                 "width": 32,
                 "height": 32
-            },
-            "position": {
-                "x": 100.0,
-                "y": 200.0
             }
         },
-        "Animation": {
+        "animation": {
             "frames": {
                 "idle": [
                     {
@@ -70,9 +66,11 @@
                         "height": 32
                     }
                 ]
-            }
+            },
+            "frame_time": 0.2,
+            "update_state": "none"
         },
-        "Hitbox": {
+        "hitbox": {
             "width": 32.0,
             "height": 32.0
         }

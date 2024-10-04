@@ -1,0 +1,153 @@
+{
+    "type": "shared",
+    "components": {
+        "position": {
+            "x": 0.0,
+            "y": 0.0
+        },
+        "velocity": {
+            "vx": 50.0,
+            "vy": 0.0
+        },
+        "sprite": {
+            "texture": "assets/typesheets/r-typesheet1.gif",
+            "initial_frame": {
+                "x": 0,
+                "y": 0,
+                "width": 16,
+                "height": 16
+            }
+        },
+        "animation": {
+            "frames": {
+                "right": [
+                    {
+                        "x": 334,
+                        "y": 248,
+                        "width": 16,
+                        "height": 16
+                    }
+                ],
+                "idle": [
+                    {
+                        "x": 182,
+                        "y": 248,
+                        "width": 16,
+                        "height": 16
+                    },
+                    {
+                        "x": 200,
+                        "y": 240,
+                        "width": 16,
+                        "height": 16
+                    },
+                    {
+                        "x": 216,
+                        "y": 240,
+                        "width": 16,
+                        "height": 16
+                    },
+                    {
+                        "x": 232,
+                        "y": 240,
+                        "width": 16,
+                        "height": 16
+                    },
+                    {
+                        "x": 248,
+                        "y": 240,
+                        "width": 16,
+                        "height": 16
+                    },
+                    {
+                        "x": 268,
+                        "y": 240,
+                        "width": 16,
+                        "height": 16
+                    },
+                    {
+                        "x": 284,
+                        "y": 240,
+                        "width": 16,
+                        "height": 16
+                    },
+                    {
+                        "x": 300,
+                        "y": 240,
+                        "width": 16,
+                        "height": 16
+                    },
+                    {
+                        "x": 316,
+                        "y": 240,
+                        "width": 16,
+                        "height": 16
+                    },
+                    {
+                        "x": 334,
+                        "y": 248,
+                        "width": 16,
+                        "height": 16
+                    },
+                    {
+                        "x": 316,
+                        "y": 256,
+                        "width": 16,
+                        "height": 16
+                    },
+                    {
+                        "x": 300,
+                        "y": 256,
+                        "width": 16,
+                        "height": 16
+                    },
+                    {
+                        "x": 284,
+                        "y": 256,
+                        "width": 16,
+                        "height": 16
+                    },
+                    {
+                        "x": 268,
+                        "y": 256,
+                        "width": 16,
+                        "height": 16
+                    },
+                    {
+                        "x": 248,
+                        "y": 256,
+                        "width": 16,
+                        "height": 16
+                    },
+                    {
+                        "x": 232,
+                        "y": 256,
+                        "width": 16,
+                        "height": 16
+                    },
+                    {
+                        "x": 216,
+                        "y": 256,
+                        "width": 16,
+                        "height": 16
+                    },
+                    {
+                        "x": 200,
+                        "y": 256,
+                        "width": 16,
+                        "height": 16
+                    }
+                ]
+            },
+            "frame_time": 0.1,
+            "update_state": "none",
+            "state": "right"
+        },
+        "missile":{},
+        "hitbox": {
+            "width": 16.0,
+            "height": 16.0
+        },
+        "share_movement": {}
+    }
+}

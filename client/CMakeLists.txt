@@ -1,6 +1,5 @@
 add_executable(r-type_client
     src/main.cpp
-    src/create_entity.cpp
     src/register_ecs.cpp
     src/setup_tcp_connection.cpp
     src/setup_udp_connection.cpp

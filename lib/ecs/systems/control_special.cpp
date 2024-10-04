@@ -29,13 +29,12 @@ static void spawnMissile(
     ecs::SpriteManager &spriteManager
 )
 {
-    // Create Missile in create_entities !
     rt::UDPClientPacket msg = {
         .header = {.cmd = rt::UDPCommand::NEW_ENTITY},
         .body = {.sharedEntityId = ecs::generateSharedEntityId()},
     };
     msg.body.b.newEntityData = {
-        .type = 1, .moveData = {.pos = {playerPos.x + 10, playerPos.y + 10}, .vel = {.vx = 50.f, .vy = 0}}
+        .type = 1, .moveData = {.pos = {playerPos.x + 10, playerPos.y + 20}, .vel = {.vx = 50.f, .vy = 0}}
     };
     udp.send(reinterpret_cast<const char *>(&msg), sizeof(msg));
 }
