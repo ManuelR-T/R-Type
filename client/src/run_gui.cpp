@@ -5,19 +5,19 @@
 ** run_gui
 */
 
+#include <SFML/System/Vector2.hpp>
+#include <iostream>
+#include <vector>
 #include "RTypeClient.hpp"
 #include "imgui.h"
 #include "core/shared_entity.hpp"
 #include "imgui-SFML.h"
 
-// ! This function is call when you click on a room in the lobby array.
-static void renderInsideRoom(const std::string &name, rtc::RoomManager &roomManager)
+static void renderInsideRoom(const std::string &name, rtc::RoomManager &roomManager, const sf::Vector2u &windowSize)
 {
     // ! Window
-    ImVec2 windowSize(850, 600);
-    ImVec2 windowPos(100, 50);
-    ImGui::SetNextWindowSize(windowSize, ImGuiCond_Always);
-    ImGui::SetNextWindowPos(windowPos, ImGuiCond_Always);
+    ImGui::SetNextWindowSize(windowSize);
+    ImGui::SetNextWindowPos(ImVec2(0, 0));
     ImGui::Begin(
         name.c_str(), nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove
     );
@@ -55,7 +55,7 @@ static void renderInsideRoom(const std::string &name, rtc::RoomManager &roomMana
     ImVec2 buttonSize(200, 50);
     ImVec2 windowContentRegionMax = ImGui::GetWindowContentRegionMax();
     ImVec2 buttonPos =
-        ImVec2(windowContentRegionMax.x - buttonSize.x - 620, windowContentRegionMax.y - buttonSize.y - 20);
+        ImVec2(20, windowContentRegionMax.y - buttonSize.y - 20);
     ImGui::SetCursorPos(buttonPos);
     if (ImGui::Button("Ready", buttonSize)) {
         // ! send ready
@@ -65,14 +65,11 @@ static void renderInsideRoom(const std::string &name, rtc::RoomManager &roomMana
     ImGui::End();
 }
 
-// ! This function is call when you are on the lobby page.
-static void renderLobbyWindow(rtc::RoomManager &roomManager)
+static void renderLobbyWindow(rtc::RoomManager &roomManager, const sf::Vector2u &windowSize)
 {
     // ! Window
-    ImVec2 windowSize(850, 600);
-    ImVec2 windowPos(100, 50);
-    ImGui::SetNextWindowSize(windowSize, ImGuiCond_Always);
-    ImGui::SetNextWindowPos(windowPos, ImGuiCond_Always);
+    ImGui::SetNextWindowSize(windowSize);
+    ImGui::SetNextWindowPos(ImVec2(0, 0));
     ImGui::Begin("Lobby", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove);
 
     // ! Table
@@ -139,9 +136,9 @@ void rtc::runGui(const std::shared_ptr<sf::RenderWindow> &window, rtc::RoomManag
         window->clear();
 
         if (roomManager.getCurrentRoom().empty()) {
-            renderLobbyWindow(roomManager);
+            renderLobbyWindow(roomManager, window->getSize());
         } else {
-            renderInsideRoom(roomManager.getCurrentRoom(), roomManager);
+            renderInsideRoom(roomManager.getCurrentRoom(), roomManager, window->getSize());
         }
 
         ImGui::SFML::Render(*window);

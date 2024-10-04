@@ -44,6 +44,9 @@ CMakeDoxyfile.in
 CMakeDoxygenDefaults.cmake
 _deps
 CPM_modules
+CPackConfig.cmake
+CPackSourceConfig.cmake
+cpm-package-lock.cmake
 
 # ? imgui
 imgui.ini
