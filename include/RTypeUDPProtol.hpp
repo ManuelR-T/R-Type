@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include <cstdint>
 #include <cstddef>
+#include <cstdint>
 #include "components/position.hpp"
 #include "components/velocity.hpp"
 #include "core/shared_entity.hpp"
