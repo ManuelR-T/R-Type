@@ -31,7 +31,7 @@ jobs:
         key: apt-cache-linux-${{ runner.os }}
 
     - name: Install dependencies
-      run: sudo apt-get install -y flex bison javacc libflac-dev libx11-dev libxext-dev libgl1-mesa-dev libudev-dev libopenal-dev libvorbis-dev
+      run: sudo apt-get install -y flex bison javacc libflac-dev libx11-dev libxext-dev libgl1-mesa-dev libudev-dev libopenal-dev libvorbis-dev libxrandr-dev
 
 
     - name: Check compilation (Linux)
