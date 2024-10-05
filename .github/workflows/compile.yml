@@ -27,12 +27,16 @@ jobs:
     - name: Cache apt dependencies
       uses: actions/cache@v3
       with:
-        path: /var/cache/apt
+        path: |
+          /var/cache/apt
+          !/var/cache/apt/archives/partial
+          !/var/cache/apt/archives/lock
         key: apt-cache-linux-${{ runner.os }}
+        restore-keys: |
+          apt-cache-linux-${{ runner.os }}
 
     - name: Install apt dependencies
       run: sudo apt-get install -y flex bison javacc libflac-dev libx11-dev libxext-dev libgl1-mesa-dev libudev-dev libopenal-dev libvorbis-dev libxcursor-dev libxrandr-dev libfreetype6-dev
-
 
     - name: Check compilation (Linux)
       if: matrix.os == 'linux'
@@ -72,6 +76,7 @@ jobs:
         key: cross-build-windows-${{ runner.os }}-${{ hashFiles('tools/build-mingw32.sh', 'cmake/mingw32-toolchain.cmake', 'dependencies.cmake' ) }}
         restore-keys: |
           cross-build-windows-${{ runner.os }}-
+            
 
     - name: Cross-compile for Windows
       if: matrix.os == 'windows'
