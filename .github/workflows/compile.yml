@@ -1,0 +1,86 @@
+name: compile
+on:
+  workflow_call
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    strategy:
+      matrix:
+        os: [linux, windows]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Cache CMake build (Linux)
+      if: matrix.os == 'linux'
+      uses: actions/cache@v3
+      with:
+        path: |
+          build/
+        key: cmake-build-linux-${{ runner.os }}-${{ hashFiles('dependencies.cmake')}}
+        restore-keys: |
+          cmake-build-linux-${{ runner.os }}-
+
+    - name: Install apt dependencies
+      run: sudo apt-get install -y flex bison javacc libflac-dev libx11-dev libxext-dev libgl1-mesa-dev libudev-dev libopenal-dev libvorbis-dev libxcursor-dev libxrandr-dev libfreetype6-dev
+
+    - name: Check compilation (Linux)
+      if: matrix.os == 'linux'
+      run: |
+        echo "## 🚀 Linux compilation result" >> $GITHUB_STEP_SUMMARY
+        mkdir -p build
+        cd build
+        {
+          set +e
+          cmake ..; make
+          if [ $? -ne 0 ]; then
+            echo "- ### Compilation failed ❌" >> $GITHUB_STEP_SUMMARY
+            echo "Linux compilation failed."
+            exit 1
+          else
+            echo "- ### Compilation succeed ✅" >> $GITHUB_STEP_SUMMARY
+            exit 0
+          fi
+        }
+
+    - name: Cache Mingw-w64 (Windows)
+      if: matrix.os == 'windows'
+      uses: actions/cache@v3
+      with:
+        path: /usr/lib/mingw-w64
+        key: mingw-w64-${{ runner.os }}
+
+    - name: Install Mingw-w64 (Windows)
+      if: matrix.os == 'windows'
+      run: sudo apt-get install -y mingw-w64 mingw-w64-tools mingw-w64-x86-64-dev
+
+    - name: Cache cross-compilation artifacts (Windows)
+      if: matrix.os == 'windows'
+      uses: actions/cache@v3
+      with:
+        path: build-mingw32
+        key: cross-build-windows-${{ runner.os }}-${{ hashFiles('tools/build-mingw32.sh', 'cmake/mingw32-toolchain.cmake', 'dependencies.cmake' ) }}
+        restore-keys: |
+          cross-build-windows-${{ runner.os }}-
+
+
+    - name: Cross-compile for Windows
+      if: matrix.os == 'windows'
+      run: |
+        echo "## 🚀 Cross-compilation for Windows result" >> $GITHUB_STEP_SUMMARY
+        chmod +x tools/build-mingw32.sh
+        {
+          set +e
+          ./tools/build-mingw32.sh
+          if [ $? -ne 0 ]; then
+            echo "- ### Cross-compilation for Windows failed ❌" >> $GITHUB_STEP_SUMMARY
+            echo "Cross-compilation failed."
+            exit 1
+          else
+            echo "- ### Cross-compilation succeed ✅" >> $GITHUB_STEP_SUMMARY
+            exit 0
+          fi
+        }

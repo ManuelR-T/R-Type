@@ -10,7 +10,6 @@
 #include <cstdio>
 #include <cstring>
 #include <functional>
-#include <string>
 #include <utility>
 #include "TrackedException.hpp"
 #include <unordered_map>

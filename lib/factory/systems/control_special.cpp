@@ -13,6 +13,10 @@
 #include "Zipper.hpp"
 #include "components/controllable.hpp"
 #include "components/position.hpp"
+#include "core/InputManager.hpp"
+#include "core/Registry.hpp"
+#include "core/SpriteManager.hpp"
+#include "core/Zipper.hpp"
 #include "udp/UDPClient.hpp"
 #include "shared_entity.hpp"
 
