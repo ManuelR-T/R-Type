@@ -7,11 +7,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
-    container:
-      image: nicolasalexandredev/r-type:dependencies
-      volumes:
-        - ${{ github.workspace }}:/app
-
     strategy:
       matrix:
         os: [linux, windows]
