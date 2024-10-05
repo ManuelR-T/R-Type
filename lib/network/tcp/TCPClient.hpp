@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "../BuffSize.hpp"
 #include "AsioClient.hpp"
 
 #include <asio.hpp>

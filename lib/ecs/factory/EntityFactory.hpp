@@ -1,70 +1,39 @@
 #pragma once
 
+#include <climits>
+#include <functional>
 #include <nlohmann/json.hpp>
 #include <string>
 #include "../components/animation.hpp"
 #include "../components/velocity.hpp"
 #include "../core/Registry.hpp"
-#include "../core/SpriteManager.hpp"
-#include "udp/UDPClient.hpp"
+#include "../core/entity.hpp"
+#include "core/shared_entity.hpp"
 #include <unordered_map>
-using json = nlohmann::json;
 
 namespace ecs {
 
 class EntityFactory {
     public:
-    EntityFactory(ecs::Registry &reg, ecs::SpriteManager &spriteManager, ntw::UDPClient &udpClient);
+    EntityFactory(ecs::Registry &reg, bool is_server = false);
+    virtual ~EntityFactory() = default;
 
-    entity_t createEntityFromJSON(const std::string &jsonFilePath, int x = INT32_MAX, int y = INT32_MAX, entity_t = UINT_MAX);
+    entity_t createEntityFromJSON(
+        const std::string &jsonFilePath,
+        int x = INT32_MAX,
+        int y = INT32_MAX,
+        shared_entity_t sharedEntity = std::numeric_limits<size_t>::max()
+    );
 
-    private:
+    protected:
     ecs::Registry &_registry;
-    ecs::SpriteManager &_spriteManager;
-    ntw::UDPClient &_udpClient;
-    const std::unordered_map<std::string, std::function<void(Registry &, entity_t, ecs::component::Animation &)>>
-        _animMap = {
-            {"player",
-             [](ecs::Registry &reg, entity_t id, ecs::component::Animation &anim) {
-                 auto velOpt = reg.getComponent<ecs::component::Velocity>(id);
-                 if (!velOpt) {
-                     return;
-                 }
+    bool _is_server;
 
-                 auto &vel = *velOpt;
-                 float vy = vel.vy;
-                 std::string &state = anim.state;
+    virtual void addComponents(entity_t entity, const nlohmann::json &componentsJson, bool isShared, int x, int y) = 0;
 
-                 if (vy > 0) {
-                     if (state == "up" || state == "top") {
-                         state = "top";
-                     } else if (state == "idle") {
-                         state = "up";
-                     } else {
-                         state = "idle";
-                     }
-                 } else if (vy < 0) {
-                     if (state == "down" || state == "bottom") {
-                         state = "bottom";
-                     } else if (state == "idle") {
-                         state = "down";
-                     } else {
-                         state = "idle";
-                     }
-                 } else {
-                     if (state == "top") {
-                         state = "up";
-                     } else if (state == "bottom") {
-                         state = "down";
-                     } else {
-                         state = "idle";
-                     }
-                 }
-             }},
-            {"none", [](ecs::Registry &, entity_t, ecs::component::Animation &) {}},
-    };
+    virtual void handleNetworkSync(entity_t entity, const nlohmann::json &entityJson, bool isShared) = 0;
 
-    void addComponentsFromJSON(entity_t entity, const nlohmann::json &componentsJson, bool isShared = false, int x = INT32_MAX, int y = INT32_MAX);
+    void addCommonComponents(entity_t entity, const nlohmann::json &componentsJson, int x, int y);
 };
 
 } // namespace ecs

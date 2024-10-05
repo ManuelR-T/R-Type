@@ -11,6 +11,8 @@ add_library(ECS STATIC
     systems/ai_act.cpp
     core/shared_entity.cpp
     factory/EntityFactory.cpp
+    factory/ServerEntityFactory.cpp
+    factory/ClientEntityFactory.cpp
 )
 
 target_include_directories(ECS PUBLIC

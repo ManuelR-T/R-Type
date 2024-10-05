@@ -14,6 +14,7 @@
 #include "core/InputManager.hpp"
 #include "core/Registry.hpp"
 #include "core/SpriteManager.hpp"
+#include "factory/ClientEntityFactory.hpp"
 #include "factory/EntityFactory.hpp"
 #include "udp/UDPClient.hpp"
 
@@ -39,7 +40,7 @@ void rtc::GameManager::_launchGame()
     rtc::registerComponents(reg);
     rtc::registerSystems(reg, *_window, dt, udpClient, inputManager, tickRateManager, spriteManager, _networkCallbacks);
 
-    ecs::EntityFactory entityFactory(reg,spriteManager,udpClient);
+    ecs::ClientEntityFactory entityFactory(reg,spriteManager,udpClient);
     _setupUdpConnection(reg, udpClient, entityFactory);
 
     entityFactory.createEntityFromJSON("assets/player.json");

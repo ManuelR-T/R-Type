@@ -15,6 +15,7 @@
 #include "TCPResponseHandler.hpp"
 #include "TickRateManager.hpp"
 #include "core/Registry.hpp"
+#include "factory/ServerEntityFactory.hpp"
 #include "udp/UDPServer.hpp"
 
 namespace rts {
@@ -33,7 +34,8 @@ void registerUdpResponse(
     ecs::Registry &reg,
     ntw::ResponseHandler<rt::UDPCommand, rt::UDPClientPacket> &responseHandler,
     std::list<rt::UDPServerPacket> &datasToSend,
-    std::list<std::function<void()>> &networkCallbacks
+    std::list<std::function<void()>> &networkCallbacks,
+    ecs::ServerEntityFactory &entityFactory
 );
 void registerTcpResponse(
     rts::RoomManager &roomManager,

@@ -14,6 +14,7 @@
 #include "core/Registry.hpp"
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Color.hpp>
 #include <cstring>
 #include "RTypeServer.hpp"
 
@@ -40,7 +41,7 @@ void rts::createStatic(ecs::Registry &reg, float x, float y)
 
     ecs::component::Drawable entityDrawable;
     entityDrawable.shape.setSize(sf::Vector2f(16.f, 16.f));
-    entityDrawable.shape.setFillColor(sf);
+    entityDrawable.shape.setFillColor(sf::Color::Red);
     reg.addComponent(entity, std::move(entityDrawable));
 
     reg.addComponent(entity, ecs::component::Hitbox{16.f, 16.f});
@@ -53,7 +54,7 @@ void rts::createMissile(ecs::Registry &reg, const rt::UDPClientPacket &msg)
     const auto &pos = msg.body.b.newEntityData.moveData.pos;
     const auto &vel = msg.body.b.newEntityData.moveData.vel;
 
-    reg.addComponent(missile, ecs::component::Position{pos.x + 55, pos.y + 8});
+    reg.addComponent(missile, ecs::component::Position{pos.x + 10, pos.y + 20});
     reg.addComponent(missile, ecs::component::Velocity{vel.vx, vel.vy});
     reg.addComponent(missile, ecs::component::Hitbox{16.0, 16.0});
 

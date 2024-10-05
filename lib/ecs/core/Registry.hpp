@@ -20,6 +20,7 @@
 #include <string>
 #include <typeindex>
 #include <unordered_map>
+#include <iostream>
 
 namespace ecs {
 /**
@@ -133,7 +134,7 @@ class Registry {
      * the identifier.
      *
      * @param shared_entity_id The id of the shared_entity.
-     * @return The identifier (`shared_entity_t`) of the newly spawned sharedentity.
+     * @return The identifier (`entity_t`) of the newly spawned sharedentity.
      */
     entity_t spawnSharedEntity(shared_entity_t sharedEntityId)
     {
@@ -141,6 +142,8 @@ class Registry {
         _entities.push_back(entity);
 
         _sharedEntityTracker[sharedEntityId] = entity;
+
+        std::cout << "Tracking shared entity ID: " << sharedEntityId << std::endl;
         this->addComponent(entity, ecs::component::SharedEntity{sharedEntityId});
 
         return entity;

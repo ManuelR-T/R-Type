@@ -7,12 +7,12 @@
 
 #pragma once
 
-#include "../AsioServer.hpp"
-
 #include <asio.hpp>
 #include <asio/ip/tcp.hpp>
 #include <functional>
 #include <list>
+#include "../AsioServer.hpp"
+#include "../BuffSize.hpp"
 
 #include <mutex>
 

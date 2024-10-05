@@ -40,7 +40,7 @@ void spriteSystem(Registry &reg, float dt, SpriteManager &spriteManager)
             anim_comp.elapsedTime = 0.0f;
             auto size = anim_comp.frames[anim_comp.state].size();
             if (size == 0) {
-                std::cout << "No frames for state " << anim_comp.state << std::endl;
+                std::cerr << "No frames for state " << anim_comp.state << std::endl;
                 continue;
             }
             anim_comp.currentFrame = (anim_comp.currentFrame + 1) % anim_comp.frames[anim_comp.state].size();

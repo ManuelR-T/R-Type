@@ -5,24 +5,31 @@
 ** register_ecs
 */
 
+#include <iostream>
 #include <utility>
 #include "RTypeServer.hpp"
 #include "RTypeUDPProtol.hpp"
 #include "components/position.hpp"
 #include "components/velocity.hpp"
+#include "factory/EntityFactory.hpp"
 
 void rts::registerUdpResponse(
     ecs::Registry &reg,
     ntw::ResponseHandler<rt::UDPCommand, rt::UDPClientPacket> &responseHandler,
     std::list<rt::UDPServerPacket> &datasToSend,
-    std::list<std::function<void()>> &networkCallbacks
+    std::list<std::function<void()>> &networkCallbacks,
+    ecs::ServerEntityFactory &entityFactory
 )
 {
     responseHandler.registerHandler(
         rt::UDPCommand::NEW_PLAYER,
-        [&reg, &networkCallbacks](const rt::UDPClientPacket &msg) {
-            networkCallbacks.push_back([&reg, sharedEntityId = msg.body.sharedEntityId]() {
+        [&reg, &networkCallbacks, &entityFactory](const rt::UDPClientPacket &msg) {
+            networkCallbacks.push_back([&reg, &entityFactory, sharedEntityId = msg.body.sharedEntityId]() {
+                std::cout << "Start callback" << std::endl;
+                std::cout << sharedEntityId << std::endl;
                 rts::createPlayer(reg, sharedEntityId);
+                //entityFactory.createEntityFromJSON("assets/player.json", INT32_MAX, INT32_MAX, sharedEntityId);
+                std::cout << "End Callback" << std::endl;
             });
         }
     );

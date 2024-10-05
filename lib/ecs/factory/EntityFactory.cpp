@@ -1,63 +1,74 @@
 #include "EntityFactory.hpp"
-#include <climits>
-#include <cstdint>
 #include <fstream>
 #include <iostream>
-
-#include "../components/animation.hpp"
-#include "../components/controllable.hpp"
-#include "../components/hitbox.hpp"
-#include "../components/position.hpp"
-#include "../components/sprite.hpp"
-#include "../components/velocity.hpp"
-#include "components/share_movement.hpp"
-#include "RTypeUDPProtol.hpp"
+#include <stdexcept>
+#include "components/controllable.hpp"
+#include "components/hitbox.hpp"
 #include "components/missile.hpp"
+#include "components/position.hpp"
 #include "core/entity.hpp"
+#include "components/share_movement.hpp"
+#include "components/shared_entity.hpp"
+#include "core/shared_entity.hpp"
 
 namespace ecs {
 
-EntityFactory::EntityFactory(ecs::Registry &reg, SpriteManager &spriteManager, ntw::UDPClient &udpClient)
-    : _registry(reg), _spriteManager(spriteManager), _udpClient(udpClient)
-{
-}
+EntityFactory::EntityFactory(ecs::Registry &reg, bool is_server) : _registry(reg), _is_server(is_server) {}
 
-entity_t EntityFactory::createEntityFromJSON(const std::string &jsonFilePath, int x, int y, entity_t entity)
+entity_t EntityFactory::createEntityFromJSON(
+    const std::string &jsonFilePath,
+    int x,
+    int y,
+    shared_entity_t sharedEntity
+)
 {
-    std::cout << "Creating entity from JSON: " << jsonFilePath << std::endl;
     std::ifstream file(jsonFilePath);
     if (!file.is_open()) {
         throw std::runtime_error("Failed to open entity JSON file: " + jsonFilePath);
     }
+
     nlohmann::json entityJson;
     file >> entityJson;
 
     std::string entityType = entityJson["type"].get<std::string>();
-    bool isShared = entityType == "shared" || entity != UINT_MAX;
-    if (isShared){
-        if (entity == UINT_MAX) {
-            entity = _registry.spawnSharedEntity(generateSharedEntityId());
-        } else {
-            entity = _registry.spawnSharedEntity(generateSharedEntityId());
+    bool isShared = entityType == "shared" || sharedEntity != std::numeric_limits<size_t>::max();
+    std::cout << sharedEntity << std::endl;
+    entity_t entity = 0;
+    std::cout << "isShared:" << isShared << std::endl;
+    if (isShared) {
+        std::cout << "sharedEntity:" << sharedEntity << std::endl;
+        std::cout << "std::numeric_limits<size_t>::max():" << std::numeric_limits<size_t>::max() << std::endl;
+        if (sharedEntity == std::numeric_limits<size_t>::max()) {
+            sharedEntity = generateSharedEntityId();
         }
+        std::cout << "sharedEntity:" << sharedEntity << std::endl;
+        if (_registry.getLocalEntity().contains(sharedEntity)) {
+            entity = _registry.getLocalEntity().at(sharedEntity);
+        } else {
+            entity = _registry.spawnSharedEntity(sharedEntity);
+        }
+        std::cout << "Shared:" << sharedEntity << std::endl;
+        std::cout << "entity:" << entity << std::endl;
     } else {
         entity = _registry.spawnEntity();
     }
-    addComponentsFromJSON(entity, entityJson["components"], isShared, x, y);
-    if (_registry.hasComponent<ecs::component::SharedEntity>(entity) && isShared && entityJson.contains("network_command")) {
-        std::cout << "Adding shared entity component" << std::endl;
-        rt::UDPClientPacket msg = {
-            .header = {.cmd = entityJson["network_command"].get<rt::UDPCommand>()},
-            .body =
-                {.sharedEntityId = _registry.getComponent<ecs::component::SharedEntity>(entity).value().sharedEntityId}
-        };
-        _udpClient.send(reinterpret_cast<const char *>(&msg), sizeof(msg));
+    if (_registry.hasComponent<component::SharedEntity>(entity)) {
+        std::cout << "s" << std::endl;
+    } else {
+        std::cout << "l" << std::endl;
     }
+    std::cout << entity << std::endl;
+    std::cout << "before addComponent" << std::endl;
+    addComponents(entity, entityJson["components"], isShared, x, y);
+    std::cout << "after addComponent" << std::endl;
+    handleNetworkSync(entity, entityJson, isShared);
+
     return entity;
 }
 
-void EntityFactory::addComponentsFromJSON(entity_t entity, const nlohmann::json &componentsJson, bool isShared, int x, int y)
+void EntityFactory::addCommonComponents(entity_t entity, const nlohmann::json &componentsJson, int x, int y)
 {
+    std::cout << "start addCommonComponent" << std::endl;
     if (componentsJson.contains("position")) {
         auto posJson = componentsJson["position"];
         if (x != INT32_MAX) {
@@ -76,58 +87,13 @@ void EntityFactory::addComponentsFromJSON(entity_t entity, const nlohmann::json 
         );
     }
 
-    if (componentsJson.contains("sprite")) {
-        auto spriteJson = componentsJson["sprite"];
-        ecs::component::Sprite spriteComp;
-        spriteComp.textureId = spriteJson["texture"].get<std::string>();
-        spriteComp.spriteObj.setTexture(_spriteManager.getTexture(spriteComp.textureId));
-        auto frameJson = spriteJson["initial_frame"];
-        spriteComp.spriteObj.setTextureRect(sf::IntRect(
-            frameJson["x"].get<int>(),
-            frameJson["y"].get<int>(),
-            frameJson["width"].get<int>(),
-            frameJson["height"].get<int>()
-        ));
-        _registry.addComponent(entity, std::move(spriteComp));
-    }
-
-    if (componentsJson.contains("animation")) {
-        auto animJson = componentsJson["animation"];
-        ecs::component::Animation animComp;
-        animComp.frameTime = animJson["frame_time"].get<float>();
-
-        for (auto &[stateName, framesJson] : animJson["frames"].items()) {
-            for (auto &frameJson : framesJson) {
-                animComp.frames[stateName].emplace_back(
-                    frameJson["x"].get<int>(),
-                    frameJson["y"].get<int>(),
-                    frameJson["width"].get<int>(),
-                    frameJson["height"].get<int>()
-                );
-            }
-        }
-        if (animJson.contains("current_frame")) {
-            animComp.currentFrame = animJson["current_frame"].get<size_t>();
-        }
-        if (animJson.contains("state")) {
-            animComp.state = animJson["state"].get<std::string>();
-        } else {
-            animComp.state = "idle";
-        }
-        if (animJson.contains("update_state")) {
-            animComp.updateState = _animMap.at(animJson["update_state"].get<std::string>());
-        }
-
-        _registry.addComponent(entity, std::move(animComp));
-    }
-
     if (componentsJson.contains("hitbox")) {
         auto hitboxJson = componentsJson["hitbox"];
         _registry.addComponent(
             entity, ecs::component::Hitbox{hitboxJson["width"].get<float>(), hitboxJson["height"].get<float>()}
         );
     }
-
+    std::cout << "middle addCommonComponent" << std::endl;
     if (componentsJson.contains("controllable")) {
         _registry.addComponent(entity, ecs::component::Controllable{});
     }
@@ -139,6 +105,7 @@ void EntityFactory::addComponentsFromJSON(entity_t entity, const nlohmann::json 
     if (componentsJson.contains("missile")) {
         _registry.addComponent(entity, ecs::component::Missile{});
     }
+    std::cout << "end addCommonComponent" << std::endl;
 }
 
 } // namespace ecs
