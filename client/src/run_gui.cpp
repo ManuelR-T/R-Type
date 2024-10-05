@@ -58,10 +58,22 @@ static void renderInsideRoom(const std::string &name, rtc::RoomManager &roomMana
     ImVec2 windowContentRegionMax = ImGui::GetWindowContentRegionMax();
     ImVec2 buttonPos = ImVec2(20, windowContentRegionMax.y - buttonSize.y - 20);
     ImGui::SetCursorPos(buttonPos);
-    if (ImGui::Button("Ready", buttonSize)) {
-        // ! send ready
-        roomManager.askToBeReady();
+    if (!roomManager.getCurrentRoomPlayer().at(roomManager.getSelfId()).ready) {
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 1.0f, 0.0f, 1.0f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.0f, 0.8f, 0.0f, 1.0f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.0f, 0.6f, 0.0f, 1.0f));
+        if (ImGui::Button("Ready", buttonSize)) {
+            roomManager.askToBeReady();
+        }
+    } else {
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.8f, 0.0f, 0.0f, 1.0f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.6f, 0.0f, 0.0f, 1.0f));
+        if (ImGui::Button("Not Ready", buttonSize)) {
+            roomManager.askToBeNotReady();
+        }
     }
+    ImGui::PopStyleColor(3);
 
     ImGui::End();
 }
