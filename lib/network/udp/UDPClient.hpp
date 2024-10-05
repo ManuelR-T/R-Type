@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "AsioClient.hpp"
 #include "../BuffSize.hpp"
+#include "AsioClient.hpp"
 
 #include <asio/ip/udp.hpp>
 

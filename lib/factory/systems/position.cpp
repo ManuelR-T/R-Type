@@ -6,9 +6,9 @@
 */
 
 #include "components/position.hpp"
-#include "components/velocity.hpp"
 #include "Registry.hpp"
 #include "Zipper.hpp"
+#include "components/velocity.hpp"
 
 namespace ecs::systems {
 

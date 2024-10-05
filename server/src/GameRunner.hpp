@@ -12,9 +12,9 @@
 #include <list>
 #include <thread>
 #include "RTypeUDPProtol.hpp"
+#include "Registry.hpp"
 #include "ResponseHandler.hpp"
 #include "TickRateManager.hpp"
-#include "Registry.hpp"
 #include "udp/UDPServer.hpp"
 
 namespace rts {

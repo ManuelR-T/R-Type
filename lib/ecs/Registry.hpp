@@ -15,11 +15,11 @@
 #include <any>
 #include <cstddef>
 #include <functional>
+#include <iostream>
 #include <stdexcept>
 #include <string>
 #include <typeindex>
 #include <unordered_map>
-#include <iostream>
 
 namespace ecs {
 /**
@@ -226,7 +226,6 @@ class Registry {
         return array[static_cast<size_t>(entity)];
     }
 
-
     /**
      * @brief Checks if an entity has a specific component.
      *
@@ -236,7 +235,7 @@ class Registry {
      * @param entity The identifier (`entity_t`) of the entity.
      * @return `true` if the entity has the component, `false` otherwise.
      */
-    template<typename Component>
+    template <typename Component>
     bool hasComponent(const entity_t &entity) const
     {
         const auto &array = getComponents<Component>();

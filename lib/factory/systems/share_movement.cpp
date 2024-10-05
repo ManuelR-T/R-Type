@@ -6,11 +6,11 @@
 */
 
 #include "components/share_movement.hpp"
-#include "components/position.hpp"
-#include "components/velocity.hpp"
+#include "RTypeUDPProtol.hpp"
 #include "Registry.hpp"
 #include "Zipper.hpp"
-#include "RTypeUDPProtol.hpp"
+#include "components/position.hpp"
+#include "components/velocity.hpp"
 #include "udp/UDPClient.hpp"
 #include "components/shared_entity.hpp"
 

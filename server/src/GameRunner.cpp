@@ -8,8 +8,8 @@
 #include "GameRunner.hpp"
 #include "RTypeServer.hpp"
 #include "RTypeUDPProtol.hpp"
-#include "SpriteManager.hpp"
 #include "ServerEntityFactory.hpp"
+#include "SpriteManager.hpp"
 
 rts::GameRunner::GameRunner(int port)
     : _port(port), _udpServer(port),

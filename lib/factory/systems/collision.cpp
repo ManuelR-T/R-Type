@@ -8,12 +8,12 @@
 #include <SFML/Graphics.hpp>
 #include <algorithm>
 #include <iostream>
+#include "Registry.hpp"
 #include "components/controllable.hpp"
 #include "components/hitbox.hpp"
 #include "components/missile.hpp"
 #include "components/position.hpp"
 #include "components/velocity.hpp"
-#include "Registry.hpp"
 
 static void resolveCollision(
     ecs::Registry &reg,

@@ -6,20 +6,14 @@
 */
 
 #include "systems/control_special.hpp"
-#include "RTypeUDPProtol.hpp"
-#include "components/animation.hpp"
-#include "components/controllable.hpp"
-#include "components/hitbox.hpp"
-#include "components/missile.hpp"
-#include "components/position.hpp"
-#include "components/sprite.hpp"
-#include "components/velocity.hpp"
 #include "InputManager.hpp"
+#include "RTypeUDPProtol.hpp"
 #include "Registry.hpp"
 #include "SpriteManager.hpp"
 #include "Zipper.hpp"
+#include "components/controllable.hpp"
+#include "components/position.hpp"
 #include "udp/UDPClient.hpp"
-#include "components/share_movement.hpp"
 #include "shared_entity.hpp"
 
 static void spawnMissile(

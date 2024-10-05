@@ -10,12 +10,12 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 
 #include "RTypeUDPProtol.hpp"
+#include "Registry.hpp"
 #include "ResponseHandler.hpp"
 #include "RoomManager.hpp"
+#include "ServerEntityFactory.hpp"
 #include "TCPResponseHandler.hpp"
 #include "TickRateManager.hpp"
-#include "Registry.hpp"
-#include "ServerEntityFactory.hpp"
 #include "udp/UDPServer.hpp"
 
 namespace rts {

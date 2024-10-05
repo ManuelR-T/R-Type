@@ -8,11 +8,11 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
-#include "components/controllable.hpp"
-#include "components/velocity.hpp"
 #include "InputManager.hpp"
 #include "Registry.hpp"
 #include "Zipper.hpp"
+#include "components/controllable.hpp"
+#include "components/velocity.hpp"
 #include "control_move.hpp"
 
 namespace ecs::systems {

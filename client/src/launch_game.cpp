@@ -7,15 +7,15 @@
 
 #include <SFML/Window/VideoMode.hpp>
 #include <memory>
-#include "GameManager.hpp"
-#include "RTypeClient.hpp"
-#include "RTypeConst.hpp"
-#include "TickRateManager.hpp"
-#include "InputManager.hpp"
-#include "Registry.hpp"
-#include "SpriteManager.hpp"
 #include "ClientEntityFactory.hpp"
 #include "EntityFactory.hpp"
+#include "GameManager.hpp"
+#include "InputManager.hpp"
+#include "RTypeClient.hpp"
+#include "RTypeConst.hpp"
+#include "Registry.hpp"
+#include "SpriteManager.hpp"
+#include "TickRateManager.hpp"
 #include "udp/UDPClient.hpp"
 
 void rtc::GameManager::_launchGame()
@@ -40,7 +40,7 @@ void rtc::GameManager::_launchGame()
     rtc::registerComponents(reg);
     rtc::registerSystems(reg, *_window, dt, udpClient, inputManager, tickRateManager, spriteManager, _networkCallbacks);
 
-    ecs::ClientEntityFactory entityFactory(reg,spriteManager,udpClient);
+    ecs::ClientEntityFactory entityFactory(reg, spriteManager, udpClient);
     _setupUdpConnection(reg, udpClient, entityFactory);
 
     entityFactory.createEntityFromJSON("assets/player.json");

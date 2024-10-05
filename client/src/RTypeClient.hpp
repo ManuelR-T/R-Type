@@ -9,11 +9,11 @@
 
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <list>
-#include "RoomManager.hpp"
-#include "TickRateManager.hpp"
 #include "InputManager.hpp"
 #include "Registry.hpp"
+#include "RoomManager.hpp"
 #include "SpriteManager.hpp"
+#include "TickRateManager.hpp"
 #include "udp/UDPClient.hpp"
 
 namespace rtc {

@@ -5,9 +5,9 @@
 ** register_udp_response
 */
 
+#include "EntityFactory.hpp"
 #include "GameManager.hpp"
 #include "Registry.hpp"
-#include "EntityFactory.hpp"
 
 void rtc::GameManager::_registerUdpResponse(ecs::Registry &reg, ecs::EntityFactory &entityFactory)
 {

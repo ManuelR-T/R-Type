@@ -10,16 +10,16 @@
 #include <functional>
 #include <list>
 #include <memory>
+#include "EntityFactory.hpp"
 #include "RTypeTCPProtol.hpp"
 #include "RTypeUDPProtol.hpp"
+#include "Registry.hpp"
 #include "ResponseHandler.hpp"
 #include "RoomManager.hpp"
 #include "TCPResponseHandler.hpp"
-#include "Registry.hpp"
 #include "tcp/TCPClient.hpp"
 #include "udp/UDPClient.hpp"
 #include "shared_entity.hpp"
-#include "EntityFactory.hpp"
 
 #include <imgui-SFML.h>
 

@@ -8,6 +8,7 @@
 #include <list>
 #include "RTypeClient.hpp"
 #include "RTypeConst.hpp"
+#include "SpriteManager.hpp"
 #include "TickRateManager.hpp"
 #include "components/animation.hpp"
 #include "components/controllable.hpp"
@@ -17,7 +18,6 @@
 #include "components/position.hpp"
 #include "components/sprite.hpp"
 #include "components/velocity.hpp"
-#include "SpriteManager.hpp"
 #include "systems/collision.hpp"
 #include "systems/draw.hpp"
 #include "systems/position.hpp"

@@ -9,8 +9,8 @@
 #include <memory>
 #include "ArgParser.hpp"
 #include "GameManager.hpp"
-#include "RTypeClient.hpp"
 #include "InputManager.hpp"
+#include "RTypeClient.hpp"
 #include "Registry.hpp"
 
 void rtc::run(ecs::Registry &reg, const std::shared_ptr<sf::RenderWindow> &window, float &dt, ecs::InputManager &input)

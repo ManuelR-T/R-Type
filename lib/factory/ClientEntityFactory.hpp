@@ -1,7 +1,7 @@
 #pragma once
 
-#include "SpriteManager.hpp"
 #include "EntityFactory.hpp"
+#include "SpriteManager.hpp"
 #include "udp/UDPClient.hpp"
 
 namespace ecs {

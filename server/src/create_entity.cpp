@@ -6,12 +6,12 @@
 */
 
 #include "RTypeUDPProtol.hpp"
+#include "Registry.hpp"
 #include "components/drawable.hpp"
 #include "components/hitbox.hpp"
 #include "components/missile.hpp"
 #include "components/position.hpp"
 #include "components/velocity.hpp"
-#include "Registry.hpp"
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Color.hpp>

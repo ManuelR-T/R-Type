@@ -9,9 +9,9 @@
 #include <utility>
 #include "RTypeServer.hpp"
 #include "RTypeUDPProtol.hpp"
+#include "ServerEntityFactory.hpp"
 #include "components/position.hpp"
 #include "components/velocity.hpp"
-#include "ServerEntityFactory.hpp"
 
 void rts::registerUdpResponse(
     ecs::Registry &reg,
@@ -28,7 +28,7 @@ void rts::registerUdpResponse(
                 std::cout << "Start callback" << std::endl;
                 std::cout << sharedEntityId << std::endl;
                 rts::createPlayer(reg, sharedEntityId);
-                //entityFactory.createEntityFromJSON("assets/player.json", INT32_MAX, INT32_MAX, sharedEntityId);
+                // entityFactory.createEntityFromJSON("assets/player.json", INT32_MAX, INT32_MAX, sharedEntityId);
                 std::cout << "End Callback" << std::endl;
             });
         }
