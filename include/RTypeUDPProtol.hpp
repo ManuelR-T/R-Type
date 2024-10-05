@@ -7,13 +7,14 @@
 
 #pragma once
 
-#include <sys/types.h>
+#include <cstdint>
+#include <cstddef>
 #include "components/position.hpp"
 #include "components/velocity.hpp"
 #include "core/shared_entity.hpp"
 
 namespace rt {
-enum class UDPCommand : u_int8_t {
+enum class UDPCommand : uint8_t {
     NONE,
     NEW_PLAYER,
     NEW_ENTITY,

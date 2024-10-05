@@ -11,7 +11,6 @@
 #include <cstring>
 #include <functional>
 #include <string>
-#include <termios.h>
 #include <vector>
 #include "../lib/utils/Logger.hpp"
 #include "../lib/utils/TrackedException.hpp"
