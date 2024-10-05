@@ -2,6 +2,8 @@
 
 #include "EntityFactory.hpp"
 #include "SpriteManager.hpp"
+#include "components/animation.hpp"
+#include "components/velocity.hpp"
 #include "udp/UDPClient.hpp"
 
 namespace ecs {

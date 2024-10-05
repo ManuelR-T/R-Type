@@ -29,6 +29,7 @@ void rts::registerUdpResponse(
                 std::cout << sharedEntityId << std::endl;
                 rts::createPlayer(reg, sharedEntityId);
                 // entityFactory.createEntityFromJSON("assets/player.json", INT32_MAX, INT32_MAX, sharedEntityId);
+                // issue with the generation of the entity_t
                 std::cout << "End Callback" << std::endl;
             });
         }

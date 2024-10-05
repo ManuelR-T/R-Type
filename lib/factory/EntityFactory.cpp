@@ -6,6 +6,7 @@
 #include "components/hitbox.hpp"
 #include "components/missile.hpp"
 #include "components/position.hpp"
+#include "components/velocity.hpp"
 #include "entity.hpp"
 #include "components/share_movement.hpp"
 #include "components/shared_entity.hpp"

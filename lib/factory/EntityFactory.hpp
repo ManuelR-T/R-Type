@@ -1,15 +1,11 @@
 #pragma once
 
 #include <climits>
-#include <functional>
 #include <nlohmann/json.hpp>
 #include <string>
 #include "Registry.hpp"
-#include "components/animation.hpp"
-#include "components/velocity.hpp"
 #include "entity.hpp"
 #include "shared_entity.hpp"
-#include <unordered_map>
 
 namespace ecs {
 

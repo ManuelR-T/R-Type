@@ -8,7 +8,6 @@
 #include <SFML/Window/VideoMode.hpp>
 #include <memory>
 #include "ClientEntityFactory.hpp"
-#include "EntityFactory.hpp"
 #include "GameManager.hpp"
 #include "InputManager.hpp"
 #include "RTypeClient.hpp"

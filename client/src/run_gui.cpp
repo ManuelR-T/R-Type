@@ -6,8 +6,6 @@
 */
 
 #include <SFML/System/Vector2.hpp>
-#include <iostream>
-#include <vector>
 #include "RTypeClient.hpp"
 #include "imgui.h"
 #include "imgui-SFML.h"
