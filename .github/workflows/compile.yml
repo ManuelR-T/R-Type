@@ -20,7 +20,7 @@ jobs:
       with:
         path: |
           build/
-        key: cmake-build-linux-${{ runner.os }}-${{ hashFiles('CMakeLists.txt') }}
+        key: cmake-build-linux-${{ runner.os }}-${{ hashFiles('dependencies.cmake')}}
         restore-keys: |
           cmake-build-linux-${{ runner.os }}-
 
@@ -70,7 +70,7 @@ jobs:
       uses: actions/cache@v3
       with:
         path: build-mingw32
-        key: cross-build-windows-${{ runner.os }}-${{ hashFiles('tools/build-mingw32.sh') }}
+        key: cross-build-windows-${{ runner.os }}-${{ hashFiles('tools/build-mingw32.sh', 'cmake/mingw32-toolchain.cmake', 'dependencies.cmake' ) }}
         restore-keys: |
           cross-build-windows-${{ runner.os }}-
 
