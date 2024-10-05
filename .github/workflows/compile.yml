@@ -24,10 +24,9 @@ jobs:
         restore-keys: |
           cmake-build-linux-${{ runner.os }}-
 
-    - uses: awalsh128/cache-apt-pkgs-action@latest
-      with:
-        packages: flex bison javacc libflac-dev libx11-dev libxext-dev libgl1-mesa-dev libudev-dev libopenal-dev libvorbis-dev libxcursor-dev libxrandr-dev libfreetype6-dev libjpeg-dev libudev-dev libxinerama-dev libxi-dev libxrandr-dev libxss-dev libglu1-mesa-dev libgl1-mesa-dev libpulse-dev libasound2-dev libssl-dev libx11-xcb-dev libxcb1-dev libxcb-icccm4-dev libxcb-image0-dev libxcb-keysyms1-dev libxcb-randr0-dev libxcb-render-util0-dev libxcb-shape0-dev libxcb-sync-dev libxcb-xfixes0-dev libxcb-xinerama0-dev libxcb-xkb-dev libxcb-xrm-dev libxcb-xtest0-dev libxcb-xv0-dev libxcb-xvmc0-dev libxcb-xv
-    
+    - name: Install apt dependencies
+      run: sudo apt-get install -y flex bison javacc libflac-dev libx11-dev libxext-dev libgl1-mesa-dev libudev-dev libopenal-dev libvorbis-dev libxcursor-dev libxrandr-dev libfreetype6-dev
+
     - name: Check compilation (Linux)
       if: matrix.os == 'linux'
       run: |
