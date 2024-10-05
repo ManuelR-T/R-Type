@@ -47,7 +47,7 @@ jobs:
       if: matrix.os == 'windows'
       run: |
         echo "## 🚀 Cross-compilation for Windows result" >> $GITHUB_STEP_SUMMARY
-        chmod +x tool/build-mingw32.sh
+        chmod +x tools/build-mingw32.sh
         {
           set +e
           ./tool/build-mingw32.sh
