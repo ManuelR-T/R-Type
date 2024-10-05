@@ -50,7 +50,7 @@ jobs:
         chmod +x tools/build-mingw32.sh
         {
           set +e
-          ./tool/build-mingw32.sh
+          ./tools/build-mingw32.sh
           if [ $? -ne 0 ]; then
             echo "- ### Cross-compilation for Windows failed ❌" >> $GITHUB_STEP_SUMMARY
             echo "Cross-compilation failed."
