@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <cstddef>
 #include <map>
 #include <utility>
 #include "tcp/TCPClient.hpp"
@@ -15,8 +16,13 @@ namespace rtc {
 
 class RoomManager {
     public:
+    struct Player {
+        std::string name;
+        bool ready = false;
+    };
+
     struct RoomContent {
-        std::map<std::string, bool> player;
+        std::map<std::size_t, Player> player;
         bool joinable = true;
     };
 
@@ -33,13 +39,14 @@ class RoomManager {
     {
     }
 
+    std::size_t getSelfId() const;
+
     const std::string &getCurrentRoom() const;
     std::string &getCurrentRoom();
 
-    const std::map<std::string, bool> &getCurrentRoomPlayer() const;
+    const std::map<std::size_t, Player> &getCurrentRoomPlayer() const;
 
     const std::map<std::string, RoomContent> &getRooms() const;
-
     std::map<std::string, RoomContent> &getRooms();
 
     void askToCreateRoom(const std::string &roomName);

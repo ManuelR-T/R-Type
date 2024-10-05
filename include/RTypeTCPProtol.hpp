@@ -49,60 +49,61 @@ struct CL_NEW_USER {
 };
 
 struct CL_CREATE_ROOM {
-    char room_name[32] = {0};
+    char room_name[rt::MAX_ROOM_NAME_SIZE + 1] = {0};
 };
 
 struct SER_ROOM_CREATED {
-    char room_name[32] = {0};
+    char room_name[rt::MAX_ROOM_NAME_SIZE + 1] = {0};
 };
 
 struct CL_DELETE_ROOM {
-    char room_name[32] = {0};
+    char room_name[rt::MAX_ROOM_NAME_SIZE + 1] = {0};
 };
 
 struct SER_ROOM_DELETED {
-    char room_name[32] = {0};
+    char room_name[rt::MAX_ROOM_NAME_SIZE + 1] = {0};
 };
 
 struct CL_JOIN_ROOM {
-    char room_name[32] = {0};
-    char user_name[32] = {0};
+    char room_name[rt::MAX_ROOM_NAME_SIZE + 1] = {0};
+    char user_name[rt::MAX_USER_NAME_SIZE + 1] = {0};
     std::size_t user_id = 0;
 };
 
 struct SER_ROOM_JOINED {
-    char room_name[32] = {0};
-    char player_name[32] = {0};
+    char room_name[rt::MAX_ROOM_NAME_SIZE + 1] = {0};
+    char user_name[rt::MAX_USER_NAME_SIZE + 1] = {0};
+    std::size_t user_id = 0;
 };
 
 struct CL_LEAVE_ROOM {
-    char room_name[32] = {0};
+    char room_name[rt::MAX_ROOM_NAME_SIZE + 1] = {0};
     std::size_t user_id = 0;
 };
 
 struct SER_ROOM_LEAVED {
-    char room_name[32] = {0};
-    char player_name[32] = {0};
+    char room_name[rt::MAX_ROOM_NAME_SIZE + 1] = {0};
+    std::size_t user_id = 0;
 };
 
 struct CL_READY {
-    char room_name[32] = {0};
+    char room_name[rt::MAX_ROOM_NAME_SIZE + 1] = {0};
     std::size_t user_id = 0;
 };
 
 struct SER_READY {
-    char room_name[32] = {0};
-    char player_name[32] = {0};
+    char room_name[rt::MAX_ROOM_NAME_SIZE + 1] = {0};
+    std::size_t user_id = 0;
 };
 
 struct CL_NOT_READY {
-    char room_name[32] = {0};
+    char room_name[rt::MAX_ROOM_NAME_SIZE + 1] = {0};
     std::size_t user_id = 0;
 };
 
 struct SER_NOT_READY {
-    char room_name[32] = {0};
-    char player_name[32] = {0};
+    char room_name[rt::MAX_ROOM_NAME_SIZE + 1] = {0};
+    std::size_t user_id = 0;
 };
 
 struct CL_ROOM_LIST {
@@ -110,20 +111,21 @@ struct CL_ROOM_LIST {
 };
 
 struct SER_ROOM_LIST {
-    char room_name[32] = {0};
+    char room_name[rt::MAX_ROOM_NAME_SIZE + 1] = {0};
 };
 
 struct SER_ROOM_CONTENT {
-    char player_name[32] = {0};
+    char user_name[rt::MAX_USER_NAME_SIZE + 1] = {0};
+    std::size_t user_id = 0;
     bool ready = false;
 };
 
 struct SER_ROOM_IN_GAME {
-    char room_name[32] = {0};
+    char room_name[rt::MAX_ROOM_NAME_SIZE + 1] = {0};
 };
 
 struct SER_ROOM_READY {
-    int port;
+    int port = 0;
 };
 } // namespace rt::TCPData
 

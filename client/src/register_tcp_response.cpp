@@ -7,6 +7,7 @@
 
 #include "GameManager.hpp"
 #include "RTypeTCPProtol.hpp"
+#include "RoomManager.hpp"
 
 void rtc::GameManager::_registerTcpResponse()
 {
@@ -19,7 +20,8 @@ void rtc::GameManager::_registerTcpResponse()
     _tcpResponseHandler.registerHandler<rt::TCPData::SER_ROOM_CONTENT>(
         rt::TCPCommand::SER_ROOM_CONTENT,
         [this](const rt::TCPPacket<rt::TCPData::SER_ROOM_CONTENT> &packet) {
-            _roomManager.getRooms().rbegin()->second.player[packet.data.player_name] = packet.data.ready;
+            _roomManager.getRooms().rbegin()->second.player[packet.data.user_id] =
+                rtc::RoomManager::Player{.name = packet.data.user_name, .ready = packet.data.ready};
         }
     );
     _tcpResponseHandler.registerHandler<rt::TCPData::SER_ROOM_READY>(
@@ -44,8 +46,9 @@ void rtc::GameManager::_registerTcpResponse()
     _tcpResponseHandler.registerHandler<rt::TCPData::SER_ROOM_JOINED>(
         rt::TCPCommand::SER_ROOM_JOINED,
         [this](const rt::TCPPacket<rt::TCPData::SER_ROOM_JOINED> &packet) {
-            _roomManager.getRooms().at(packet.data.room_name).player[packet.data.player_name] = false;
-            if (this->_playerName == packet.data.player_name) {
+            _roomManager.getRooms().at(packet.data.room_name).player[packet.data.user_id] =
+                rtc::RoomManager::Player{.name = packet.data.user_name, .ready = false};
+            if (this->_userId == packet.data.user_id) {
                 _roomManager.getCurrentRoom() = packet.data.room_name;
             }
         }
@@ -53,8 +56,8 @@ void rtc::GameManager::_registerTcpResponse()
     _tcpResponseHandler.registerHandler<rt::TCPData::SER_ROOM_LEAVED>(
         rt::TCPCommand::SER_ROOM_LEAVED,
         [this](const rt::TCPPacket<rt::TCPData::SER_ROOM_LEAVED> &packet) {
-            _roomManager.getRooms().at(packet.data.room_name).player.erase(packet.data.player_name);
-            if (this->_playerName == packet.data.player_name) {
+            _roomManager.getRooms().at(packet.data.room_name).player.erase(packet.data.user_id);
+            if (this->_userId == packet.data.user_id) {
                 _roomManager.getCurrentRoom().clear();
             }
         }
@@ -62,13 +65,13 @@ void rtc::GameManager::_registerTcpResponse()
     _tcpResponseHandler.registerHandler<rt::TCPData::SER_READY>(
         rt::TCPCommand::SER_READY,
         [this](const rt::TCPPacket<rt::TCPData::SER_READY> &packet) {
-            _roomManager.getRooms().at(packet.data.room_name).player.at(packet.data.player_name) = true;
+            _roomManager.getRooms().at(packet.data.room_name).player.at(packet.data.user_id).ready = true;
         }
     );
     _tcpResponseHandler.registerHandler<rt::TCPData::SER_NOT_READY>(
         rt::TCPCommand::SER_NOT_READY,
         [this](const rt::TCPPacket<rt::TCPData::SER_NOT_READY> &packet) {
-            _roomManager.getRooms().at(packet.data.room_name).player.at(packet.data.player_name) = false;
+            _roomManager.getRooms().at(packet.data.room_name).player.at(packet.data.user_id).ready = false;
         }
     );
     _tcpResponseHandler.registerHandler<rt::TCPData::SER_ROOM_IN_GAME>(
