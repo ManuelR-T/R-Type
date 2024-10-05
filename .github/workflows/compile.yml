@@ -1,0 +1,62 @@
+name: compile
+on:
+  workflow_call
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    container:
+      image: nicolasalexandredev/r-type:dependencies
+      volumes:
+        - ${{ github.workspace }}:/app
+
+    strategy:
+      matrix:
+        os: [linux, windows]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install dependencies (Linux)
+      run: sudo apt-get install -y flex bison javacc libflac-dev
+
+    - name: Install Mingw-w64 (Windows)
+      if: matrix.os == 'windows'
+      run: sudo apt-get install -y mingw-w64 mingw-w64-tools mingw-w64-x86-64-dev
+
+    - name: Check compilation (Linux)
+      if: matrix.os == 'linux'
+      run: |
+        echo "## 🚀 Linux compilation result" >> $GITHUB_STEP_SUMMARY
+        {
+          set +e
+          cmake .; make
+          if [ $? -ne 0 ]; then
+            echo "- ### Compilation failed ❌" >> $GITHUB_STEP_SUMMARY
+            echo "Linux compilation failed."
+            exit 1
+          else
+            echo "- ### Compilation succeed ✅" >> $GITHUB_STEP_SUMMARY
+            exit 0
+          fi
+        }
+
+    - name: Cross-compile for Windows
+      if: matrix.os == 'windows'
+      run: |
+        echo "## 🚀 Cross-compilation for Windows result" >> $GITHUB_STEP_SUMMARY
+        chmod +x tool/build-mingw32.sh
+        {
+          set +e
+          ./tool/build-mingw32.sh
+          if [ $? -ne 0 ]; then
+            echo "- ### Cross-compilation for Windows failed ❌" >> $GITHUB_STEP_SUMMARY
+            echo "Cross-compilation failed."
+            exit 1
+          else
+            echo "- ### Cross-compilation succeed ✅" >> $GITHUB_STEP_SUMMARY
+            exit 0
+          fi
+        }
