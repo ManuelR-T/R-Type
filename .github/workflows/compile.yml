@@ -28,9 +28,7 @@ jobs:
       uses: actions/cache@v3
       with:
         path: |
-          /var/cache/apt
-          !/var/cache/apt/archives/partial
-          !/var/cache/apt/archives/lock
+          /var/cache/apt/archives
         key: apt-cache-linux-${{ runner.os }}
         restore-keys: |
           apt-cache-linux-${{ runner.os }}
@@ -76,7 +74,7 @@ jobs:
         key: cross-build-windows-${{ runner.os }}-${{ hashFiles('tools/build-mingw32.sh', 'cmake/mingw32-toolchain.cmake', 'dependencies.cmake' ) }}
         restore-keys: |
           cross-build-windows-${{ runner.os }}-
-            
+
 
     - name: Cross-compile for Windows
       if: matrix.os == 'windows'
