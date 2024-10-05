@@ -32,7 +32,7 @@ class GameRunner {
     ntw::TickRateManager _tickRateManager;
 
     std::list<rt::UDPServerPacket> _datasToSend;
-    std::list<std::function<void()>> _networkCallbacks;
+    std::list<std::function<void(ecs::Registry &reg)>> _networkCallbacks;
 
     sf::RenderWindow _window;
 

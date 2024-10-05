@@ -5,28 +5,38 @@
 ** register_udp_response
 */
 
-#include "EntityFactory.hpp"
+#include "ClientEntityFactory.hpp"
 #include "GameManager.hpp"
 #include "Registry.hpp"
+#include "SpriteManager.hpp"
+#include "udp/UDPClient.hpp"
 
-void rtc::GameManager::_registerUdpResponse(ecs::Registry &reg, ecs::EntityFactory &entityFactory)
+void rtc::GameManager::_registerUdpResponse(
+    ecs::Registry &reg,
+    ecs::SpriteManager &spriteManager,
+    ntw::UDPClient &udpClient
+)
 {
     _udpResponseHandler.registerHandler(
         rt::UDPCommand::NEW_ENTITY,
-        [&entityFactory, this](const rt::UDPServerPacket &packet) {
+        [this, &spriteManager, &udpClient](const rt::UDPServerPacket &packet) {
             if (packet.body.b.newEntityData.type == 1) {
                 auto &[pos, _] = packet.body.b.newEntityData.moveData;
                 auto sharedEntityId = packet.body.sharedEntityId;
 
-                _networkCallbacks.push_back([sharedEntityId, pos, &entityFactory]() {
-                    entityFactory.createEntityFromJSON("assets/missile.json", pos.x, pos.y, sharedEntityId);
+                _networkCallbacks.push_back([sharedEntityId, pos, &spriteManager, &udpClient](ecs::Registry &reg) {
+                    ecs::ClientEntityFactory::createClientEntityFromJSON(
+                        reg, spriteManager, udpClient, "assets/missile.json", pos.x, pos.y, sharedEntityId
+                    );
                 });
             }
             if (packet.body.b.newEntityData.type == 0) {
                 auto &[pos, _] = packet.body.b.newEntityData.moveData;
 
-                _networkCallbacks.push_back([pos, &entityFactory]() {
-                    entityFactory.createEntityFromJSON("assets/static.json", pos.x, pos.y);
+                _networkCallbacks.push_back([pos, &spriteManager, &udpClient](ecs::Registry &reg) {
+                    ecs::ClientEntityFactory::createClientEntityFromJSON(
+                        reg, spriteManager, udpClient, "assets/static.json", pos.x, pos.y
+                    );
                 });
             }
         }

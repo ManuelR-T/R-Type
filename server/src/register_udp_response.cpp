@@ -5,7 +5,6 @@
 ** register_ecs
 */
 
-#include <iostream>
 #include <utility>
 #include "RTypeServer.hpp"
 #include "RTypeUDPProtol.hpp"
@@ -14,47 +13,36 @@
 #include "components/velocity.hpp"
 
 void rts::registerUdpResponse(
-    ecs::Registry &reg,
     ntw::ResponseHandler<rt::UDPCommand, rt::UDPClientPacket> &responseHandler,
     std::list<rt::UDPServerPacket> &datasToSend,
-    std::list<std::function<void()>> &networkCallbacks,
-    ecs::ServerEntityFactory &entityFactory
+    std::list<std::function<void(ecs::Registry &reg)>> &networkCallbacks
 )
 {
-    responseHandler.registerHandler(
-        rt::UDPCommand::NEW_PLAYER,
-        [&reg, &networkCallbacks, &entityFactory](const rt::UDPClientPacket &msg) {
-            networkCallbacks.push_back([&reg, &entityFactory, sharedEntityId = msg.body.sharedEntityId]() {
-                std::cout << "Start callback" << std::endl;
-                std::cout << sharedEntityId << std::endl;
-                rts::createPlayer(reg, sharedEntityId);
-                // entityFactory.createEntityFromJSON("assets/player.json", INT32_MAX, INT32_MAX, sharedEntityId);
-                // issue with the generation of the entity_t
-                std::cout << "End Callback" << std::endl;
-            });
-        }
-    );
-    responseHandler.registerHandler(
-        rt::UDPCommand::MOVE_ENTITY,
-        [&reg, &networkCallbacks](const rt::UDPClientPacket &msg) {
-            networkCallbacks.push_back([&reg, msg]() {
-                try {
-                    reg.getComponent<ecs::component::Position>(reg.getLocalEntity().at(msg.body.sharedEntityId))
-                        .value() = msg.body.b.shareMovement.pos;
-                    reg.getComponent<ecs::component::Velocity>(reg.getLocalEntity().at(msg.body.sharedEntityId))
-                        .value() = msg.body.b.shareMovement.vel;
-                } catch (...) {
-                }
-            });
-        }
-    );
+    responseHandler.registerHandler(rt::UDPCommand::NEW_PLAYER, [&networkCallbacks](const rt::UDPClientPacket &msg) {
+        networkCallbacks.push_back([sharedEntityId = msg.body.sharedEntityId](ecs::Registry &reg) {
+            ecs::ServerEntityFactory::createServerEntityFromJSON(
+                reg, "assets/player.json", INT32_MAX, INT32_MAX, sharedEntityId
+            );
+        });
+    });
+    responseHandler.registerHandler(rt::UDPCommand::MOVE_ENTITY, [&networkCallbacks](const rt::UDPClientPacket &msg) {
+        networkCallbacks.push_back([msg](ecs::Registry &reg) {
+            try {
+                reg.getComponent<ecs::component::Position>(reg.getLocalEntity().at(msg.body.sharedEntityId)).value() =
+                    msg.body.b.shareMovement.pos;
+                reg.getComponent<ecs::component::Velocity>(reg.getLocalEntity().at(msg.body.sharedEntityId)).value() =
+                    msg.body.b.shareMovement.vel;
+            } catch (...) {
+            }
+        });
+    });
     responseHandler.registerHandler(
         rt::UDPCommand::NEW_ENTITY,
-        [&reg, &datasToSend, &networkCallbacks](const rt::UDPClientPacket &msg) {
+        [&datasToSend, &networkCallbacks](const rt::UDPClientPacket &msg) {
             datasToSend.push_back(
                 rt::UDPServerPacket({.header = {.cmd = rt::UDPCommand::NEW_ENTITY}, .body = std::move(msg.body)})
             );
-            networkCallbacks.push_back([&reg, msg]() { rts::createMissile(reg, msg); });
+            networkCallbacks.push_back([msg](ecs::Registry &reg) { rts::createMissile(reg, msg); });
         }
     );
 }

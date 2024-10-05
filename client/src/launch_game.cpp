@@ -39,10 +39,10 @@ void rtc::GameManager::_launchGame()
     rtc::registerComponents(reg);
     rtc::registerSystems(reg, *_window, dt, udpClient, inputManager, tickRateManager, spriteManager, _networkCallbacks);
 
-    ecs::ClientEntityFactory entityFactory(reg, spriteManager, udpClient);
-    _setupUdpConnection(reg, udpClient, entityFactory);
+    // ecs::ClientEntityFactory entityFactory(spriteManager, udpClient);
+    _setupUdpConnection(reg, spriteManager, udpClient);
 
-    entityFactory.createEntityFromJSON("assets/player.json");
+    ecs::ClientEntityFactory::createClientEntityFromJSON(reg, spriteManager, udpClient, "assets/player.json");
 
     run(reg, _window, dt, inputManager);
 }

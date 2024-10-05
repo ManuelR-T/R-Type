@@ -17,8 +17,7 @@ rts::GameRunner::GameRunner(int port)
       _window(sf::VideoMode(720, 480), "R-Type") // ! for debug
 {
     ecs::SpriteManager spriteManager;
-    ecs::ServerEntityFactory entityFactory(_reg);
-    rts::registerUdpResponse(_reg, _responseHandler, _datasToSend, _networkCallbacks, entityFactory);
+    rts::registerUdpResponse(_responseHandler, _datasToSend, _networkCallbacks);
     _udpServer.registerCommand([this](char *data, std::size_t size) {
         this->_responseHandler.handleResponse(data, size);
     });
@@ -34,7 +33,7 @@ rts::GameRunner::GameRunner(int port)
             {.header = {.cmd = rt::UDPCommand::NEW_ENTITY},
              .body = {.sharedEntityId = 0, .b = {.newEntityData = {0, {{100.f * i, 100.f * i}, {0}}}}}}
         ));
-        entityFactory.createEntityFromJSON("assets/static.json", 100.f * i, 100.f * i);
+        ecs::ServerEntityFactory::createServerEntityFromJSON(_reg, "assets/static.json", 100.f * i, 100.f * i);
     }
 }
 

@@ -1,15 +1,61 @@
 #include "ClientEntityFactory.hpp"
 #include "RTypeUDPProtol.hpp"
+#include "SpriteManager.hpp"
 #include "components/sprite.hpp"
+#include "udp/UDPClient.hpp"
 
 namespace ecs {
 
-ClientEntityFactory::ClientEntityFactory(ecs::Registry &reg, SpriteManager &spriteManager, ntw::UDPClient &udpClient)
-    : EntityFactory(reg, false), _spriteManager(spriteManager), _udpClient(udpClient)
-{
-}
+// ClientEntityFactory::ClientEntityFactory(SpriteManager &spriteManager, ntw::UDPClient &udpClient)
+//     : EntityFactory(false), _spriteManager(spriteManager), _udpClient(udpClient)
+// {
+// }
+
+const std::unordered_map<std::string, std::function<void(Registry &, entity_t, ecs::component::Animation &)>>
+    ClientEntityFactory::_animMap = {
+        {"player",
+         [](ecs::Registry &reg, entity_t id, ecs::component::Animation &anim) {
+             auto velOpt = reg.getComponent<ecs::component::Velocity>(id);
+             if (!velOpt) {
+                 return;
+             }
+
+             auto &vel = *velOpt;
+             float vy = vel.vy;
+             std::string &state = anim.state;
+
+             if (vy > 0) {
+                 if (state == "up" || state == "top") {
+                     state = "top";
+                 } else if (state == "idle") {
+                     state = "up";
+                 } else {
+                     state = "idle";
+                 }
+             } else if (vy < 0) {
+                 if (state == "down" || state == "bottom") {
+                     state = "bottom";
+                 } else if (state == "idle") {
+                     state = "down";
+                 } else {
+                     state = "idle";
+                 }
+             } else {
+                 if (state == "top") {
+                     state = "up";
+                 } else if (state == "bottom") {
+                     state = "down";
+                 } else {
+                     state = "idle";
+                 }
+             }
+         }},
+        {"none", [](ecs::Registry &, entity_t, ecs::component::Animation &) {}},
+};
 
 void ClientEntityFactory::addComponents(
+    Registry &reg,
+    SpriteManager &spriteManager,
     entity_t entity,
     const nlohmann::json &componentsJson,
     bool isShared,
@@ -17,13 +63,13 @@ void ClientEntityFactory::addComponents(
     int y
 )
 {
-    addCommonComponents(entity, componentsJson, x, y);
+    addCommonComponents(reg, entity, componentsJson, x, y);
 
     if (componentsJson.contains("sprite")) {
         auto spriteJson = componentsJson["sprite"];
         ecs::component::Sprite spriteComp;
         spriteComp.textureId = spriteJson["texture"].get<std::string>();
-        spriteComp.spriteObj.setTexture(_spriteManager.getTexture(spriteComp.textureId));
+        spriteComp.spriteObj.setTexture(spriteManager.getTexture(spriteComp.textureId));
         auto frameJson = spriteJson["initial_frame"];
         spriteComp.spriteObj.setTextureRect(sf::IntRect(
             frameJson["x"].get<int>(),
@@ -31,7 +77,7 @@ void ClientEntityFactory::addComponents(
             frameJson["width"].get<int>(),
             frameJson["height"].get<int>()
         ));
-        _registry.addComponent(entity, std::move(spriteComp));
+        reg.addComponent(entity, std::move(spriteComp));
     }
 
     if (componentsJson.contains("animation")) {
@@ -61,19 +107,24 @@ void ClientEntityFactory::addComponents(
             animComp.updateState = _animMap.at(animJson["update_state"].get<std::string>());
         }
 
-        _registry.addComponent(entity, std::move(animComp));
+        reg.addComponent(entity, std::move(animComp));
     }
 }
 
-void ClientEntityFactory::handleNetworkSync(entity_t entity, const nlohmann::json &entityJson, bool isShared)
+void ClientEntityFactory::handleNetworkSync(
+    Registry &reg,
+    ntw::UDPClient &udpClient,
+    entity_t entity,
+    const nlohmann::json &entityJson,
+    bool isShared
+)
 {
     if (isShared && entityJson.contains("network_command")) {
         rt::UDPClientPacket msg = {
             .header = {.cmd = entityJson["network_command"].get<rt::UDPCommand>()},
-            .body =
-                {.sharedEntityId = _registry.getComponent<ecs::component::SharedEntity>(entity).value().sharedEntityId}
+            .body = {.sharedEntityId = reg.getComponent<ecs::component::SharedEntity>(entity).value().sharedEntityId}
         };
-        _udpClient.send(reinterpret_cast<const char *>(&msg), sizeof(msg));
+        udpClient.send(reinterpret_cast<const char *>(&msg), sizeof(msg));
     }
 }
 

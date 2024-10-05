@@ -27,7 +27,7 @@ void registerSystems(
     ecs::InputManager &input,
     ntw::TickRateManager &tickRateManager,
     ecs::SpriteManager &spriteManager,
-    std::list<std::function<void()>> &_networkCallbacks
+    std::list<std::function<void(ecs::Registry &reg)>> &_networkCallbacks
 );
 
 void run(ecs::Registry &reg, const std::shared_ptr<sf::RenderWindow> &window, float &dt, ecs::InputManager &input);

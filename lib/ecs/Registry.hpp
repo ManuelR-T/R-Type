@@ -15,7 +15,6 @@
 #include <any>
 #include <cstddef>
 #include <functional>
-#include <iostream>
 #include <stdexcept>
 #include <string>
 #include <typeindex>
@@ -142,7 +141,6 @@ class Registry {
 
         _sharedEntityTracker[sharedEntityId] = entity;
 
-        std::cout << "Tracking shared entity ID: " << sharedEntityId << std::endl;
         this->addComponent(entity, ecs::component::SharedEntity{sharedEntityId});
 
         return entity;
