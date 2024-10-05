@@ -14,20 +14,36 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Install dependencies (Linux)
-      run: sudo apt-get install -y flex bison javacc libflac-dev
+    - name: Cache CMake build (Linux)
+      if: matrix.os == 'linux'
+      uses: actions/cache@v3
+      with:
+        path: |
+          build/
+        key: cmake-build-linux-${{ runner.os }}-${{ hashFiles('CMakeLists.txt') }}
+        restore-keys: |
+          cmake-build-linux-${{ runner.os }}-
 
-    - name: Install Mingw-w64 (Windows)
-      if: matrix.os == 'windows'
-      run: sudo apt-get install -y mingw-w64 mingw-w64-tools mingw-w64-x86-64-dev
+    - name: Cache apt dependencies (Linux)
+      if: matrix.os == 'linux'
+      uses: actions/cache@v3
+      with:
+        path: /var/cache/apt
+        key: apt-cache-linux-${{ runner.os }}
+
+    - name: Install dependencies (Linux)
+      if: matrix.os == 'linux'
+      run: sudo apt-get install -y flex bison javacc libflac-dev
 
     - name: Check compilation (Linux)
       if: matrix.os == 'linux'
       run: |
         echo "## 🚀 Linux compilation result" >> $GITHUB_STEP_SUMMARY
+        mkdir -p build
+        cd build
         {
           set +e
-          cmake .; make
+          cmake ..; make
           if [ $? -ne 0 ]; then
             echo "- ### Compilation failed ❌" >> $GITHUB_STEP_SUMMARY
             echo "Linux compilation failed."
@@ -37,6 +53,26 @@ jobs:
             exit 0
           fi
         }
+
+    - name: Cache Mingw-w64 (Windows)
+      if: matrix.os == 'windows'
+      uses: actions/cache@v3
+      with:
+        path: /usr/lib/mingw-w64
+        key: mingw-w64-${{ runner.os }}
+
+    - name: Install Mingw-w64 (Windows)
+      if: matrix.os == 'windows'
+      run: sudo apt-get install -y mingw-w64 mingw-w64-tools mingw-w64-x86-64-dev
+
+    - name: Cache cross-compilation artifacts (Windows)
+      if: matrix.os == 'windows'
+      uses: actions/cache@v3
+      with:
+        path: build-mingw32
+        key: cross-build-windows-${{ runner.os }}-${{ hashFiles('tools/build-mingw32.sh') }}
+        restore-keys: |
+          cross-build-windows-${{ runner.os }}-
 
     - name: Cross-compile for Windows
       if: matrix.os == 'windows'
