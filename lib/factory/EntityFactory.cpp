@@ -17,8 +17,6 @@
 
 namespace ecs {
 
-// EntityFactory::EntityFactory(bool is_server) : _is_server(is_server) {}
-
 entity_t EntityFactory::createClientEntityFromJSON(
     Registry &reg,
     SpriteManager &spriteManager,
@@ -84,7 +82,7 @@ entity_t EntityFactory::createServerEntityFromJSON(
             sharedEntity = generateSharedEntityId();
         }
         if (reg.getLocalEntity().contains(sharedEntity)) {
-            entity = reg.getLocalEntity().at(sharedEntity);
+            entity = reg.getLocalEntity().at(sharedEntity); // should never happen
         } else {
             entity = reg.spawnSharedEntity(sharedEntity);
         }

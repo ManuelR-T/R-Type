@@ -1,0 +1,29 @@
+{
+    "type": "local",
+    "components": {
+        "position": {
+            "x": 200.0,
+            "y": 333.0
+        },
+        "velocity": {
+            "vx": -15.0,
+            "vy": 0.0
+        },
+        "sprite": {
+            "texture": "assets/bg/planets150.png",
+            "initial_frame": {
+                "x": 0,
+                "y": 0,
+                "width": 150,
+                "height": 150
+            },
+            "width": 75,
+            "height": 75
+        },
+        "parallax": {
+            "layer": 4,
+            "repeat_x": -720,
+            "respawn_x": 1200
+        }
+    }
+}

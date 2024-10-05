@@ -1,0 +1,27 @@
+{
+    "type": "local",
+    "components": {
+        "position": {
+            "x": 0.0,
+            "y": 0.0
+        },
+        "velocity": {
+            "vx": -2.0,
+            "vy": 0.0
+        },
+        "sprite": {
+            "texture": "assets/bg/bg.png",
+            "initial_frame": {
+                "x": 0,
+                "y": 0,
+                "width": 1440,
+                "height": 720
+            }
+        },
+        "parallax": {
+            "layer": 0,
+            "repeat_x": -720,
+            "respawn_x": 0
+        }
+    }
+}

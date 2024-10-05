@@ -15,11 +15,13 @@
 #include "components/drawable.hpp"
 #include "components/hitbox.hpp"
 #include "components/missile.hpp"
+#include "components/parallax.hpp"
 #include "components/position.hpp"
 #include "components/sprite.hpp"
 #include "components/velocity.hpp"
 #include "systems/collision.hpp"
 #include "systems/draw.hpp"
+#include "systems/parallax.hpp"
 #include "systems/position.hpp"
 #include "components/ai_actor.hpp"
 #include "components/share_movement.hpp"
@@ -43,6 +45,7 @@ void rtc::registerComponents(ecs::Registry &reg)
     reg.registerComponent<ecs::component::SharedEntity>();
     reg.registerComponent<ecs::component::Missile>();
     reg.registerComponent<ecs::component::AiActor>();
+    reg.registerComponent<ecs::component::Parallax>();
 }
 
 void rtc::registerSystems(
@@ -77,6 +80,7 @@ void rtc::registerSystems(
         }
     });
     reg.addSystem([&reg]() { ecs::systems::missilesStop(reg); });
+    reg.addSystem([&reg]() { ecs::systems::parallax(reg); });
     reg.addSystem([&reg, &dt, &spriteManager]() { ecs::systems::spriteSystem(reg, dt, spriteManager); });
     reg.addSystem([&reg, &window]() {
         window.clear();

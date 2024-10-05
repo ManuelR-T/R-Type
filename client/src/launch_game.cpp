@@ -39,10 +39,27 @@ void rtc::GameManager::_launchGame()
     rtc::registerComponents(reg);
     rtc::registerSystems(reg, *_window, dt, udpClient, inputManager, tickRateManager, spriteManager, _networkCallbacks);
 
-    // ecs::ClientEntityFactory entityFactory(spriteManager, udpClient);
     _setupUdpConnection(reg, spriteManager, udpClient);
 
     ecs::ClientEntityFactory::createClientEntityFromJSON(reg, spriteManager, udpClient, "assets/player.json");
+    ecs::ClientEntityFactory::createClientEntityFromJSON(reg, spriteManager, udpClient, "assets/bg.json");
+    ecs::ClientEntityFactory::createClientEntityFromJSON(reg, spriteManager, udpClient, "assets/earth.json", 500, 123);
+    ecs::ClientEntityFactory::createClientEntityFromJSON(
+        reg, spriteManager, udpClient, "assets/planetShade75.json", 500, 123
+    );
+    ecs::ClientEntityFactory::createClientEntityFromJSON(
+        reg, spriteManager, udpClient, "assets/planet50.json", 1500, 303
+    );
+    ecs::ClientEntityFactory::createClientEntityFromJSON(
+        reg, spriteManager, udpClient, "assets/planetShade50.json", 1500, 303
+    );
+    ecs::ClientEntityFactory::createClientEntityFromJSON(
+        reg, spriteManager, udpClient, "assets/planetShade25.json", 1000, 288
+    );
+    ecs::ClientEntityFactory::createClientEntityFromJSON(
+        reg, spriteManager, udpClient, "assets/planetShade25.json", 1000, 288
+    );
+    ecs::ClientEntityFactory::createClientEntityFromJSON(reg, spriteManager, udpClient, "assets/sun.json");
 
     run(reg, _window, dt, inputManager);
 }

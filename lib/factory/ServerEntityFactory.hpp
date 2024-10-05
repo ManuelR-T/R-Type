@@ -7,9 +7,6 @@ namespace ecs {
 
 class ServerEntityFactory : public EntityFactory {
     public:
-    ServerEntityFactory();
-
-    // protected:
     static void addComponents(
         Registry &reg,
         entity_t entity,

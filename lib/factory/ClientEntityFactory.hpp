@@ -10,9 +10,6 @@ namespace ecs {
 
 class ClientEntityFactory : public EntityFactory {
     public:
-    // ClientEntityFactory(SpriteManager &spriteManager, ntw::UDPClient &udpClient);
-
-    // protected:
     static void addComponents(
         Registry &reg,
         SpriteManager &spriteManager,
@@ -31,8 +28,6 @@ class ClientEntityFactory : public EntityFactory {
     );
 
     private:
-    // SpriteManager &_spriteManager;
-    // ntw::UDPClient &_udpClient;
     static const std::unordered_map<std::string, std::function<void(Registry &, entity_t, ecs::component::Animation &)>>
         _animMap;
 };

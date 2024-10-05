@@ -18,6 +18,7 @@
 #include "components/drawable.hpp"
 #include "components/hitbox.hpp"
 #include "components/missile.hpp"
+#include "components/parallax.hpp"
 #include "components/position.hpp"
 #include "components/sprite.hpp"
 #include "components/tag.hpp"
@@ -62,6 +63,7 @@ void rts::registerComponents(ecs::Registry &reg)
     reg.registerComponent<ecs::component::Drawable>();
     reg.registerComponent<ecs::component::Sprite>();
     reg.registerComponent<ecs::component::Animation>();
+    reg.registerComponent<ecs::component::Parallax>();
     reg.registerComponent<ecs::component::Controllable>();
     reg.registerComponent<ecs::component::Hitbox>();
     reg.registerComponent<ecs::component::ShareMovement>();

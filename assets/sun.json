@@ -1,0 +1,127 @@
+{
+    "type": "local",
+    "components": {
+        "position": {
+            "x": 700.0,
+            "y": 20.0
+        },
+        "velocity": {
+            "vx": -3.0,
+            "vy": 0.0
+        },
+        "animation": {
+            "frames": {
+                "idle": [
+                    {
+                        "x": 1,
+                        "y": 1,
+                        "width": 330,
+                        "height": 330
+                    },
+                    {
+                        "x": 333,
+                        "y": 1,
+                        "width": 330,
+                        "height": 330
+                    },
+                    {
+                        "x": 665,
+                        "y": 1,
+                        "width": 330,
+                        "height": 330
+                    },
+                    {
+                        "x": 997,
+                        "y": 1,
+                        "width": 330,
+                        "height": 330
+                    },
+                    {
+                        "x": 1329,
+                        "y": 1,
+                        "width": 330,
+                        "height": 330
+                    },
+                    {
+                        "x": 1661,
+                        "y": 1,
+                        "width": 330,
+                        "height": 330
+                    },
+                    {
+                        "x": 1993,
+                        "y": 1,
+                        "width": 330,
+                        "height": 330
+                    },
+                    {
+                        "x": 2325,
+                        "y": 1,
+                        "width": 330,
+                        "height": 330
+                    },
+                    {
+                        "x": 2657,
+                        "y": 1,
+                        "width": 330,
+                        "height": 330
+                    },
+                    {
+                        "x": 2989,
+                        "y": 1,
+                        "width": 330,
+                        "height": 330
+                    },
+                    {
+                        "x": 3321,
+                        "y": 1,
+                        "width": 330,
+                        "height": 330
+                    },
+                    {
+                        "x": 3653,
+                        "y": 1,
+                        "width": 330,
+                        "height": 330
+                    },
+                    {
+                        "x": 3985,
+                        "y": 1,
+                        "width": 330,
+                        "height": 330
+                    },
+                    {
+                        "x": 4317,
+                        "y": 1,
+                        "width": 330,
+                        "height": 330
+                    },
+                    {
+                        "x": 4649,
+                        "y": 1,
+                        "width": 330,
+                        "height": 330
+                    }
+                ]
+            },
+            "frame_time": 0.1,
+            "update_state": "none"
+        },
+        "sprite": {
+            "texture": "assets/bg/Sun330.png",
+            "initial_frame": {
+                "x": 0,
+                "y": 0,
+                "width": 330,
+                "height": 330
+            },
+            "width": 30,
+            "height": 30
+        },
+        "parallax": {
+            "layer": 1,
+            "repeat_x": -720,
+            "respawn_x": 1200
+        }
+    }
+}

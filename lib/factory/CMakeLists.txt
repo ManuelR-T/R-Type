@@ -8,6 +8,7 @@ add_library(FACTORY STATIC
     systems/missiles_stop.cpp
     systems/share_movement.cpp
     systems/health_check.cpp
+    systems/parallax.cpp
     EntityFactory.cpp
     ServerEntityFactory.cpp
     ClientEntityFactory.cpp

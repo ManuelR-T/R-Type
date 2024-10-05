@@ -3,8 +3,6 @@
 
 namespace ecs {
 
-// ServerEntityFactory::ServerEntityFactory() : EntityFactory(true) {}
-
 void ServerEntityFactory::addComponents(
     Registry &reg,
     entity_t entity,
