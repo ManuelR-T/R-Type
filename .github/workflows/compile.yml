@@ -31,7 +31,8 @@ jobs:
         key: apt-cache-linux-${{ runner.os }}
 
     - name: Install dependencies
-      run: sudo apt-get install -y flex bison javacc libflac-dev libx11-dev libxext-dev
+      run: sudo apt-get install -y flex bison javacc libflac-dev libx11-dev libxext-dev libgl1-mesa-dev
+
 
     - name: Check compilation (Linux)
       if: matrix.os == 'linux'
