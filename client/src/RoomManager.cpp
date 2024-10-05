@@ -9,6 +9,11 @@
 #include <cstddef>
 #include "RTypeTCPProtol.hpp"
 
+std::size_t rtc::RoomManager::getSelfId() const
+{
+    return _userId;
+}
+
 const std::string &rtc::RoomManager::getCurrentRoom() const
 {
     return _currentRoom;

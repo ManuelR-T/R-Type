@@ -39,13 +39,14 @@ class RoomManager {
     {
     }
 
+    std::size_t getSelfId() const;
+
     const std::string &getCurrentRoom() const;
     std::string &getCurrentRoom();
 
     const std::map<std::size_t, Player> &getCurrentRoomPlayer() const;
 
     const std::map<std::string, RoomContent> &getRooms() const;
-
     std::map<std::string, RoomContent> &getRooms();
 
     void askToCreateRoom(const std::string &roomName);
