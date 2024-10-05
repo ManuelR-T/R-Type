@@ -24,16 +24,14 @@ jobs:
         restore-keys: |
           cmake-build-linux-${{ runner.os }}-
 
-    - name: Cache apt dependencies (Linux)
-      if: matrix.os == 'linux'
+    - name: Cache apt dependencies
       uses: actions/cache@v3
       with:
         path: /var/cache/apt
         key: apt-cache-linux-${{ runner.os }}
 
-    - name: Install dependencies (Linux)
-      if: matrix.os == 'linux'
-      run: sudo apt-get install -y flex bison javacc libflac-dev
+    - name: Install dependencies
+      run: sudo apt-get install -y flex bison javacc libflac-dev libx11-dev libxext-dev
 
     - name: Check compilation (Linux)
       if: matrix.os == 'linux'
