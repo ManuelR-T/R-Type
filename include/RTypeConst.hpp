@@ -21,4 +21,7 @@ constexpr unsigned int SCREEN_WIDTH = 1920 / 2.4;
 constexpr unsigned int SCREEN_HEIGHT = 1080 / 2.4;
 
 constexpr std::size_t TCP_MAGIC = 0x5443503e; // '<RT-TCP>'
+
+constexpr std::size_t MAX_ROOM_NAME_SIZE = 32;
+constexpr std::size_t MAX_USER_NAME_SIZE = 32;
 } // namespace rt

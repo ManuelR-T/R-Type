@@ -6,8 +6,6 @@
 */
 
 #include <SFML/System/Vector2.hpp>
-#include <iostream>
-#include <vector>
 #include "RTypeClient.hpp"
 #include "imgui.h"
 #include "core/shared_entity.hpp"
@@ -29,12 +27,12 @@ static void renderInsideRoom(const std::string &name, rtc::RoomManager &roomMana
     ImGui::TableHeadersRow();
 
     // ! Action with table
-    for (const auto &current : roomManager.getCurrentRoomPlayer()) {
+    for (const auto &[id, player] : roomManager.getCurrentRoomPlayer()) {
         ImGui::TableNextRow();
         ImGui::TableSetColumnIndex(0);
-        ImGui::Text("%s", current.first.c_str());
+        ImGui::Text("%s", player.name.c_str());
         ImGui::TableSetColumnIndex(1);
-        ImGui::Text("%s", std::to_string(current.second).c_str());
+        ImGui::Text("%s", player.ready ? "ready" : "not ready");
     }
     ImGui::EndTable();
 
