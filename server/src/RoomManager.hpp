@@ -8,6 +8,7 @@
 #pragma once
 
 #include <array>
+#include <cstddef>
 #include <map>
 #include <string>
 #include <utility>
@@ -53,5 +54,6 @@ class RoomManager {
     void playerReady(const std::string &roomName, std::size_t playerId, ntw::TCPServer &tcpServer);
     void playerNotReady(const std::string &roomName, std::size_t playerId, ntw::TCPServer &tcpServer);
     void sendListRoom(std::size_t playerId, ntw::TCPServer &tcpServer);
+    void playerDisconnected(std::size_t playerId, ntw::TCPServer &tcpServer);
 };
 } // namespace rts

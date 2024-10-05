@@ -159,3 +159,15 @@ void rts::RoomManager::sendListRoom(std::size_t playerId, ntw::TCPServer &tcpSer
         }
     }
 }
+
+void rts::RoomManager::playerDisconnected(std::size_t playerId, ntw::TCPServer &tcpServer)
+{
+    for (const auto &[roomName, room] : this->_rooms) {
+        for (const auto &[id, _] : room.player) {
+            if (playerId == id) {
+                this->leaveRoom(roomName, id, tcpServer);
+                return;
+            }
+        }
+    }
+}

@@ -9,6 +9,7 @@
 #include <functional>
 #include <iostream>
 #include <utility>
+#include "../../utils/Logger.hpp"
 #include <asio/ip/address_v4.hpp>
 #include <asio/socket_base.hpp>
 
@@ -35,14 +36,18 @@ void ntw::TCPClient::run()
     _thread = std::thread([this]() {
         _asioRun();
         _io.run();
-        std::cout << "Client terminated" << std::endl;
+        eng::logInfo("Client closed.");
     });
 }
 
 void ntw::TCPClient::send(const char *data, std::size_t size)
 {
     _socket.async_write_some(asio::buffer(data, size), [](const asio::error_code &ec, std::size_t bytes) {
-        std::cout << "Message sent !" << std::endl;
+        if (ec) {
+            eng::logWarning(ec.message());
+        } else {
+            eng::logInfo("Send " + std::to_string(bytes) + " bytes to server.");
+        }
     });
 }
 
@@ -53,9 +58,9 @@ void ntw::TCPClient::registerHandler(std::function<void(const char *, std::size_
 
 void ntw::TCPClient::_asioRun()
 {
-    std::cout << "Start receiving data from server!" << std::endl;
     _socket.async_receive(asio::buffer(_buff, _buff.size()), [&](const asio::error_code &ec, std::size_t bytes) {
         if (!ec) {
+            eng::logInfo("Recv " + std::to_string(bytes) + " bytes from server.");
             this->_recvHandler(_buff.data(), bytes);
             _asioRun();
         } else {
