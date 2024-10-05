@@ -10,12 +10,9 @@
 #include "RTypeUDPProtol.hpp"
 #include "Registry.hpp"
 #include "SpriteManager.hpp"
+#include "Zipper.hpp"
 #include "components/controllable.hpp"
 #include "components/position.hpp"
-#include "InputManager.hpp"
-#include "Registry.hpp"
-#include "SpriteManager.hpp"
-#include "Zipper.hpp"
 #include "udp/UDPClient.hpp"
 #include "shared_entity.hpp"
 
