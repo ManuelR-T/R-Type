@@ -10,7 +10,7 @@
 #include <vector>
 #include "RTypeClient.hpp"
 #include "imgui.h"
-#include "core/shared_entity.hpp"
+#include "shared_entity.hpp"
 #include "imgui-SFML.h"
 
 static void renderInsideRoom(const std::string &name, rtc::RoomManager &roomManager, const sf::Vector2u &windowSize)

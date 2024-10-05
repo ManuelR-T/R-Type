@@ -6,8 +6,8 @@
 */
 
 #include "GameManager.hpp"
-#include "core/Registry.hpp"
-#include "factory/EntityFactory.hpp"
+#include "Registry.hpp"
+#include "EntityFactory.hpp"
 
 void rtc::GameManager::_registerUdpResponse(ecs::Registry &reg, ecs::EntityFactory &entityFactory)
 {

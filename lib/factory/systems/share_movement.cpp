@@ -5,14 +5,14 @@
 ** position
 */
 
-#include "../components/share_movement.hpp"
-#include "../components/position.hpp"
-#include "../components/velocity.hpp"
-#include "../core/Registry.hpp"
-#include "../core/Zipper.hpp"
+#include "components/share_movement.hpp"
+#include "components/position.hpp"
+#include "components/velocity.hpp"
+#include "Registry.hpp"
+#include "Zipper.hpp"
 #include "RTypeUDPProtol.hpp"
 #include "udp/UDPClient.hpp"
-#include "../components/shared_entity.hpp"
+#include "components/shared_entity.hpp"
 
 namespace ecs::systems {
 

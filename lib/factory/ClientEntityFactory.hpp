@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../core/SpriteManager.hpp"
+#include "SpriteManager.hpp"
 #include "EntityFactory.hpp"
 #include "udp/UDPClient.hpp"
 

@@ -8,8 +8,8 @@
 #pragma once
 
 #include <SFML/Window/Event.hpp>
-#include "core/InputManager.hpp"
-#include "core/Registry.hpp"
+#include "InputManager.hpp"
+#include "Registry.hpp"
 
 namespace ecs::systems {
 

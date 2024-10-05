@@ -10,7 +10,7 @@
 #include <sys/types.h>
 #include "components/position.hpp"
 #include "components/velocity.hpp"
-#include "core/shared_entity.hpp"
+#include "shared_entity.hpp"
 
 namespace rt {
 enum class UDPCommand : u_int8_t {

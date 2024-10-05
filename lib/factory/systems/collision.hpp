@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "core/Registry.hpp"
+#include "Registry.hpp"
 
 namespace ecs::systems {
 

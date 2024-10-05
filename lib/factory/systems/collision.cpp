@@ -13,7 +13,7 @@
 #include "components/missile.hpp"
 #include "components/position.hpp"
 #include "components/velocity.hpp"
-#include "core/Registry.hpp"
+#include "Registry.hpp"
 
 static void resolveCollision(
     ecs::Registry &reg,

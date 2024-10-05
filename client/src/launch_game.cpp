@@ -11,11 +11,11 @@
 #include "RTypeClient.hpp"
 #include "RTypeConst.hpp"
 #include "TickRateManager.hpp"
-#include "core/InputManager.hpp"
-#include "core/Registry.hpp"
-#include "core/SpriteManager.hpp"
-#include "factory/ClientEntityFactory.hpp"
-#include "factory/EntityFactory.hpp"
+#include "InputManager.hpp"
+#include "Registry.hpp"
+#include "SpriteManager.hpp"
+#include "ClientEntityFactory.hpp"
+#include "EntityFactory.hpp"
 #include "udp/UDPClient.hpp"
 
 void rtc::GameManager::_launchGame()

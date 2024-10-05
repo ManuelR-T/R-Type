@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "../core/shared_entity.hpp"
+#include "../shared_entity.hpp"
 
 namespace ecs::component {
 

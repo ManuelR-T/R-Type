@@ -5,10 +5,10 @@
 ** position
 */
 
-#include "../components/position.hpp"
-#include "../components/velocity.hpp"
-#include "../core/Registry.hpp"
-#include "../core/Zipper.hpp"
+#include "components/position.hpp"
+#include "components/velocity.hpp"
+#include "Registry.hpp"
+#include "Zipper.hpp"
 
 namespace ecs::systems {
 

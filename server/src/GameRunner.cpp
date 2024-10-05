@@ -8,13 +8,13 @@
 #include "GameRunner.hpp"
 #include "RTypeServer.hpp"
 #include "RTypeUDPProtol.hpp"
-#include "core/SpriteManager.hpp"
-#include "factory/ServerEntityFactory.hpp"
+#include "SpriteManager.hpp"
+#include "ServerEntityFactory.hpp"
 
 rts::GameRunner::GameRunner(int port)
     : _port(port), _udpServer(port),
       _responseHandler([](const rt::UDPClientPacket &packet) { return packet.header.cmd; }),
-      _window(sf::VideoMode(1000, 700), "R-Type") // ! for debug
+      _window(sf::VideoMode(720, 480), "R-Type") // ! for debug
 {
     ecs::SpriteManager spriteManager;
     ecs::ServerEntityFactory entityFactory(_reg);

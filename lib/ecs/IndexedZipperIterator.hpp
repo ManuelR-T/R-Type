@@ -5,7 +5,7 @@
 ** indexed_zipper_iterator
 */
 
-#include "core/ZipperIterator.hpp"
+#include "ZipperIterator.hpp"
 
 namespace ecs {
 

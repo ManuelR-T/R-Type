@@ -4,11 +4,11 @@
 #include <functional>
 #include <nlohmann/json.hpp>
 #include <string>
-#include "../components/animation.hpp"
-#include "../components/velocity.hpp"
-#include "../core/Registry.hpp"
-#include "../core/entity.hpp"
-#include "core/shared_entity.hpp"
+#include "components/animation.hpp"
+#include "components/velocity.hpp"
+#include "Registry.hpp"
+#include "entity.hpp"
+#include "shared_entity.hpp"
 #include <unordered_map>
 
 namespace ecs {

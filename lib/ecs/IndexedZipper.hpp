@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "core/IndexedZipperIterator.hpp"
-#include "core/Zipper.hpp"
+#include "IndexedZipperIterator.hpp"
+#include "Zipper.hpp"
 
 namespace ecs {
 template <typename... Components>

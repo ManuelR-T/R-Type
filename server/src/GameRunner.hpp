@@ -14,7 +14,7 @@
 #include "RTypeUDPProtol.hpp"
 #include "ResponseHandler.hpp"
 #include "TickRateManager.hpp"
-#include "core/Registry.hpp"
+#include "Registry.hpp"
 #include "udp/UDPServer.hpp"
 
 namespace rts {

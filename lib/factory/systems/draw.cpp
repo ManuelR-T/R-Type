@@ -6,11 +6,11 @@
 */
 
 #include <SFML/Graphics.hpp>
-#include "../core/Registry.hpp"
+#include "Registry.hpp"
 #include "components/drawable.hpp"
 #include "components/position.hpp"
 #include "components/sprite.hpp"
-#include "core/Zipper.hpp"
+#include "Zipper.hpp"
 
 namespace ecs::systems {
 

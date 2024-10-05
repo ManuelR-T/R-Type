@@ -15,11 +15,11 @@
 #include "ResponseHandler.hpp"
 #include "RoomManager.hpp"
 #include "TCPResponseHandler.hpp"
-#include "core/Registry.hpp"
+#include "Registry.hpp"
 #include "tcp/TCPClient.hpp"
 #include "udp/UDPClient.hpp"
-#include "core/shared_entity.hpp"
-#include "factory/EntityFactory.hpp"
+#include "shared_entity.hpp"
+#include "EntityFactory.hpp"
 
 #include <imgui-SFML.h>
 

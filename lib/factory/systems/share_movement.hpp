@@ -2,12 +2,13 @@
 ** EPITECH PROJECT, 2024
 ** Rtype
 ** File description:
-** position
+** share_movement
 */
 
 #pragma once
 
-#include "core/Registry.hpp"
+#include "Registry.hpp"
+#include "udp/UDPClient.hpp"
 
 namespace ecs::systems {
 
@@ -21,6 +22,6 @@ namespace ecs::systems {
  * @param reg Reference to the registry managing entities and their components.
  * @param dt The delta time since the last update, used to scale velocity.
  */
-void position(Registry &reg, float dt);
+void shareMovement(Registry &reg, ntw::UDPClient &udpClient);
 
 } // namespace ecs::systems

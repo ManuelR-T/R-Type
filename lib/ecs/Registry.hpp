@@ -9,7 +9,6 @@
 
 #include "SparseArray.hpp"
 #include "entity.hpp"
-#include "../components/shared_entity.hpp"
 #include "components/shared_entity.hpp"
 #include "shared_entity.hpp"
 

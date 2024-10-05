@@ -6,10 +6,10 @@
 #include "components/hitbox.hpp"
 #include "components/missile.hpp"
 #include "components/position.hpp"
-#include "core/entity.hpp"
+#include "entity.hpp"
 #include "components/share_movement.hpp"
 #include "components/shared_entity.hpp"
-#include "core/shared_entity.hpp"
+#include "shared_entity.hpp"
 
 namespace ecs {
 

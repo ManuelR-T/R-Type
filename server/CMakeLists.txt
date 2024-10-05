@@ -9,7 +9,7 @@ add_executable(r-type_server
 )
 
 target_compile_options(r-type_server PRIVATE -Wall -Wextra)
-target_link_libraries(r-type_server PRIVATE ECS PRIVATE NETWORK PRIVATE UTILS)
+target_link_libraries(r-type_server PRIVATE FACTORY NETWORK UTILS)
 include_directories(
     ${CMAKE_SOURCE_DIR}/include
 )

@@ -14,13 +14,13 @@
 #include "components/position.hpp"
 #include "components/sprite.hpp"
 #include "components/velocity.hpp"
-#include "core/InputManager.hpp"
-#include "core/Registry.hpp"
-#include "core/SpriteManager.hpp"
-#include "core/Zipper.hpp"
+#include "InputManager.hpp"
+#include "Registry.hpp"
+#include "SpriteManager.hpp"
+#include "Zipper.hpp"
 #include "udp/UDPClient.hpp"
 #include "components/share_movement.hpp"
-#include "core/shared_entity.hpp"
+#include "shared_entity.hpp"
 
 static void spawnMissile(
     ecs::Registry &reg,

@@ -7,12 +7,12 @@
 
 #include "sprite_system.hpp"
 #include <iostream>
-#include "../components/animation.hpp"
-#include "../components/position.hpp"
-#include "../components/sprite.hpp"
-#include "core/IndexedZipper.hpp"
-#include "core/Registry.hpp"
-#include "core/Zipper.hpp"
+#include "components/animation.hpp"
+#include "components/position.hpp"
+#include "components/sprite.hpp"
+#include "IndexedZipper.hpp"
+#include "Registry.hpp"
+#include "Zipper.hpp"
 
 namespace ecs::systems {
 

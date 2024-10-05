@@ -14,8 +14,8 @@
 #include "RoomManager.hpp"
 #include "TCPResponseHandler.hpp"
 #include "TickRateManager.hpp"
-#include "core/Registry.hpp"
-#include "factory/ServerEntityFactory.hpp"
+#include "Registry.hpp"
+#include "ServerEntityFactory.hpp"
 #include "udp/UDPServer.hpp"
 
 namespace rts {

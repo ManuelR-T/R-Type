@@ -11,7 +11,7 @@
 #include "RTypeUDPProtol.hpp"
 #include "components/position.hpp"
 #include "components/velocity.hpp"
-#include "factory/EntityFactory.hpp"
+#include "ServerEntityFactory.hpp"
 
 void rts::registerUdpResponse(
     ecs::Registry &reg,

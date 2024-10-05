@@ -11,9 +11,9 @@
 #include <list>
 #include "RoomManager.hpp"
 #include "TickRateManager.hpp"
-#include "core/InputManager.hpp"
-#include "core/Registry.hpp"
-#include "core/SpriteManager.hpp"
+#include "InputManager.hpp"
+#include "Registry.hpp"
+#include "SpriteManager.hpp"
 #include "udp/UDPClient.hpp"
 
 namespace rtc {
