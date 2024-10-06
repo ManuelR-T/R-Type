@@ -6,18 +6,22 @@
 */
 
 #include <SFML/System/Vector2.hpp>
+#include <SFML/Window/Event.hpp>
 #include <cstring>
 #include "RTypeClient.hpp"
+#include "RTypeConst.hpp"
 #include "imgui.h"
 #include "imgui-SFML.h"
 
-static void renderInsideRoom(const std::string &name, rtc::RoomManager &roomManager, const sf::Vector2u &windowSize)
+static void renderInsideRoom(rtc::RoomManager &roomManager, const sf::Vector2u &windowSize)
 {
     // ! Window
     ImGui::SetNextWindowSize(windowSize);
     ImGui::SetNextWindowPos(ImVec2(0, 0));
     ImGui::Begin(
-        name.c_str(), nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove
+        roomManager.getCurrentRoom().c_str(),
+        nullptr,
+        ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove
     );
 
     // ! Table
@@ -78,12 +82,26 @@ static void renderInsideRoom(const std::string &name, rtc::RoomManager &roomMana
     ImGui::End();
 }
 
+static void unsupportedWindowSize(const sf::Vector2u &windowSize)
+{
+    ImGui::SetNextWindowSize(windowSize);
+    ImGui::SetNextWindowPos(ImVec2(0, 0));
+    ImGui::Begin(
+        "Window to small",
+        nullptr,
+        ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove
+    );
+    ImGui::Text("Window size not supported !");
+    ImGui::End();
+}
+
 void rtc::runGui(const std::shared_ptr<sf::RenderWindow> &window, rtc::RoomManager &roomManager, bool &inLobby)
 {
     if (!ImGui::SFML::Init(*window)) {
         throw std::runtime_error("IMGUI Window init failed");
     }
     sf::Clock dt;
+    sf::Vector2u windowSize;
 
     while (window->isOpen() && inLobby) {
         sf::Event event;
@@ -96,10 +114,13 @@ void rtc::runGui(const std::shared_ptr<sf::RenderWindow> &window, rtc::RoomManag
         ImGui::SFML::Update(*window, dt.restart());
         window->clear();
 
-        if (roomManager.getCurrentRoom().empty()) {
-            rtc::renderLobbyWindow(roomManager, window->getSize());
+        windowSize = window->getSize();
+        if (windowSize.x < rt::MIN_SCREEN_WIDTH || windowSize.y < rt::MIN_SCREEN_HEIGHT) {
+            unsupportedWindowSize(windowSize);
+        } else if (roomManager.getCurrentRoom().empty()) {
+            rtc::renderLobbyWindow(roomManager, windowSize);
         } else {
-            renderInsideRoom(roomManager.getCurrentRoom(), roomManager, window->getSize());
+            renderInsideRoom(roomManager, windowSize);
         }
 
         ImGui::SFML::Render(*window);
