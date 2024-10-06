@@ -12,11 +12,6 @@
 namespace rt {
 constexpr unsigned int FPS_LIMIT = 60;
 
-constexpr float MOVEMENT_TICK_RATE = 30.0;
-constexpr float AI_ACTING_TICK_RATE = 10.0;
-constexpr float SEND_PACKETS_TICK_RATE = 15.0;
-constexpr float CALL_NETWORK_CALLBACKS_TICK_RATE = 25.0;
-
 constexpr unsigned int SCREEN_WIDTH = 720;
 constexpr unsigned int SCREEN_HEIGHT = 480;
 

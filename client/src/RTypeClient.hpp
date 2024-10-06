@@ -9,6 +9,7 @@
 
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <list>
+#include "ClientTickRate.hpp"
 #include "InputManager.hpp"
 #include "Registry.hpp"
 #include "RoomManager.hpp"
@@ -25,7 +26,7 @@ void registerSystems(
     float &dt,
     ntw::UDPClient &udpClient,
     ecs::InputManager &input,
-    ntw::TickRateManager &tickRateManager,
+    ntw::TickRateManager<rtc::TickRate> &tickRateManager,
     ecs::SpriteManager &spriteManager,
     std::list<std::function<void(ecs::Registry &reg)>> &_networkCallbacks
 );

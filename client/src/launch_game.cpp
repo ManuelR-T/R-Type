@@ -8,6 +8,7 @@
 #include <SFML/Window/VideoMode.hpp>
 #include <memory>
 #include "ClientEntityFactory.hpp"
+#include "ClientTickRate.hpp"
 #include "GameManager.hpp"
 #include "InputManager.hpp"
 #include "RTypeClient.hpp"
@@ -33,7 +34,7 @@ void rtc::GameManager::_launchGame()
     ecs::Registry reg;
     float dt = 0.f;
     ecs::InputManager inputManager;
-    ntw::TickRateManager tickRateManager;
+    ntw::TickRateManager<rtc::TickRate> tickRateManager;
     ecs::SpriteManager spriteManager;
 
     rtc::registerComponents(reg);

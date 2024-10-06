@@ -6,8 +6,8 @@
 */
 
 #include <SFML/Graphics.hpp>
+#include <cstddef>
 #include <functional>
-#include "RTypeConst.hpp"
 #include "RTypeServer.hpp"
 #include "RTypeUDPProtol.hpp"
 #include "Registry.hpp"
@@ -77,13 +77,13 @@ void rts::registerSystems(
     ecs::Registry &reg,
     sf::RenderWindow &window,
     float &dt,
-    ntw::TickRateManager &tickRateManager,
+    ntw::TickRateManager<rts::TickRate> &tickRateManager,
     ntw::UDPServer &udpServer,
     std::list<rt::UDPServerPacket> &datasToSend,
     std::list<std::function<void(ecs::Registry &reg)>> &networkCallbacks
 )
 {
-    tickRateManager.addTickRate(rt::SEND_PACKETS_TICK_RATE);
+    tickRateManager.addTickRate(rts::TickRate::SEND_PACKETS, rts::SERVER_TICKRATE.at(rts::TickRate::SEND_PACKETS));
 
     reg.addSystem([&networkCallbacks, &reg]() {
         while (!networkCallbacks.empty()) {
@@ -100,7 +100,7 @@ void rts::registerSystems(
     });
     reg.addSystem([&reg]() { ecs::systems::missilesStop(reg); });
     reg.addSystem([&datasToSend, &udpServer, &tickRateManager, &dt, &reg]() {
-        if (tickRateManager.needUpdate(rt::SEND_PACKETS_TICK_RATE, dt)) {
+        if (tickRateManager.needUpdate(rts::TickRate::SEND_PACKETS, dt)) {
             share_server_movements(reg, datasToSend);
             while (!datasToSend.empty()) {
                 udpServer.sendAll(reinterpret_cast<const char *>(&datasToSend.front()), sizeof(rt::UDPServerPacket));

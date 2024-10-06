@@ -6,8 +6,8 @@
 */
 
 #include <list>
+#include "ClientTickRate.hpp"
 #include "RTypeClient.hpp"
-#include "RTypeConst.hpp"
 #include "SpriteManager.hpp"
 #include "TickRateManager.hpp"
 #include "components/animation.hpp"
@@ -54,28 +54,30 @@ void rtc::registerSystems(
     float &dt,
     ntw::UDPClient &udpClient,
     ecs::InputManager &input,
-    ntw::TickRateManager &tickRateManager,
+    ntw::TickRateManager<rtc::TickRate> &tickRateManager,
     ecs::SpriteManager &spriteManager,
     std::list<std::function<void(ecs::Registry &reg)>> &_networkCallbacks
 )
 {
-    tickRateManager.addTickRate(rt::MOVEMENT_TICK_RATE);
-    tickRateManager.addTickRate(rt::AI_ACTING_TICK_RATE);
-    tickRateManager.addTickRate(rt::CALL_NETWORK_CALLBACKS_TICK_RATE);
+    tickRateManager.addTickRate(rtc::TickRate::MOVEMENT, rtc::CLIENT_TICKRATE.at(rtc::TickRate::MOVEMENT));
+    tickRateManager.addTickRate(rtc::TickRate::AI_ACTING, rtc::CLIENT_TICKRATE.at(rtc::TickRate::AI_ACTING));
+    tickRateManager.addTickRate(
+        rtc::TickRate::CALL_NETWORK_CALLBACKS, rtc::CLIENT_TICKRATE.at(rtc::TickRate::CALL_NETWORK_CALLBACKS)
+    );
 
     reg.addSystem([&reg, &input]() { ecs::systems::controlMove(reg, input); });
     reg.addSystem([&reg, &input, &udpClient, &spriteManager]() {
         ecs::systems::controlSpecial(reg, input, udpClient, spriteManager);
     });
     reg.addSystem([&reg, &dt, &tickRateManager]() {
-        if (tickRateManager.needUpdate(rt::AI_ACTING_TICK_RATE, dt)) {
+        if (tickRateManager.needUpdate(rtc::TickRate::AI_ACTING, dt)) {
             ecs::systems::aiAct(reg);
         }
     });
     reg.addSystem([&reg, &dt]() { ecs::systems::position(reg, dt); });
     reg.addSystem([&reg]() { ecs::systems::collision(reg); });
     reg.addSystem([&reg, &udpClient, &tickRateManager, &dt]() {
-        if (tickRateManager.needUpdate(rt::MOVEMENT_TICK_RATE, dt)) {
+        if (tickRateManager.needUpdate(rtc::TickRate::MOVEMENT, dt)) {
             ecs::systems::shareMovement(reg, udpClient);
         }
     });
@@ -88,7 +90,7 @@ void rtc::registerSystems(
         window.display();
     });
     reg.addSystem([&_networkCallbacks, &tickRateManager, &dt, &reg]() {
-        if (tickRateManager.needUpdate(rt::CALL_NETWORK_CALLBACKS_TICK_RATE, dt)) {
+        if (tickRateManager.needUpdate(rtc::TickRate::CALL_NETWORK_CALLBACKS, dt)) {
             while (!_networkCallbacks.empty()) {
                 _networkCallbacks.front()(reg);
                 _networkCallbacks.pop_front();

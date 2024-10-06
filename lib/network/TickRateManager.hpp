@@ -12,21 +12,22 @@
 
 namespace ntw {
 
+template <typename T>
 class TickRateManager {
     public:
-    void addTickRate(float tickRate)
+    void addTickRate(const T &id, float tickRate)
     {
-        _tickRate[tickRate] = {1 / tickRate, 0};
+        _tickRate[id] = {._time_between_tick = (1 / tickRate), ._elapsed_time = 0};
     }
 
-    void removeTickRate(float tickRate)
+    void removeTickRate(const T &id)
     {
-        _tickRate.erase(tickRate);
+        _tickRate.erase(id);
     }
 
-    bool needUpdate(float tickRate, float dt)
+    bool needUpdate(const T &id, float dt)
     {
-        auto &[time_between_tick, elapsed_time] = _tickRate[tickRate];
+        auto &[time_between_tick, elapsed_time] = _tickRate.at(id);
         elapsed_time += dt;
         if (elapsed_time >= time_between_tick) {
             elapsed_time -= time_between_tick;
@@ -41,7 +42,7 @@ class TickRateManager {
         float _elapsed_time = 0;
     };
 
-    std::unordered_map<float, TickData> _tickRate;
+    std::unordered_map<T, TickData> _tickRate;
 };
 
 } // namespace ntw

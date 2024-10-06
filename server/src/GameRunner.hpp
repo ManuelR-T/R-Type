@@ -15,6 +15,7 @@
 #include "RTypeUDPProtol.hpp"
 #include "Registry.hpp"
 #include "ResponseHandler.hpp"
+#include "ServerTickRate.hpp"
 #include "TickRateManager.hpp"
 #include "udp/UDPServer.hpp"
 
@@ -30,7 +31,7 @@ class GameRunner {
     ecs::Registry _reg;
 
     float _dt = 0;
-    ntw::TickRateManager _tickRateManager;
+    ntw::TickRateManager<rts::TickRate> _tickRateManager;
 
     std::list<rt::UDPServerPacket> _datasToSend;
     std::list<std::function<void(ecs::Registry &reg)>> _networkCallbacks;

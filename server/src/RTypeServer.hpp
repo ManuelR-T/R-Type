@@ -13,18 +13,18 @@
 #include "Registry.hpp"
 #include "ResponseHandler.hpp"
 #include "RoomManager.hpp"
+#include "ServerTickRate.hpp"
 #include "TCPResponseHandler.hpp"
 #include "TickRateManager.hpp"
 #include "udp/UDPServer.hpp"
 
 namespace rts {
-
 void registerComponents(ecs::Registry &reg);
 void registerSystems(
     ecs::Registry &reg,
     sf::RenderWindow &window,
     float &dt,
-    ntw::TickRateManager &tick_rate_manager,
+    ntw::TickRateManager<rts::TickRate> &tick_rate_manager,
     ntw::UDPServer &udpServer,
     std::list<rt::UDPServerPacket> &datasToSend,
     std::list<std::function<void(ecs::Registry &reg)>> &networkCallbacks
