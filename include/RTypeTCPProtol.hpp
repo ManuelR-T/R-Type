@@ -50,10 +50,12 @@ struct CL_NEW_USER {
 
 struct CL_CREATE_ROOM {
     char room_name[rt::MAX_ROOM_NAME_SIZE + 1] = {0};
+    std::size_t stage = 1;
 };
 
 struct SER_ROOM_CREATED {
     char room_name[rt::MAX_ROOM_NAME_SIZE + 1] = {0};
+    std::size_t stage = 1;
 };
 
 struct CL_DELETE_ROOM {
@@ -112,6 +114,7 @@ struct CL_ROOM_LIST {
 
 struct SER_ROOM_LIST {
     char room_name[rt::MAX_ROOM_NAME_SIZE + 1] = {0};
+    std::size_t stage = 1;
 };
 
 struct SER_ROOM_CONTENT {

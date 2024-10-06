@@ -8,6 +8,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <cstddef>
 #include <functional>
 #include <list>
 #include <thread>
@@ -37,7 +38,7 @@ class GameRunner {
     sf::RenderWindow _window;
 
     public:
-    GameRunner(int port);
+    GameRunner(int port, std::size_t stage);
 
     void runGame();
 };

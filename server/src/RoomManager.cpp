@@ -6,15 +6,17 @@
 */
 
 #include "RoomManager.hpp"
+#include <cstddef>
 #include "GameRunner.hpp"
 #include "RTypeTCPProtol.hpp"
 
-void rts::RoomManager::createRoom(const std::string &name, ntw::TCPServer &tcpServer)
+void rts::RoomManager::createRoom(const std::string &name, std::size_t stage, ntw::TCPServer &tcpServer)
 {
     rt::TCPPacket<rt::TCPData::SER_ROOM_CREATED> packet{.cmd = rt::TCPCommand::SER_ROOM_CREATED};
 
-    _rooms[name] = Room{};
+    _rooms[name] = Room{.stage = stage};
 
+    packet.data.stage = stage;
     name.copy(packet.data.room_name, sizeof(packet.data.room_name) - 1);
     tcpServer.sendToAllUser(reinterpret_cast<const char *>(&packet), sizeof(packet));
 }
@@ -85,12 +87,13 @@ void rts::RoomManager::playerReady(const std::string &roomName, std::size_t play
     std::future<bool> server = serverReady.get_future();
 
     _rooms.at(roomName).game = std::make_unique<std::thread>(
-        [](int port, std::promise<bool> serverReady) {
-            rts::GameRunner gameRunner(port);
+        [](int port, std::size_t stage, std::promise<bool> serverReady) {
+            rts::GameRunner gameRunner(port, stage);
             serverReady.set_value(true);
             gameRunner.runGame();
         },
         _nextPort,
+        _rooms.at(roomName).stage,
         std::move(serverReady)
     );
     server.wait();
@@ -126,6 +129,7 @@ void rts::RoomManager::sendListRoom(std::size_t playerId, ntw::TCPServer &tcpSer
         {
             rt::TCPPacket<rt::TCPData::SER_ROOM_LIST> packet{.cmd = rt::TCPCommand::SER_ROOM_LIST};
 
+            packet.data.stage = content.stage;
             name.copy(packet.data.room_name, sizeof(packet.data.room_name) - 1);
             tcpServer.sendToUser(playerId, reinterpret_cast<const char *>(&packet), sizeof(packet));
         }

@@ -23,8 +23,9 @@ class RoomManager {
     };
 
     struct Room {
-        std::map<std::size_t, PlayerLobby> player;
-        std::unique_ptr<std::thread> game;
+        std::map<std::size_t, PlayerLobby> player{};
+        std::size_t stage = 1;
+        std::unique_ptr<std::thread> game{};
     };
 
     std::map<std::string, Room> _rooms;
@@ -42,7 +43,7 @@ class RoomManager {
         }
     }
 
-    void createRoom(const std::string &name, ntw::TCPServer &tcpServer);
+    void createRoom(const std::string &name, std::size_t stage, ntw::TCPServer &tcpServer);
     void deleteRoom(const std::string &name, ntw::TCPServer &tcpServer);
     void joinRoom(
         const std::string &name,

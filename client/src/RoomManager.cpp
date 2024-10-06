@@ -39,10 +39,11 @@ std::map<std::string, rtc::RoomManager::RoomContent> &rtc::RoomManager::getRooms
     return _rooms;
 }
 
-void rtc::RoomManager::askToCreateRoom(const std::string &roomName)
+void rtc::RoomManager::askToCreateRoom(const std::string &roomName, const std::size_t &stage)
 {
     rt::TCPPacket<rt::TCPData::CL_CREATE_ROOM> packet{.cmd = rt::TCPCommand::CL_CREATE_ROOM};
 
+    packet.data.stage = stage;
     roomName.copy(packet.data.room_name, sizeof(packet.data.room_name) - 1);
     _tcpClient.send(reinterpret_cast<const char *>(&packet), sizeof(packet));
 }

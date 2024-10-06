@@ -8,6 +8,7 @@
 #include <any>
 #include <cstddef>
 #include <functional>
+#include <string>
 #include <vector>
 #include "RTypeServer.hpp"
 #include "RTypeTCPProtol.hpp"
@@ -31,7 +32,7 @@ void rts::registerTcpResponse(
     responseHandler.registerHandler<rt::TCPData::CL_CREATE_ROOM>(
         rt::TCPCommand::CL_CREATE_ROOM,
         [&roomManager, &tcpServer](const rt::TCPPacket<rt::TCPData::CL_CREATE_ROOM> &packet) {
-            roomManager.createRoom(packet.data.room_name, tcpServer);
+            roomManager.createRoom(packet.data.room_name, packet.data.stage, tcpServer);
         }
     );
     responseHandler.registerHandler<rt::TCPData::CL_DELETE_ROOM>(

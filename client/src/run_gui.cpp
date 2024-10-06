@@ -6,10 +6,10 @@
 */
 
 #include <SFML/System/Vector2.hpp>
+#include <cstring>
 #include "RTypeClient.hpp"
 #include "imgui.h"
 #include "imgui-SFML.h"
-#include "shared_entity.hpp"
 
 static void renderInsideRoom(const std::string &name, rtc::RoomManager &roomManager, const sf::Vector2u &windowSize)
 {
@@ -78,56 +78,6 @@ static void renderInsideRoom(const std::string &name, rtc::RoomManager &roomMana
     ImGui::End();
 }
 
-static void renderLobbyWindow(rtc::RoomManager &roomManager, const sf::Vector2u &windowSize)
-{
-    // ! Window
-    ImGui::SetNextWindowSize(windowSize);
-    ImGui::SetNextWindowPos(ImVec2(0, 0));
-    ImGui::Begin("Lobby", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove);
-
-    // ! Table
-    ImGui::BeginTable("table", 3);
-    ImGui::TableSetupColumn("Name");
-    ImGui::TableSetupColumn("Number of players");
-    ImGui::TableSetupColumn("Actions");
-    ImGui::TableHeadersRow();
-    ImU32 inGameRowColor = ImGui::GetColorU32(ImVec4(1, 0, 0, 0.25));
-
-    // ! Action with table
-    for (const auto &[room_name, room_data] : roomManager.getRooms()) {
-        ImGui::TableNextRow();
-        if (!room_data.joinable) {
-            ImGui::TableSetBgColor(ImGuiTableBgTarget_RowBg0, inGameRowColor);
-        }
-        ImGui::TableSetColumnIndex(0);
-        if (ImGui::Button(room_name.c_str()) && room_data.joinable) {
-            // ! send join room
-            roomManager.askToJoinRoom(room_name);
-        }
-        ImGui::TableSetColumnIndex(1);
-        ImGui::Text("%zu / 4", room_data.player.size());
-        ImGui::TableSetColumnIndex(2);
-        if (ImGui::Button((std::string("Delete##") + room_name).c_str()) && room_data.joinable &&
-            room_data.player.empty()) {
-            // !send delete
-            roomManager.askToDeleteRoom(room_name);
-        }
-    }
-    ImGui::EndTable();
-    // ! Create room
-    ImVec2 buttonSize(200, 50);
-    ImVec2 windowContentRegionMax = ImGui::GetWindowContentRegionMax();
-    ImVec2 buttonPos =
-        ImVec2(windowContentRegionMax.x - buttonSize.x - 20, windowContentRegionMax.y - buttonSize.y - 20);
-    ImGui::SetCursorPos(buttonPos);
-    if (ImGui::Button("Create", buttonSize)) {
-        // ! send create room
-        roomManager.askToCreateRoom("Room " + std::to_string(ecs::generateSharedEntityId()));
-    }
-
-    ImGui::End();
-}
-
 void rtc::runGui(const std::shared_ptr<sf::RenderWindow> &window, rtc::RoomManager &roomManager, bool &inLobby)
 {
     if (!ImGui::SFML::Init(*window)) {
@@ -147,7 +97,7 @@ void rtc::runGui(const std::shared_ptr<sf::RenderWindow> &window, rtc::RoomManag
         window->clear();
 
         if (roomManager.getCurrentRoom().empty()) {
-            renderLobbyWindow(roomManager, window->getSize());
+            rtc::renderLobbyWindow(roomManager, window->getSize());
         } else {
             renderInsideRoom(roomManager.getCurrentRoom(), roomManager, window->getSize());
         }

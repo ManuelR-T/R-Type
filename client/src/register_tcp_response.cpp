@@ -5,6 +5,7 @@
 ** register_tcp_response
 */
 
+#include <string>
 #include "GameManager.hpp"
 #include "RTypeTCPProtol.hpp"
 #include "RoomManager.hpp"
@@ -14,7 +15,7 @@ void rtc::GameManager::_registerTcpResponse()
     _tcpResponseHandler.registerHandler<rt::TCPData::SER_ROOM_LIST>(
         rt::TCPCommand::SER_ROOM_LIST,
         [this](const rt::TCPPacket<rt::TCPData::SER_ROOM_LIST> &packet) {
-            _roomManager.getRooms()[packet.data.room_name] = {};
+            _roomManager.getRooms()[packet.data.room_name] = {.stage = packet.data.stage};
         }
     );
     _tcpResponseHandler.registerHandler<rt::TCPData::SER_ROOM_CONTENT>(
@@ -34,7 +35,7 @@ void rtc::GameManager::_registerTcpResponse()
     _tcpResponseHandler.registerHandler<rt::TCPData::SER_ROOM_CREATED>(
         rt::TCPCommand::SER_ROOM_CREATED,
         [this](const rt::TCPPacket<rt::TCPData::SER_ROOM_CREATED> &packet) {
-            _roomManager.getRooms()[packet.data.room_name] = {};
+            _roomManager.getRooms()[packet.data.room_name] = {.stage = packet.data.stage};
         }
     );
     _tcpResponseHandler.registerHandler<rt::TCPData::SER_ROOM_DELETED>(

@@ -24,4 +24,6 @@ constexpr std::size_t TCP_MAGIC = 0x5443503e; // '<RT-TCP>'
 
 constexpr std::size_t MAX_ROOM_NAME_SIZE = 32;
 constexpr std::size_t MAX_USER_NAME_SIZE = 32;
+
+constexpr std::size_t NB_STAGE = 10;
 } // namespace rt

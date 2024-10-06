@@ -22,8 +22,9 @@ class RoomManager {
     };
 
     struct RoomContent {
-        std::map<std::size_t, Player> player;
+        std::map<std::size_t, Player> player = {};
         bool joinable = true;
+        std::size_t stage = 1;
     };
 
     private:
@@ -49,7 +50,7 @@ class RoomManager {
     const std::map<std::string, RoomContent> &getRooms() const;
     std::map<std::string, RoomContent> &getRooms();
 
-    void askToCreateRoom(const std::string &roomName);
+    void askToCreateRoom(const std::string &roomName, const std::size_t &stage);
     void askToDeleteRoom(const std::string &roomName);
     void askToJoinRoom(const std::string &roomName);
     void askToLeaveRoom();

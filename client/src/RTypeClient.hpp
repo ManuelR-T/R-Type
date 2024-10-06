@@ -32,4 +32,5 @@ void registerSystems(
 
 void run(ecs::Registry &reg, const std::shared_ptr<sf::RenderWindow> &window, float &dt, ecs::InputManager &input);
 void runGui(const std::shared_ptr<sf::RenderWindow> &window, rtc::RoomManager &roomManager, bool &inLobby);
+void renderLobbyWindow(rtc::RoomManager &roomManager, const sf::Vector2u &windowSize);
 } // namespace rtc
