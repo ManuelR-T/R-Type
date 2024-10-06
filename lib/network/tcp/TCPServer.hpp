@@ -11,7 +11,6 @@
 #include <asio/ip/tcp.hpp>
 #include <cstddef>
 #include <functional>
-#include <list>
 #include "../AsioServer.hpp"
 #include "../BuffSize.hpp"
 

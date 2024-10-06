@@ -177,7 +177,7 @@ void ntw::TCPServer::sendToUser(std::size_t id, const char *data, std::size_t si
         if (session->socket().is_open()) {
             sockWrite(session->socket(), data, size);
         } else {
-            eng::logWarning("Trying to send data to a closed socker: " + std::to_string(id) + ".");
+            eng::logWarning("Trying to send data to a closed socket: " + std::to_string(id) + ".");
         }
     } else {
         eng::logWarning("No session found for: " + std::to_string(id) + ".");

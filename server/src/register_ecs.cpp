@@ -36,7 +36,7 @@ static void share_server_movements(ecs::Registry &reg, std::list<rt::UDPServerPa
 {
     auto &sharedMov = reg.getComponents<ecs::component::ShareMovement>();
     auto &positions = reg.getComponents<ecs::component::Position>();
-    auto &velocitys = reg.getComponents<ecs::component::Velocity>();
+    auto &velocities = reg.getComponents<ecs::component::Velocity>();
     auto &sharedEntity = reg.getComponents<ecs::component::SharedEntity>();
 
     ecs::Zipper<
@@ -44,7 +44,7 @@ static void share_server_movements(ecs::Registry &reg, std::list<rt::UDPServerPa
         ecs::component::Position,
         ecs::component::Velocity,
         ecs::component::SharedEntity>
-        zip(sharedMov, positions, velocitys, sharedEntity);
+        zip(sharedMov, positions, velocities, sharedEntity);
 
     for (auto [_, pos, vel, shared_entity] : zip) {
         rt::UDPBody body = {
