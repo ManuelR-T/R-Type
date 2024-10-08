@@ -50,12 +50,12 @@ static void resolve_tag_effect(ecs::Registry &reg, size_t entityA, size_t entity
 
     if (missiles.has(entityA) && !missiles.has(entityB)) {
         std::cout << "Entity B is dead => " << entityB << std::endl;
-        reg.killEntity(entityB);
     }
     if (missiles.has(entityB) && !missiles.has(entityA)) {
         std::cout << "Entity A is dead => " << entityA << std::endl;
-        reg.killEntity(entityA);
     }
+    reg.killEntity(entityA);
+    reg.killEntity(entityB);
 }
 
 namespace ecs::systems {
