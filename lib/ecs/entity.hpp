@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2024
-** R-type
+** R-Type
 ** File description:
 ** entity
 */

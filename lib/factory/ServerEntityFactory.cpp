@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2024
+** R-Type
+** File description:
+** ServerEntityFactory
+*/
+
 #include "ServerEntityFactory.hpp"
 #include "components/drawable.hpp"
 

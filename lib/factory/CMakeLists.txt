@@ -13,6 +13,7 @@ add_library(FACTORY STATIC
     ServerEntityFactory.cpp
     ClientEntityFactory.cpp
     systems/ai_act.cpp
+    SoundManager.cpp
 )
 
 target_include_directories(FACTORY PUBLIC
@@ -20,4 +21,4 @@ target_include_directories(FACTORY PUBLIC
     ${CMAKE_SOURCE_DIR}/include
 )
 
-target_link_libraries(FACTORY PUBLIC nlohmann_json ECS NETWORK sfml-system sfml-window sfml-graphics)
+target_link_libraries(FACTORY PUBLIC nlohmann_json ECS NETWORK sfml-system sfml-window sfml-graphics sfml-audio)

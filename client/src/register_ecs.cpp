@@ -24,7 +24,9 @@
 #include "systems/parallax.hpp"
 #include "systems/position.hpp"
 #include "components/ai_actor.hpp"
+#include "components/music_component.hpp"
 #include "components/share_movement.hpp"
+#include "components/sound_emitter.hpp"
 #include "systems/ai_act.hpp"
 #include "systems/control_move.hpp"
 #include "systems/control_special.hpp"
@@ -46,6 +48,8 @@ void rtc::registerComponents(ecs::Registry &reg)
     reg.registerComponent<ecs::component::Missile>();
     reg.registerComponent<ecs::component::AiActor>();
     reg.registerComponent<ecs::component::Parallax>();
+    reg.registerComponent<ecs::component::SoundEmitter>();
+    reg.registerComponent<ecs::component::MusicComponent>();
 }
 
 void rtc::registerSystems(
