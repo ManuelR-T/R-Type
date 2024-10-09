@@ -20,33 +20,6 @@
 
 // ! It's a temporary file that will be delete when factory are setup
 
-void rts::createPlayer(ecs::Registry &reg, shared_entity_t sharedEntityId)
-{
-    auto player = reg.spawnSharedEntity(sharedEntityId);
-    reg.addComponent(player, ecs::component::Position{400.f, 300.f});
-
-    reg.addComponent(player, ecs::component::Velocity{0.f, 0.f});
-    ecs::component::Drawable playerDrawable;
-    playerDrawable.shape.setSize(sf::Vector2f(32.f, 16.f));
-    playerDrawable.shape.setFillColor(sf::Color::Blue);
-    reg.addComponent(player, std::move(playerDrawable));
-
-    reg.addComponent(player, ecs::component::Hitbox{32.f, 16.f});
-}
-
-void rts::createStatic(ecs::Registry &reg, float x, float y)
-{
-    auto entity = reg.spawnEntity();
-    reg.addComponent(entity, ecs::component::Position{x, y});
-
-    ecs::component::Drawable entityDrawable;
-    entityDrawable.shape.setSize(sf::Vector2f(16.f, 16.f));
-    entityDrawable.shape.setFillColor(sf::Color::Red);
-    reg.addComponent(entity, std::move(entityDrawable));
-
-    reg.addComponent(entity, ecs::component::Hitbox{16.f, 16.f});
-}
-
 void rts::createMissile(ecs::Registry &reg, const rt::UDPClientPacket &msg)
 {
     auto missile = reg.spawnSharedEntity(msg.body.sharedEntityId);
@@ -63,6 +36,5 @@ void rts::createMissile(ecs::Registry &reg, const rt::UDPClientPacket &msg)
     playerDrawable.shape.setFillColor(sf::Color::Yellow);
     reg.addComponent(missile, std::move(playerDrawable));
 
-    // reg.addComponent(player, component::hitbox{50.f, 50.f});
     reg.addComponent(missile, ecs::component::Missile{});
 }

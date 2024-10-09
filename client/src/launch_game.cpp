@@ -61,6 +61,7 @@ void rtc::GameManager::_launchGame()
         reg, spriteManager, udpClient, "assets/planetShade25.json", 1000, 288
     );
     ecs::ClientEntityFactory::createClientEntityFromJSON(reg, spriteManager, udpClient, "assets/sun.json");
+    ecs::ClientEntityFactory::createClientEntityFromJSON(reg, spriteManager, udpClient, "assets/explosion.json", 300, 200);
 
     run(reg, _window, dt, inputManager);
 }
