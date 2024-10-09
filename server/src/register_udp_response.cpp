@@ -26,8 +26,7 @@ void rts::registerUdpResponse(
                     reg, "assets/player.json", INT32_MAX, INT32_MAX, sharedEntityId
                 );
             });
-            datasToSend.push_back(
-                rt::UDPServerPacket({.header = {.cmd = rt::UDPCommand::NEW_PLAYER}, .body = msg.body})
+            datasToSend.push_back(rt::UDPServerPacket({.header = {.cmd = rt::UDPCommand::NEW_PLAYER}, .body = msg.body})
             );
         }
     );
