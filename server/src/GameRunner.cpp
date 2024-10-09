@@ -35,17 +35,19 @@ rts::GameRunner::GameRunner(int port, std::size_t stage) // ! Use the stage argu
     for (int i = 0; i < 10; ++i) {
         _datasToSend.push_back(rt::UDPServerPacket(
             {.header = {.cmd = rt::UDPCommand::NEW_ENTITY},
-             .body = {.sharedEntityId = 0, .b = {.newEntityData = {0, {{100.f * i, 100.f * i}, {0}}}}}}
+             .body =
+                 {.sharedEntityId = 0,
+                  .b = {.newEntityData = {.type = rt::EntityType::STATIC, .moveData = {{100.f * i, 100.f * i}, {0}}}}}}
         ));
         ecs::ServerEntityFactory::createServerEntityFromJSON(_reg, "assets/static.json", 100.f * i, 100.f * i);
     }
 }
 
-void rts::GameRunner::runGame()
+void rts::GameRunner::runGame(bool &stopGame)
 {
     sf::Clock clock;
 
-    while (_window.isOpen()) {
+    while (_window.isOpen() && !stopGame) {
         _dt = clock.restart().asSeconds();
 
         // ! for debug
@@ -57,5 +59,8 @@ void rts::GameRunner::runGame()
         }
         // ! for debug
         _reg.runSystems();
+    }
+    if (_window.isOpen()) {
+        _window.close();
     }
 }

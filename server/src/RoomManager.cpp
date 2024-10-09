@@ -52,12 +52,18 @@ void rts::RoomManager::joinRoom(
 void rts::RoomManager::leaveRoom(const std::string &name, std::size_t playerId, ntw::TCPServer &tcpServer)
 {
     rt::TCPPacket<rt::TCPData::SER_ROOM_LEAVED> packet{.cmd = rt::TCPCommand::SER_ROOM_LEAVED};
+    bool playerWasReady = _rooms.at(name).player.at(playerId).ready;
 
     packet.data.user_id = playerId;
     name.copy(packet.data.room_name, sizeof(packet.data.room_name) - 1);
 
     _rooms.at(name).player.erase(playerId);
     tcpServer.sendToAllUser(reinterpret_cast<const char *>(&packet), sizeof(packet));
+    if (playerWasReady && _rooms.at(name).player.empty()) {
+        _rooms.at(name).game->detach();
+        _rooms.at(name).stopGame = true;
+        deleteRoom(name, tcpServer);
+    }
 }
 
 void rts::RoomManager::playerReady(const std::string &roomName, std::size_t playerId, ntw::TCPServer &tcpServer)
@@ -87,13 +93,14 @@ void rts::RoomManager::playerReady(const std::string &roomName, std::size_t play
     std::future<bool> server = serverReady.get_future();
 
     _rooms.at(roomName).game = std::make_unique<std::thread>(
-        [](int port, std::size_t stage, std::promise<bool> serverReady) {
+        [](int port, std::size_t stage, bool &stopGame, std::promise<bool> serverReady) {
             rts::GameRunner gameRunner(port, stage);
             serverReady.set_value(true);
-            gameRunner.runGame();
+            gameRunner.runGame(stopGame);
         },
         _nextPort,
         _rooms.at(roomName).stage,
+        std::ref(_rooms.at(roomName).stopGame),
         std::move(serverReady)
     );
     server.wait();

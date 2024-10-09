@@ -14,7 +14,7 @@
 #include "shared_entity.hpp"
 
 namespace rt {
-enum class UDPCommand : uint8_t {
+enum class UDPCommand : std::uint8_t {
     NONE,
     NEW_PLAYER,
     NEW_ENTITY,
@@ -25,12 +25,18 @@ enum class UDPCommand : uint8_t {
     DEL_ENTITY
 };
 
+enum class EntityType : std::uint8_t {
+    NONE,
+    STATIC,
+    MISSILE
+};
+
 /**
  * ! Later on we could have a timestamp member variable
  *   or an id to check late packets
  */
 struct UDPHeader {
-    size_t magic = 0x42424242;
+    std::size_t magic = 0x42424242;
     UDPCommand cmd;
 };
 
@@ -41,7 +47,7 @@ struct UDPBody {
     };
 
     struct NewEntityData {
-        char type; // ! One byte for the type of entity, depend on factory too
+        EntityType type; // ! One byte for the type of entity, depend on factory too
         ShareMovement moveData;
     };
 
