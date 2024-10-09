@@ -10,10 +10,7 @@
 
 namespace ecs {
 
-SoundManager::SoundManager() : _currentMusic(nullptr)
-{
-
-}
+SoundManager::SoundManager() : _currentMusic(nullptr) {}
 
 SoundManager::~SoundManager()
 {

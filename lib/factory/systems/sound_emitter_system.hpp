@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "Registry.hpp"
 #include "../SoundManager.hpp"
+#include "Registry.hpp"
 
 namespace ecs::systems {
 

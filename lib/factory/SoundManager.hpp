@@ -39,6 +39,8 @@ class SoundManager {
 
     std::unordered_map<std::string, std::shared_ptr<sf::Music>> _musics;
     std::shared_ptr<sf::Music> _currentMusic;
-};;
+};
+
+;
 
 } // namespace ecs
