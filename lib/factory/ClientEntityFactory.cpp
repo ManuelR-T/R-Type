@@ -1,9 +1,18 @@
+/*
+** EPITECH PROJECT, 2024
+** R-Type
+** File description:
+** ClientEntityFactory
+*/
+
 #include "ClientEntityFactory.hpp"
 #include "RTypeUDPProtol.hpp"
 #include "SpriteManager.hpp"
 #include "components/parallax.hpp"
 #include "components/sprite.hpp"
 #include "udp/UDPClient.hpp"
+#include "components/music_component.hpp"
+#include "components/sound_emitter.hpp"
 
 namespace ecs {
 
@@ -131,6 +140,23 @@ void ClientEntityFactory::addComponents(
         }
 
         reg.addComponent(entity, std::move(animComp));
+    }
+    if (componentsJson.contains("sound_emitter")) {
+        auto soundEmitterJson = componentsJson["sound_emitter"];
+        ecs::component::SoundEmitter soundEmitterComp;
+        soundEmitterComp.soundBufferId = soundEmitterJson["sound_buffer"].get<std::string>();
+        soundEmitterComp.volume = soundEmitterJson["volume"].get<float>();
+        soundEmitterComp.loop = soundEmitterJson["loop"].get<bool>();
+        reg.addComponent(entity, std::move(soundEmitterComp));
+    }
+    if (componentsJson.contains("music")) {
+        auto musicJson = componentsJson["music"];
+        ecs::component::MusicComponent musicComp;
+        musicComp.musicFilePath = musicJson["file_path"].get<std::string>();
+        musicComp.volume = musicJson["volume"].get<float>();
+        musicComp.loop = musicJson["loop"].get<bool>();
+        musicComp.isPlaying = musicJson["is_playing"].get<bool>();
+        reg.addComponent(entity, std::move(musicComp));
     }
 }
 

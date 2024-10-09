@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2024
+** R-Type
+** File description:
+** EntityFactory
+*/
+
 #include "EntityFactory.hpp"
 #include <fstream>
 #include <stdexcept>

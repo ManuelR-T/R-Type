@@ -1,9 +1,15 @@
+/*
+** EPITECH PROJECT, 2024
+** R-Type
+** File description:
+** ClientEntityFactory
+*/
+
 #pragma once
 
 #include "EntityFactory.hpp"
 #include "SpriteManager.hpp"
 #include "components/animation.hpp"
-#include "components/velocity.hpp"
 #include "udp/UDPClient.hpp"
 
 namespace ecs {

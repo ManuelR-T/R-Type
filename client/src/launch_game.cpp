@@ -14,6 +14,7 @@
 #include "RTypeClient.hpp"
 #include "RTypeConst.hpp"
 #include "Registry.hpp"
+#include "SoundManager.hpp"
 #include "SpriteManager.hpp"
 #include "TickRateManager.hpp"
 #include "udp/UDPClient.hpp"
@@ -36,6 +37,10 @@ void rtc::GameManager::_launchGame()
     ecs::InputManager inputManager;
     ntw::TickRateManager<rtc::TickRate> tickRateManager;
     ecs::SpriteManager spriteManager;
+    ecs::SoundManager soundManager;
+
+    soundManager.loadMusic("battle", "assets/battle.ogg");
+    soundManager.playMusic("battle", 5.f, true);
 
     rtc::registerComponents(reg);
     rtc::registerSystems(reg, *_window, dt, udpClient, inputManager, tickRateManager, spriteManager, _networkCallbacks);
