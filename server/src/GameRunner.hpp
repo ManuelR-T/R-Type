@@ -17,6 +17,7 @@
 #include "ResponseHandler.hpp"
 #include "ServerTickRate.hpp"
 #include "TickRateManager.hpp"
+#include "WaveManager.hpp"
 #include "udp/UDPServer.hpp"
 
 namespace rts {
@@ -29,6 +30,7 @@ class GameRunner {
     ntw::ResponseHandler<rt::UDPCommand, rt::UDPClientPacket> _responseHandler;
 
     ecs::Registry _reg;
+    ecs::WaveManager _waveManager;
 
     float _dt = 0;
     ntw::TickRateManager<rts::TickRate> _tickRateManager;

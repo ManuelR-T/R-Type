@@ -84,6 +84,10 @@
         "hitbox": {
             "width": 32.0,
             "height": 32.0
+        },
+        "health": {
+            "maxHp": 1,
+            "currHp": 1
         }
     }
 }

@@ -11,8 +11,7 @@
 #include "Logger.hpp"
 #include "RTypeServer.hpp"
 #include "RTypeUDPProtol.hpp"
-#include "ServerEntityFactory.hpp"
-#include "SpriteManager.hpp"
+#include "Registry.hpp"
 
 rts::GameRunner::GameRunner(int port, std::size_t stage) // ! Use the stage argument
     : _port(port), _udpServer(port),
@@ -20,7 +19,7 @@ rts::GameRunner::GameRunner(int port, std::size_t stage) // ! Use the stage argu
       _window(sf::VideoMode(720, 480), "R-Type") // ! for debug
 {
     eng::logWarning("Selected stage: " + std::to_string(stage) + ".");
-    ecs::SpriteManager spriteManager;
+
     rts::registerUdpResponse(_responseHandler, _datasToSend, _networkCallbacks);
     _udpServer.registerCommand([this](char *data, std::size_t size) {
         this->_responseHandler.handleResponse(data, size);
@@ -29,16 +28,12 @@ rts::GameRunner::GameRunner(int port, std::size_t stage) // ! Use the stage argu
 
     _window.setFramerateLimit(60); // ! for debug
     rts::registerComponents(_reg);
-    rts::registerSystems(_reg, _window, _dt, _tickRateManager, _udpServer, _datasToSend, _networkCallbacks);
+    rts::registerSystems(
+        _reg, _window, _dt, _tickRateManager, _udpServer, _datasToSend, _networkCallbacks, _waveManager
+    );
 
-    // * create static
-    for (int i = 0; i < 10; ++i) {
-        _datasToSend.push_back(rt::UDPServerPacket(
-            {.header = {.cmd = rt::UDPCommand::NEW_ENTITY},
-             .body = {.sharedEntityId = 0, .b = {.newEntityData = {0, {{100.f * i, 100.f * i}, {0}}}}}}
-        ));
-        ecs::ServerEntityFactory::createServerEntityFromJSON(_reg, "assets/static.json", 100.f * i, 100.f * i);
-    }
+    // Faire un init des waves dans un autre fichier + le monstre volant.
+    rts::init_waves(_waveManager, _datasToSend);
 }
 
 void rts::GameRunner::runGame()

@@ -8,11 +8,13 @@ add_library(FACTORY STATIC
     systems/missiles_stop.cpp
     systems/share_movement.cpp
     systems/health_check.cpp
+    systems/health_mob_check.cpp
     systems/parallax.cpp
     EntityFactory.cpp
     ServerEntityFactory.cpp
     ClientEntityFactory.cpp
     systems/ai_act.cpp
+    WaveManager.cpp
 )
 
 target_include_directories(FACTORY PUBLIC

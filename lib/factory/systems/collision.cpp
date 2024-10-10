@@ -7,9 +7,9 @@
 
 #include <SFML/Graphics.hpp>
 #include <algorithm>
-#include <iostream>
 #include "Registry.hpp"
 #include "components/controllable.hpp"
+#include "components/health.hpp"
 #include "components/hitbox.hpp"
 #include "components/missile.hpp"
 #include "components/position.hpp"
@@ -47,14 +47,21 @@ static void resolveCollision(
 static void resolve_tag_effect(ecs::Registry &reg, size_t entityA, size_t entityB)
 {
     auto &missiles = reg.getComponents<ecs::component::Missile>();
+    auto &health = reg.getComponents<ecs::component::Health>();
 
     if (missiles.has(entityA) && !missiles.has(entityB)) {
-        std::cout << "Entity B is dead => " << entityB << std::endl;
-        reg.killEntity(entityB);
+        if (health.has(entityB)) {
+            health[entityB]->currHp -= 1;
+        } else {
+            reg.killEntity(entityB);
+        }
     }
     if (missiles.has(entityB) && !missiles.has(entityA)) {
-        std::cout << "Entity A is dead => " << entityA << std::endl;
-        reg.killEntity(entityA);
+        if (health.has(entityA)) {
+            health[entityA]->currHp -= 1;
+        } else {
+            reg.killEntity(entityA);
+        }
     }
 }
 

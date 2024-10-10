@@ -13,6 +13,7 @@
 #include "components/animation.hpp"
 #include "components/controllable.hpp"
 #include "components/drawable.hpp"
+#include "components/health.hpp"
 #include "components/hitbox.hpp"
 #include "components/missile.hpp"
 #include "components/parallax.hpp"
@@ -28,6 +29,7 @@
 #include "systems/ai_act.hpp"
 #include "systems/control_move.hpp"
 #include "systems/control_special.hpp"
+#include "systems/health_check.hpp"
 #include "systems/missiles_stop.hpp"
 #include "systems/share_movement.hpp"
 #include "systems/sprite_system.hpp"
@@ -46,6 +48,7 @@ void rtc::registerComponents(ecs::Registry &reg)
     reg.registerComponent<ecs::component::Missile>();
     reg.registerComponent<ecs::component::AiActor>();
     reg.registerComponent<ecs::component::Parallax>();
+    reg.registerComponent<ecs::component::Health>();
 }
 
 void rtc::registerSystems(
@@ -82,6 +85,7 @@ void rtc::registerSystems(
         }
     });
     reg.addSystem([&reg]() { ecs::systems::missilesStop(reg); });
+    reg.addSystem([&reg]() { ecs::systems::healthCheck(reg); });
     reg.addSystem([&reg]() { ecs::systems::parallax(reg); });
     reg.addSystem([&reg, &dt, &spriteManager]() { ecs::systems::spriteSystem(reg, dt, spriteManager); });
     reg.addSystem([&reg, &window]() {

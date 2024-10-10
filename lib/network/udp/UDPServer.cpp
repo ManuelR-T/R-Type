@@ -42,7 +42,6 @@ void ntw::UDPServer::send(udp::endpoint &to, const char *data, std::size_t size)
         if (ec) {
             std::cout << ec << std::endl;
         } else {
-            std::cout << "I sent data Bytes\n";
         }
     });
 }
