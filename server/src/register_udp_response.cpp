@@ -21,13 +21,18 @@ void rts::registerUdpResponse(
     std::list<std::function<void(ecs::Registry &reg)>> &networkCallbacks
 )
 {
-    responseHandler.registerHandler(rt::UDPCommand::NEW_PLAYER, [&networkCallbacks](const rt::UDPClientPacket &msg) {
-        networkCallbacks.push_back([sharedEntityId = msg.body.sharedEntityId](ecs::Registry &reg) {
-            ecs::ServerEntityFactory::createServerEntityFromJSON(
-                reg, "assets/player.json", INT32_MAX, INT32_MAX, sharedEntityId
+    responseHandler.registerHandler(
+        rt::UDPCommand::NEW_PLAYER,
+        [&datasToSend, &networkCallbacks](const rt::UDPClientPacket &msg) {
+            networkCallbacks.push_back([sharedEntityId = msg.body.sharedEntityId](ecs::Registry &reg) {
+                ecs::ServerEntityFactory::createServerEntityFromJSON(
+                    reg, "assets/player.json", INT32_MAX, INT32_MAX, sharedEntityId
+                );
+            });
+            datasToSend.push_back(rt::UDPServerPacket({.header = {.cmd = rt::UDPCommand::NEW_PLAYER}, .body = msg.body})
             );
-        });
-    });
+        }
+    );
     responseHandler.registerHandler(rt::UDPCommand::MOVE_ENTITY, [&networkCallbacks](const rt::UDPClientPacket &msg) {
         networkCallbacks.push_back([msg](ecs::Registry &reg) {
             try {

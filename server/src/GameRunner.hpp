@@ -11,7 +11,6 @@
 #include <cstddef>
 #include <functional>
 #include <list>
-#include <thread>
 #include "RTypeUDPProtol.hpp"
 #include "Registry.hpp"
 #include "ResponseHandler.hpp"
@@ -26,7 +25,6 @@ class GameRunner {
     private:
     int _port = 0;
     ntw::UDPServer _udpServer;
-    std::thread _receiveThread;
     ntw::ResponseHandler<rt::UDPCommand, rt::UDPClientPacket> _responseHandler;
 
     ecs::Registry _reg;
@@ -43,6 +41,6 @@ class GameRunner {
     public:
     GameRunner(int port, std::size_t stage);
 
-    void runGame();
+    void runGame(bool &stopGame);
 };
 } // namespace rts

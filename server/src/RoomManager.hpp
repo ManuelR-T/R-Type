@@ -26,6 +26,7 @@ class RoomManager {
         std::map<std::size_t, PlayerLobby> player{};
         std::size_t stage = 1;
         std::unique_ptr<std::thread> game{};
+        bool stopGame = false;
     };
 
     std::map<std::string, Room> _rooms;

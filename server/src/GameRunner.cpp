@@ -34,11 +34,11 @@ rts::GameRunner::GameRunner(int port, std::size_t stage) // ! Use the stage argu
     rts::init_waves(_waveManager, _datasToSend);
 }
 
-void rts::GameRunner::runGame()
+void rts::GameRunner::runGame(bool &stopGame)
 {
     sf::Clock clock;
 
-    while (_window.isOpen()) {
+    while (_window.isOpen() && !stopGame) {
         _dt = clock.restart().asSeconds();
 
         // ! for debug
@@ -50,5 +50,8 @@ void rts::GameRunner::runGame()
         }
         // ! for debug
         _reg.runSystems();
+    }
+    if (_window.isOpen()) {
+        _window.close();
     }
 }

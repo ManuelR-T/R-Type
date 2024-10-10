@@ -28,7 +28,8 @@ static void spawnMissile(
         .body = {.sharedEntityId = ecs::generateSharedEntityId()},
     };
     msg.body.b.newEntityData = {
-        .type = 1, .moveData = {.pos = {playerPos.x + 36, playerPos.y}, .vel = {.vx = 250.f, .vy = 0}}
+        .type = rt::EntityType::MISSILE,
+        .moveData = {.pos = {playerPos.x + 36, playerPos.y}, .vel = {.vx = 250.f, .vy = 0}}
     };
     udp.send(reinterpret_cast<const char *>(&msg), sizeof(msg));
 }
