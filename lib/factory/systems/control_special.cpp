@@ -29,7 +29,7 @@ static void spawnMissile(
     };
     msg.body.b.newEntityData = {
         .type = rt::EntityType::MISSILE,
-        .moveData = {.pos = {playerPos.x + 10, playerPos.y + 20}, .vel = {.vx = 50.f, .vy = 0}}
+        .moveData = {.pos = {playerPos.x + 36, playerPos.y}, .vel = {.vx = 250.f, .vy = 0}}
     };
     udp.send(reinterpret_cast<const char *>(&msg), sizeof(msg));
 }
@@ -46,8 +46,14 @@ void ecs::systems::controlSpecial(
 
     ecs::Zipper<ecs::component::Controllable, ecs::component::Position> zipControl(controllables, positions);
 
+    static auto lastTime = std::chrono::high_resolution_clock::now();
     for (auto [_, pos] : zipControl) {
         if (input.isKeyPressed(sf::Keyboard::Space)) {
+            auto now = std::chrono::high_resolution_clock::now();
+            if (std::chrono::duration_cast<std::chrono::milliseconds>(now - lastTime).count() < 500) {
+                continue;
+            }
+            lastTime = now;
             spawnMissile(reg, udp, pos, spriteManager);
         }
     }

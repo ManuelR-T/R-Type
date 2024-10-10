@@ -16,10 +16,12 @@ void ServerEntityFactory::addComponents(
     const nlohmann::json &componentsJson,
     bool isShared,
     int x,
-    int y
+    int y,
+    float vx,
+    float vy
 )
 {
-    addCommonComponents(reg, entity, componentsJson, x, y);
+    addCommonComponents(reg, entity, componentsJson, x, y, vx, vy);
 
     if (componentsJson.contains("drawable")) {
         auto drawableJson = componentsJson["drawable"];
