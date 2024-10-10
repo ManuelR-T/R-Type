@@ -21,7 +21,6 @@ namespace ecs::component {
  * to modify the current ai.
  */
 struct AiActor {
-    bool val = false; // ! For testing
     std::function<void(Registry &registry, entity_t entity)> act;
 };
 

@@ -5,6 +5,7 @@
 ** register_udp_response
 */
 
+#include <iostream>
 #include <string>
 #include "ClientEntityFactory.hpp"
 #include "GameManager.hpp"
@@ -32,7 +33,8 @@ static void handleStaticCreation(
     });
 }
 
-static void handleMissileCreation(
+static void handleSharedCreation(
+    const std::string &jsonFilePath,
     ecs::SpriteManager &spriteManager,
     ntw::UDPClient &udpClient,
     std::list<std::function<void(ecs::Registry &)>> &_networkCallbacks,
@@ -42,9 +44,9 @@ static void handleMissileCreation(
     auto &[pos, _] = packet.body.b.newEntityData.moveData;
     auto sharedEntityId = packet.body.sharedEntityId;
 
-    _networkCallbacks.push_back([sharedEntityId, pos, &spriteManager, &udpClient](ecs::Registry &reg) {
+    _networkCallbacks.push_back([sharedEntityId, pos, &spriteManager, &udpClient, jsonFilePath](ecs::Registry &reg) {
         ecs::ClientEntityFactory::createClientEntityFromJSON(
-            reg, spriteManager, udpClient, "assets/missile.json", pos.x, pos.y, sharedEntityId
+            reg, spriteManager, udpClient, jsonFilePath, pos.x, pos.y, sharedEntityId
         );
     });
 }
@@ -60,10 +62,18 @@ void rtc::GameManager::_registerUdpResponse(
         [this, &spriteManager, &udpClient](const rt::UDPServerPacket &packet) {
             switch (packet.body.b.newEntityData.type) {
                 case rt::EntityType::MISSILE:
-                    handleMissileCreation(spriteManager, udpClient, this->_networkCallbacks, packet);
+                    handleSharedCreation(
+                        "assets/missile.json", spriteManager, udpClient, this->_networkCallbacks, packet
+                    );
                     break;
                 case rt::EntityType::STATIC:
                     handleStaticCreation(spriteManager, udpClient, this->_networkCallbacks, packet);
+                    break;
+                case rt::EntityType::BYDOS_WAVE:
+                    std::cout << "Bydos create !\n";
+                    handleSharedCreation(
+                        "assets/bydosWave.json", spriteManager, udpClient, this->_networkCallbacks, packet
+                    );
                     break;
                 default:
                     throw eng::TrackedException(

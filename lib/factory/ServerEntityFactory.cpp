@@ -7,6 +7,7 @@
 
 #include "ServerEntityFactory.hpp"
 #include "components/drawable.hpp"
+#include "components/ai_actor.hpp"
 
 namespace ecs {
 
@@ -36,6 +37,9 @@ void ServerEntityFactory::addComponents(
         );
 
         reg.addComponent(entity, std::move(drawableComp));
+    }
+    if (componentsJson.contains("ai_actor")) {
+        reg.addComponent(entity, ecs::component::AiActor{});
     }
 }
 

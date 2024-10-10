@@ -28,7 +28,8 @@ enum class UDPCommand : std::uint8_t {
 enum class EntityType : std::uint8_t {
     NONE,
     STATIC,
-    MISSILE
+    MISSILE,
+    BYDOS_WAVE
 };
 
 /**

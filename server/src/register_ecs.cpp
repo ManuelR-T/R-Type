@@ -12,6 +12,7 @@
 #include "RTypeServer.hpp"
 #include "RTypeUDPProtol.hpp"
 #include "Registry.hpp"
+#include "ServerTickRate.hpp"
 #include "TickRateManager.hpp"
 #include "Zipper.hpp"
 #include "components/animation.hpp"
@@ -25,6 +26,7 @@
 #include "components/sprite.hpp"
 #include "components/tag.hpp"
 #include "components/velocity.hpp"
+#include "components/ai_actor.hpp"
 #include "systems/collision.hpp"
 #include "systems/draw.hpp"
 #include "systems/position.hpp"
@@ -32,6 +34,7 @@
 #include "components/ai_actor.hpp"
 #include "components/share_movement.hpp"
 #include "components/shared_entity.hpp"
+#include "systems/ai_act.hpp"
 #include "systems/health_check.hpp"
 #include "systems/health_mob_check.hpp"
 #include "systems/missiles_stop.hpp"
@@ -76,6 +79,7 @@ void rts::registerComponents(ecs::Registry &reg)
     reg.registerComponent<ecs::component::AiActor>();
     reg.registerComponent<ecs::component::Tag<size_t>>();
     reg.registerComponent<ecs::component::Health>();
+    reg.registerComponent<ecs::component::AiActor>();
 }
 
 void rts::registerSystems(
@@ -90,11 +94,17 @@ void rts::registerSystems(
 )
 {
     tickRateManager.addTickRate(rts::TickRate::SEND_PACKETS, rts::SERVER_TICKRATE.at(rts::TickRate::SEND_PACKETS));
+    tickRateManager.addTickRate(rts::TickRate::AI_ACTING, rts::SERVER_TICKRATE.at(rts::TickRate::AI_ACTING));
 
     reg.addSystem([&networkCallbacks, &reg]() {
         while (!networkCallbacks.empty()) {
             networkCallbacks.front()(reg);
             networkCallbacks.pop_front();
+        }
+    });
+    reg.addSystem([&reg, &dt, &tickRateManager]() {
+        if (tickRateManager.needUpdate(rts::TickRate::AI_ACTING, dt)) {
+            ecs::systems::aiAct(reg);
         }
     });
     reg.addSystem([&reg, &dt]() { ecs::systems::position(reg, dt); });

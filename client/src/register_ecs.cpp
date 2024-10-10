@@ -24,11 +24,9 @@
 #include "systems/draw.hpp"
 #include "systems/parallax.hpp"
 #include "systems/position.hpp"
-#include "components/ai_actor.hpp"
 #include "components/music_component.hpp"
 #include "components/share_movement.hpp"
 #include "components/sound_emitter.hpp"
-#include "systems/ai_act.hpp"
 #include "systems/control_move.hpp"
 #include "systems/control_special.hpp"
 #include "systems/health_check.hpp"
@@ -48,7 +46,6 @@ void rtc::registerComponents(ecs::Registry &reg)
     reg.registerComponent<ecs::component::ShareMovement>();
     reg.registerComponent<ecs::component::SharedEntity>();
     reg.registerComponent<ecs::component::Missile>();
-    reg.registerComponent<ecs::component::AiActor>();
     reg.registerComponent<ecs::component::Parallax>();
     reg.registerComponent<ecs::component::Health>();
     reg.registerComponent<ecs::component::SoundEmitter>();
@@ -67,7 +64,6 @@ void rtc::registerSystems(
 )
 {
     tickRateManager.addTickRate(rtc::TickRate::MOVEMENT, rtc::CLIENT_TICKRATE.at(rtc::TickRate::MOVEMENT));
-    tickRateManager.addTickRate(rtc::TickRate::AI_ACTING, rtc::CLIENT_TICKRATE.at(rtc::TickRate::AI_ACTING));
     tickRateManager.addTickRate(
         rtc::TickRate::CALL_NETWORK_CALLBACKS, rtc::CLIENT_TICKRATE.at(rtc::TickRate::CALL_NETWORK_CALLBACKS)
     );
@@ -75,11 +71,6 @@ void rtc::registerSystems(
     reg.addSystem([&reg, &input]() { ecs::systems::controlMove(reg, input); });
     reg.addSystem([&reg, &input, &udpClient, &spriteManager]() {
         ecs::systems::controlSpecial(reg, input, udpClient, spriteManager);
-    });
-    reg.addSystem([&reg, &dt, &tickRateManager]() {
-        if (tickRateManager.needUpdate(rtc::TickRate::AI_ACTING, dt)) {
-            ecs::systems::aiAct(reg);
-        }
     });
     reg.addSystem([&reg, &dt]() { ecs::systems::position(reg, dt); });
     reg.addSystem([&reg]() { ecs::systems::collision(reg); });
