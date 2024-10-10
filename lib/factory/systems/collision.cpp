@@ -55,6 +55,7 @@ static void resolve_tag_effect(ecs::Registry &reg, size_t entityA, size_t entity
         } else {
             reg.killEntity(entityB);
         }
+        reg.killEntity(entityA);
     }
     if (missiles.has(entityB) && !missiles.has(entityA)) {
         if (health.has(entityA)) {
@@ -62,6 +63,7 @@ static void resolve_tag_effect(ecs::Registry &reg, size_t entityA, size_t entity
         } else {
             reg.killEntity(entityA);
         }
+        reg.killEntity(entityB);
     }
 }
 

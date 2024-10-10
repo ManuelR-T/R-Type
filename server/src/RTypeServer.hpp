@@ -44,7 +44,4 @@ void registerTcpResponse(
 
 void init_waves(ecs::WaveManager &waveManager, std::list<rt::UDPServerPacket> &_datasToSend);
 
-// ! will be replace by factory
-void createMissile(ecs::Registry &reg, const rt::UDPClientPacket &msg);
-// !
 } // namespace rts
