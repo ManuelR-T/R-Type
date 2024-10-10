@@ -41,7 +41,6 @@ void registerTcpResponse(
 );
 
 // ! will be replace by factory
-void createPlayer(ecs::Registry &reg, shared_entity_t sharedEntityId);
 void createMissile(ecs::Registry &reg, const rt::UDPClientPacket &msg);
 // !
 } // namespace rts

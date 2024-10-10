@@ -8,8 +8,6 @@
 #include <SFML/Graphics.hpp>
 #include <algorithm>
 #include <iostream>
-#include "ClientEntityFactory.hpp"
-#include "EntityFactory.hpp"
 #include "Registry.hpp"
 #include "components/controllable.hpp"
 #include "components/hitbox.hpp"
@@ -64,7 +62,7 @@ static void resolve_tag_effect(ecs::Registry &reg, size_t entityA, size_t entity
 
 namespace ecs::systems {
 
-void collision(Registry &reg, bool isServer)
+void collision(Registry &reg)
 {
     auto &positions = reg.getComponents<ecs::component::Position>();
     auto &hitboxes = reg.getComponents<ecs::component::Hitbox>();

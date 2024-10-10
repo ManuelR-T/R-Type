@@ -23,7 +23,9 @@ class ClientEntityFactory : public EntityFactory {
         const nlohmann::json &componentsJson,
         bool isShared,
         int x,
-        int y
+        int y,
+        float vx,
+        float vy
     );
     static void handleNetworkSync(
         Registry &reg,

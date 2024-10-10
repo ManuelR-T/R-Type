@@ -8,6 +8,7 @@
 #pragma once
 
 #include <climits>
+#include <limits>
 #include <nlohmann/json.hpp>
 #include <string>
 #include "Registry.hpp"
@@ -25,20 +26,32 @@ class EntityFactory {
         SpriteManager &spriteManager,
         ntw::UDPClient &udpClient,
         const std::string &jsonFilePath,
-        int x = INT32_MAX,
-        int y = INT32_MAX,
-        shared_entity_t sharedEntity = std::numeric_limits<size_t>::max()
+        int x = std::numeric_limits<int>::max(),
+        int y = std::numeric_limits<int>::max(),
+        shared_entity_t sharedEntity = std::numeric_limits<size_t>::max(),
+        float vx = std::numeric_limits<float>::max(),
+        float vy = std::numeric_limits<float>::max()
     );
 
     static entity_t createServerEntityFromJSON(
         Registry &reg,
         const std::string &jsonFilePath,
-        int x = INT32_MAX,
-        int y = INT32_MAX,
-        shared_entity_t sharedEntity = std::numeric_limits<size_t>::max()
+        int x = std::numeric_limits<int>::max(),
+        int y = std::numeric_limits<int>::max(),
+        shared_entity_t sharedEntity = std::numeric_limits<size_t>::max(),
+        float vx = std::numeric_limits<float>::max(),
+        float vy = std::numeric_limits<float>::max()
     );
 
-    static void addCommonComponents(Registry &reg, entity_t entity, const nlohmann::json &componentsJson, int x, int y);
+    static void addCommonComponents(
+        Registry &reg,
+        entity_t entity,
+        const nlohmann::json &componentsJson,
+        int x,
+        int y,
+        float vx,
+        float vy
+    );
 };
 
 } // namespace ecs

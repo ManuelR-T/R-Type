@@ -31,7 +31,9 @@ entity_t EntityFactory::createClientEntityFromJSON(
     const std::string &jsonFilePath,
     int x,
     int y,
-    shared_entity_t sharedEntity
+    shared_entity_t sharedEntity,
+    float vx,
+    float vy
 )
 {
     std::ifstream file(jsonFilePath);
@@ -59,7 +61,7 @@ entity_t EntityFactory::createClientEntityFromJSON(
         entity = reg.spawnEntity();
     }
 
-    ClientEntityFactory::addComponents(reg, spriteManager, entity, entityJson["components"], isShared, x, y);
+    ClientEntityFactory::addComponents(reg, spriteManager, entity, entityJson["components"], isShared, x, y, vx, vy);
     ClientEntityFactory::handleNetworkSync(reg, udpClient, entity, entityJson, isShared);
 
     return entity;
@@ -70,7 +72,9 @@ entity_t EntityFactory::createServerEntityFromJSON(
     const std::string &jsonFilePath,
     int x,
     int y,
-    shared_entity_t sharedEntity
+    shared_entity_t sharedEntity,
+    float vx,
+    float vy
 )
 {
     std::ifstream file(jsonFilePath);
@@ -96,7 +100,7 @@ entity_t EntityFactory::createServerEntityFromJSON(
     } else {
         entity = reg.spawnEntity();
     }
-    ServerEntityFactory::addComponents(reg, entity, entityJson["components"], isShared, x, y);
+    ServerEntityFactory::addComponents(reg, entity, entityJson["components"], isShared, x, y, vx, vy);
     ServerEntityFactory::handleNetworkSync(reg, entity, entityJson, isShared);
 
     return entity;
@@ -107,15 +111,17 @@ void EntityFactory::addCommonComponents(
     entity_t entity,
     const nlohmann::json &componentsJson,
     int x,
-    int y
+    int y,
+    float vx,
+    float vy
 )
 {
     if (componentsJson.contains("position")) {
         auto posJson = componentsJson["position"];
-        if (x != INT32_MAX) {
+        if (x != std::numeric_limits<int>::max()) {
             posJson["x"] = x;
         }
-        if (y != INT32_MAX) {
+        if (y != std::numeric_limits<int>::max()) {
             posJson["y"] = y;
         }
         reg.addComponent(entity, ecs::component::Position{posJson["x"].get<float>(), posJson["y"].get<float>()});
@@ -123,6 +129,12 @@ void EntityFactory::addCommonComponents(
 
     if (componentsJson.contains("velocity")) {
         auto velJson = componentsJson["velocity"];
+        if (vx != std::numeric_limits<float>::max()) {
+            velJson["vx"] = vx;
+        }
+        if (vy != std::numeric_limits<float>::max()) {
+            velJson["vy"] = vy;
+        }
         reg.addComponent(entity, ecs::component::Velocity{velJson["vx"].get<float>(), velJson["vy"].get<float>()});
     }
 
