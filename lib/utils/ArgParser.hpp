@@ -124,8 +124,6 @@ class ArgParser {
         throw std::runtime_error("Argument is not defined or has no value: " + longName);
     }
 
-    
-
     /**
      * @brief Prints the help message listing all available arguments.
      *
@@ -195,4 +193,3 @@ inline bool ArgParser::getValue<bool>(const std::string &longName) const
 }
 
 } // namespace eng
-
