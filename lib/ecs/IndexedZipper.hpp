@@ -38,21 +38,27 @@ class IndexedZipper {
      *
      * @param arrays The SparseArray components to be iterated over.
      */
-    IndexedZipper(ecs::SparseArray<Components> &...arrays);
+    IndexedZipper(ecs::SparseArray<Components> &...arrays) : _baseZipper(arrays...) {}
 
     /**
      * @brief Returns an iterator to the beginning of the zipped components.
      *
      * @return iterator_t An iterator to the beginning.
      */
-    iterator_t begin();
+    iterator_t begin()
+    {
+        return iterator_t(_baseZipper.begin());
+    }
 
     /**
      * @brief Returns an iterator to the end of the zipped components.
      *
      * @return iterator_t An iterator to the end.
      */
-    iterator_t end();
+    iterator_t end()
+    {
+        return iterator_t(_baseZipper.end());
+    }
 
     private:
     /**
@@ -60,5 +66,4 @@ class IndexedZipper {
      */
     base_zipper_t _baseZipper;
 };
-
 } // namespace ecs

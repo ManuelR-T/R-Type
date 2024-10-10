@@ -104,22 +104,27 @@ class ArgParser {
      * @throws std::runtime_error If the argument is not defined, has no value, or conversion fails.
      */
     template <typename T>
-    T getValue(const std::string &longName) const;
+    T getValue(const std::string &longName) const
+    {
+        auto it = std::find_if(_arguments.begin(), _arguments.end(), [&](const Argument &arg) {
+            return arg.long_name == longName;
+        });
 
-    /**
-     * @brief Specialized retrieval for boolean arguments.
-     *
-     * This specialization handles the conversion of string values to boolean.
-     * It accepts "true", "false", "1", and "0" (case-insensitive).
-     *
-     * @param longName The long name of the boolean argument to retrieve.
-     *
-     * @return The boolean value of the argument.
-     *
-     * @throws std::runtime_error If the argument is not defined, has no value, or contains an invalid boolean string.
-     */
-    template <>
-    inline bool getValue<bool>(const std::string &longName) const;
+        if (it != _arguments.end() && it->value) {
+            T result;
+            std::istringstream iss(*(it->value));
+            iss >> result;
+            if (iss.fail() || !iss.eof()) {
+                throw std::runtime_error(
+                    "Failed to convert argument value to the requested type for argument: " + longName
+                );
+            }
+            return result;
+        }
+        throw std::runtime_error("Argument is not defined or has no value: " + longName);
+    }
+
+    
 
     /**
      * @brief Prints the help message listing all available arguments.
@@ -155,26 +160,18 @@ class ArgParser {
     std::unordered_map<std::string, Argument *> _argMap; ///< A map for quick lookup of arguments by name.
 };
 
-template <typename T>
-T ArgParser::getValue(const std::string &longName) const
-{
-    auto it = std::find_if(_arguments.begin(), _arguments.end(), [&](const Argument &arg) {
-        return arg.long_name == longName;
-    });
-
-    if (it != _arguments.end() && it->value) {
-        T result;
-        std::istringstream iss(*(it->value));
-        iss >> result;
-        if (iss.fail() || !iss.eof()) {
-            throw std::runtime_error(
-                "Failed to convert argument value to the requested type for argument: " + longName
-            );
-        }
-        return result;
-    }
-    throw std::runtime_error("Argument is not defined or has no value: " + longName);
-}
+/**
+ * @brief Specialized retrieval for boolean arguments.
+ *
+ * This specialization handles the conversion of string values to boolean.
+ * It accepts "true", "false", "1", and "0" (case-insensitive).
+ *
+ * @param longName The long name of the boolean argument to retrieve.
+ *
+ * @return The boolean value of the argument.
+ *
+ * @throws std::runtime_error If the argument is not defined, has no value, or contains an invalid boolean string.
+ */
 
 template <>
 inline bool ArgParser::getValue<bool>(const std::string &longName) const
@@ -198,3 +195,4 @@ inline bool ArgParser::getValue<bool>(const std::string &longName) const
 }
 
 } // namespace eng
+

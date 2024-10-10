@@ -23,7 +23,14 @@ class InputManager {
      *
      * @param event The event to process.
      */
-    void update(const sf::Event &event);
+    void update(const sf::Event &event)
+    {
+        if (event.type == sf::Event::KeyPressed) {
+            _keyState[event.key.code] = true;
+        } else if (event.type == sf::Event::KeyReleased) {
+            _keyState[event.key.code] = false;
+        }
+    }
 
     /**
      * @brief Checks if a specific key is currently pressed.
@@ -31,7 +38,13 @@ class InputManager {
      * @param key The key to check.
      * @return true if the key is pressed, false otherwise.
      */
-    bool isKeyPressed(sf::Keyboard::Key key) const;
+    bool isKeyPressed(sf::Keyboard::Key key) const
+    {
+        if (_keyState.contains(key)) {
+            return _keyState.at(key);
+        }
+        return false;
+    }
 
     private:
     /**
