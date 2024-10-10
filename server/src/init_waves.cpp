@@ -47,10 +47,10 @@ static void bydosWaveInit(ecs::WaveManager &waveManager, std::list<rt::UDPServer
 
 void rts::init_waves(ecs::WaveManager &waveManager, std::list<rt::UDPServerPacket> &datasToSend)
 {
-    auto waveId2 = waveManager.addNewWave();
+    auto waveId = waveManager.addNewWave();
 
     for (int i = 1; i < 3; ++i) {
-        waveManager.addNewMob(waveId2, [i, &datasToSend](ecs::Registry &reg) {
+        waveManager.addNewMob(waveId, [i, &datasToSend](ecs::Registry &reg) {
             datasToSend.push_back(rt::UDPServerPacket(
                 {.header = {.cmd = rt::UDPCommand::NEW_ENTITY},
                  .body =
@@ -62,4 +62,5 @@ void rts::init_waves(ecs::WaveManager &waveManager, std::list<rt::UDPServerPacke
             );
         });
     }
+    bydosWaveInit(waveManager, datasToSend);
 }

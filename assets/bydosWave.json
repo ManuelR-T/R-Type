@@ -1,5 +1,5 @@
 {
-    "type": "local",
+    "type": "shared",
     "components": {
         "position": {
             "x": 100.0,

@@ -7,6 +7,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <cstddef>
+#include <cstdio>
 #include <functional>
 #include <iostream>
 #include "RTypeServer.hpp"
@@ -41,19 +42,17 @@
 
 static void share_server_movements(ecs::Registry &reg, std::list<rt::UDPServerPacket> &datasToSend)
 {
-    auto &sharedMov = reg.getComponents<ecs::component::ShareMovement>();
     auto &positions = reg.getComponents<ecs::component::Position>();
     auto &velocities = reg.getComponents<ecs::component::Velocity>();
     auto &sharedEntity = reg.getComponents<ecs::component::SharedEntity>();
 
     ecs::Zipper<
-        ecs::component::ShareMovement,
         ecs::component::Position,
         ecs::component::Velocity,
         ecs::component::SharedEntity>
-        zip(sharedMov, positions, velocities, sharedEntity);
+        zip(positions, velocities, sharedEntity);
 
-    for (auto [_, pos, vel, shared_entity] : zip) {
+    for (auto [pos, vel, shared_entity] : zip) {
         rt::UDPBody body = {
             .sharedEntityId = shared_entity.sharedEntityId, .b = {.shareMovement = {.pos = pos, .vel = vel}}
         };

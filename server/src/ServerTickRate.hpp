@@ -18,7 +18,7 @@ enum class TickRate : std::size_t {
 
 const std::unordered_map<rts::TickRate, float> SERVER_TICKRATE = {
     {rts::TickRate::SEND_PACKETS, 60.0},
-    {rts::TickRate::AI_ACTING, 10.0}
+    {rts::TickRate::AI_ACTING, 60.0}
 };
 
 } // namespace rts

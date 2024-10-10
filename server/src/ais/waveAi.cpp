@@ -13,8 +13,7 @@
 void rts::ais::waveMovement(ecs::Registry &reg, entity_t e, float defaultY)
 {
     if (reg.hasComponent<ecs::component::Position>(e)) {
-        auto pos = reg.getComponent<ecs::component::Position>(e);
-        pos->y = defaultY + std::cos(pos->x) * 100;
-        dprintf(1, "Pos: (%f, %f)\n", pos->x, pos->y);
+        auto &pos = reg.getComponent<ecs::component::Position>(e);
+        pos->y = defaultY + std::sin(pos->x) * 10;
     }
 }
