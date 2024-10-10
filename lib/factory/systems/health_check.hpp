@@ -9,7 +9,6 @@
 
 #include "Registry.hpp"
 
-
 /**
  * @brief Perform health checks on entities within the registry.
  *
