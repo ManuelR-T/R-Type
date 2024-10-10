@@ -1,0 +1,86 @@
+{
+    "type": "shared",
+    "components": {
+        "position": {
+            "x": 400.0,
+            "y": 300.0
+        },
+        "velocity": {
+            "vx": 0.0,
+            "vy": 0.0
+        },
+        "controllable": {},
+        "drawable": {
+            "size": {
+                "x": 32.0,
+                "y": 16.0
+            },
+            "fill_color": {
+                "r": 0,
+                "g": 0,
+                "b": 255
+            }
+        },
+        "sprite": {
+            "texture": "assets/typesheets/r-typesheet42.gif",
+            "initial_frame": {
+                "x": 0,
+                "y": 55,
+                "width": 32,
+                "height": 16
+            }
+        },
+        "animation": {
+            "frames": {
+                "bottom": [
+                    {
+                        "x": 132,
+                        "y": 54,
+                        "width": 32,
+                        "height": 16
+                    }
+                ],
+                "down": [
+                    {
+                        "x": 99,
+                        "y": 54,
+                        "width": 32,
+                        "height": 16
+                    }
+                ],
+                "idle": [
+                    {
+                        "x": 66,
+                        "y": 54,
+                        "width": 32,
+                        "height": 16
+                    }
+                ],
+                "up": [
+                    {
+                        "x": 33,
+                        "y": 54,
+                        "width": 32,
+                        "height": 16
+                    }
+                ],
+                "top": [
+                    {
+                        "x": 0,
+                        "y": 54,
+                        "width": 32,
+                        "height": 16
+                    }
+                ]
+            },
+            "frame_time": 0.1,
+            "update_state": "player"
+        },
+        "hitbox": {
+            "width": 32.0,
+            "height": 16.0
+        },
+        "share_movement": {}
+    },
+    "network_command": 1
+}
