@@ -6,7 +6,7 @@
             "y": 0.0
         },
         "velocity": {
-            "vx": 100.0,
+            "vx": 250.0,
             "vy": 0.0
         },
         "sprite": {
@@ -16,6 +16,17 @@
                 "y": 0,
                 "width": 16,
                 "height": 16
+            }
+        },
+        "drawable": {
+            "size": {
+                "x": 16.0,
+                "y": 16.0
+            },
+            "fill_color": {
+                "r": 0,
+                "g": 255,
+                "b": 255
             }
         },
         "animation": {

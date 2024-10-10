@@ -1,7 +1,6 @@
 add_executable(r-type_server
     src/main.cpp
     src/register_ecs.cpp
-    src/create_entity.cpp
     src/GameRunner.cpp
     src/register_tcp_response.cpp
     src/register_udp_response.cpp

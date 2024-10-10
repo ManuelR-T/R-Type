@@ -1,0 +1,62 @@
+{
+    "type": "local",
+    "components": {
+        "position": {
+            "x": 100.0,
+            "y": 200.0
+        },
+        "sprite": {
+            "texture": "assets/typesheets/r-typesheet43.png",
+            "initial_frame": {
+                "x": 0,
+                "y": 0,
+                "width": 32,
+                "height": 32
+            }
+        },
+        "animation": {
+            "frames": {
+                "idle": [
+                    {
+                        "x": 8,
+                        "y": 53,
+                        "width": 32,
+                        "height": 32
+                    },
+                    {
+                        "x": 40,
+                        "y": 53,
+                        "width": 32,
+                        "height": 32
+                    },
+                    {
+                        "x": 74,
+                        "y": 53,
+                        "width": 32,
+                        "height": 32
+                    },
+                    {
+                        "x": 109,
+                        "y": 53,
+                        "width": 32,
+                        "height": 32
+                    },
+                    {
+                        "x": 144,
+                        "y": 53,
+                        "width": 32,
+                        "height": 32
+                    },
+                    {
+                        "x": 179,
+                        "y": 53,
+                        "width": 32,
+                        "height": 32
+                    }
+                ]
+            },
+            "frame_time": 0.2,
+            "update_state": "none"
+        }
+    }
+}

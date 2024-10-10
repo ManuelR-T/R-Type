@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2024
+** R-Type
+** File description:
+** ServerEntityFactory
+*/
+
 #include "ServerEntityFactory.hpp"
 #include "components/drawable.hpp"
 
@@ -9,10 +16,12 @@ void ServerEntityFactory::addComponents(
     const nlohmann::json &componentsJson,
     bool isShared,
     int x,
-    int y
+    int y,
+    float vx,
+    float vy
 )
 {
-    addCommonComponents(reg, entity, componentsJson, x, y);
+    addCommonComponents(reg, entity, componentsJson, x, y, vx, vy);
 
     if (componentsJson.contains("drawable")) {
         auto drawableJson = componentsJson["drawable"];
