@@ -6,7 +6,6 @@
 */
 
 #include <cstddef>
-#include <iostream>
 #include <limits>
 #include <utility>
 #include "RTypeServer.hpp"
@@ -48,7 +47,6 @@ void rts::registerUdpResponse(
             );
             const auto &pos = msg.body.b.newEntityData.moveData.pos;
             const auto &vel = msg.body.b.newEntityData.moveData.vel;
-
 
             networkCallbacks.push_back([pos, vel](ecs::Registry &reg) {
                 ecs::ServerEntityFactory::createServerEntityFromJSON(
