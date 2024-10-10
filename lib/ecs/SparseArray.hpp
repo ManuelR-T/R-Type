@@ -21,7 +21,6 @@ namespace ecs {
  * associated with entities in an Entity-Component-System (ECS) architecture. It uses
  * a vector of `std::optional` to allow for sparse storage, enabling quick access and
  * modification of components.
- * TODO: Refactor using bitfield for better performance et remove `std::optional`.
  *
  * @tparam Component The type of component to be stored in the sparse array.
  */
