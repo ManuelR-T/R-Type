@@ -8,7 +8,6 @@
 #pragma once
 
 #include <functional>
-#include <iostream>
 #include <vector>
 #include "Registry.hpp"
 #include "entity.hpp"

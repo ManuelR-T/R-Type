@@ -31,8 +31,6 @@ rts::GameRunner::GameRunner(int port, std::size_t stage) // ! Use the stage argu
     rts::registerSystems(
         _reg, _window, _dt, _tickRateManager, _udpServer, _datasToSend, _networkCallbacks, _waveManager
     );
-
-    // Faire un init des waves dans un autre fichier + le monstre volant.
     rts::init_waves(_waveManager, _datasToSend);
 }
 
