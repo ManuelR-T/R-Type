@@ -4,6 +4,11 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'docs/**'
+      - '.github/workflows/doxygen-gh-pages.yml'
+      - '**.md'
+      - '**.hpp'
   workflow_dispatch:
 
 jobs:
