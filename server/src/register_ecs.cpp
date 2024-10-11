@@ -9,7 +9,6 @@
 #include <cstddef>
 #include <cstdio>
 #include <functional>
-#include <iostream>
 #include "RTypeServer.hpp"
 #include "RTypeUDPProtol.hpp"
 #include "Registry.hpp"
@@ -114,7 +113,6 @@ void rts::registerSystems(
     });
     reg.addSystem([&reg, &waveManager]() {
         if (!waveManager.hasEntity() && !waveManager.isEnd()) {
-            std::cout << "New wave !" << std::endl;
             waveManager.spawnNextWave(reg);
         }
     });

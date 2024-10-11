@@ -12,4 +12,4 @@
 
 namespace rts::ais {
     void waveMovement(ecs::Registry &reg, entity_t e, float defaultY);
-}
+} // namespace rts::ais

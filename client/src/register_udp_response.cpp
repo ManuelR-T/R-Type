@@ -66,11 +66,15 @@ void rtc::GameManager::_registerUdpResponse(
                         "assets/missile.json", spriteManager, udpClient, this->_networkCallbacks, packet
                     );
                     break;
+                case rt::EntityType::MISSILE_BALL:
+                    handleSharedCreation(
+                        "assets/missileBall.json", spriteManager, udpClient, this->_networkCallbacks, packet
+                    );
+                    break;
                 case rt::EntityType::STATIC:
                     handleStaticCreation(spriteManager, udpClient, this->_networkCallbacks, packet);
                     break;
                 case rt::EntityType::BYDOS_WAVE:
-                    std::cout << "Bydos create !\n";
                     handleSharedCreation(
                         "assets/bydosWave.json", spriteManager, udpClient, this->_networkCallbacks, packet
                     );

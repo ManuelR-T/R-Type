@@ -1,0 +1,71 @@
+{
+    "type": "shared",
+    "components": {
+        "position": {
+            "x": 0.0,
+            "y": 0.0
+        },
+        "velocity": {
+            "vx": -150.0,
+            "vy": 0.0
+        },
+        "sprite": {
+            "texture": "assets/typesheets/r-typesheet43.png",
+            "initial_frame": {
+                "x": 0,
+                "y": 0,
+                "width": 10,
+                "height": 10
+            }
+        },
+        "drawable": {
+            "size": {
+                "x": 10.0,
+                "y": 10.0
+            },
+            "fill_color": {
+                "r": 0,
+                "g": 255,
+                "b": 255
+            }
+        },
+        "animation": {
+            "frames": {
+                "idle": [
+                    {
+                        "x": 146,
+                        "y": 4,
+                        "width": 10,
+                        "height": 10
+                    },
+                    {
+                        "x": 163,
+                        "y": 4,
+                        "width": 10,
+                        "height": 10
+                    },
+                    {
+                        "x": 180,
+                        "y": 4,
+                        "width": 10,
+                        "height": 10
+                    },
+                    {
+                        "x": 198,
+                        "y": 4,
+                        "width": 10,
+                        "height": 10
+                    }
+                ]
+            },
+            "frame_time": 0.2,
+            "update_state": "none"
+        },
+        "missile":{},
+        "hitbox": {
+            "width": 10.0,
+            "height": 10.0
+        },
+        "share_movement": {}
+    }
+}
