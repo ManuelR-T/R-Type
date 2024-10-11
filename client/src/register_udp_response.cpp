@@ -5,7 +5,6 @@
 ** register_udp_response
 */
 
-#include <iostream>
 #include <string>
 #include "ClientEntityFactory.hpp"
 #include "GameManager.hpp"
