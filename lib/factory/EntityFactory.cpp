@@ -63,7 +63,6 @@ entity_t EntityFactory::createClientEntityFromJSON(
     }
 
     ClientEntityFactory::addComponents(reg, spriteManager, entity, entityJson["components"], isShared, x, y, vx, vy);
-    ClientEntityFactory::handleNetworkSync(reg, udpClient, entity, entityJson, isShared);
 
     return entity;
 }

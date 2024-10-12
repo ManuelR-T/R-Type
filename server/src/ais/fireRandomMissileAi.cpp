@@ -60,7 +60,8 @@ entity_t rts::ais::fireRandomMissileAi(
              {.sharedEntityId = sharedId,
               .b =
                   {.newEntityData =
-                       {rt::EntityType::MISSILE_BALL, {{missilePosX, missilePosY}, {xFactor * 150, yFactor * 150}}}}}}
+                       {.type = rt::EntityType::MISSILE_BALL,
+                        .moveData = {{missilePosX, missilePosY}, {xFactor * 150, yFactor * 150}}}}}}
     ));
     return rMissile;
 }

@@ -6,11 +6,11 @@
 */
 
 #include "ClientEntityFactory.hpp"
-#include "RTypeUDPProtol.hpp"
 #include "SpriteManager.hpp"
+#include "components/animation.hpp"
 #include "components/parallax.hpp"
 #include "components/sprite.hpp"
-#include "udp/UDPClient.hpp"
+#include "components/velocity.hpp"
 #include "components/music_component.hpp"
 #include "components/sound_emitter.hpp"
 
@@ -175,23 +175,6 @@ void ClientEntityFactory::addComponents(
         musicComp.loop = musicJson["loop"].get<bool>();
         musicComp.isPlaying = musicJson["is_playing"].get<bool>();
         reg.addComponent(entity, std::move(musicComp));
-    }
-}
-
-void ClientEntityFactory::handleNetworkSync(
-    Registry &reg,
-    ntw::UDPClient &udpClient,
-    entity_t entity,
-    const nlohmann::json &entityJson,
-    bool isShared
-)
-{
-    if (isShared && entityJson.contains("network_command")) {
-        rt::UDPClientPacket msg = {
-            .header = {.cmd = entityJson["network_command"].get<rt::UDPCommand>()},
-            .body = {.sharedEntityId = reg.getComponent<ecs::component::SharedEntity>(entity).value().sharedEntityId}
-        };
-        udpClient.send(reinterpret_cast<const char *>(&msg), sizeof(msg));
     }
 }
 

@@ -2,8 +2,8 @@
     "type": "shared",
     "components": {
         "position": {
-            "x": 400.0,
-            "y": 300.0
+            "x": 100.0,
+            "y": 150.0
         },
         "velocity": {
             "vx": 0.0,
@@ -81,6 +81,5 @@
             "height": 16.0
         },
         "share_movement": {}
-    },
-    "network_command": 1
+    }
 }

@@ -6,6 +6,7 @@
 */
 
 #include <SFML/Window/VideoMode.hpp>
+#include <cstddef>
 #include <memory>
 #include "ClientEntityFactory.hpp"
 #include "ClientTickRate.hpp"
@@ -13,11 +14,36 @@
 #include "InputManager.hpp"
 #include "RTypeClient.hpp"
 #include "RTypeConst.hpp"
+#include "RTypeUDPProtol.hpp"
 #include "Registry.hpp"
+#include "RoomManager.hpp"
 #include "SoundManager.hpp"
 #include "SpriteManager.hpp"
 #include "TickRateManager.hpp"
 #include "udp/UDPClient.hpp"
+
+static void spawnPlayer(ntw::UDPClient &udp, std::size_t userId, const rtc::RoomManager &roomManager)
+{
+    std::size_t playerIndex = 1;
+    for (const auto &[id, _] : roomManager.getCurrentRoomPlayer()) {
+        if (id == userId) {
+            break;
+        }
+        ++playerIndex;
+    }
+    rt::UDPClientPacket msg = {
+        .header = {.cmd = rt::UDPCommand::NEW_ENTITY},
+        .body =
+            {.sharedEntityId = ecs::generateSharedEntityId(),
+             .b =
+                 {.newEntityData =
+                      {.playerId = userId,
+                       .playerIndex = playerIndex,
+                       .type = rt::EntityType::PLAYER,
+                       .moveData = {.pos = {.x = 100, .y = 150 + (50 * float(playerIndex))}}}}}
+    };
+    udp.send(reinterpret_cast<const char *>(&msg), sizeof(msg));
+}
 
 void rtc::GameManager::_launchGame()
 {
@@ -47,7 +73,7 @@ void rtc::GameManager::_launchGame()
 
     _setupUdpConnection(reg, spriteManager, udpClient);
 
-    ecs::ClientEntityFactory::createClientEntityFromJSON(reg, spriteManager, udpClient, "assets/player.json");
+    spawnPlayer(udpClient, _userId, this->_roomManager);
     ecs::ClientEntityFactory::createClientEntityFromJSON(reg, spriteManager, udpClient, "assets/bg.json");
     ecs::ClientEntityFactory::createClientEntityFromJSON(reg, spriteManager, udpClient, "assets/earth.json", 500, 123);
     ecs::ClientEntityFactory::createClientEntityFromJSON(

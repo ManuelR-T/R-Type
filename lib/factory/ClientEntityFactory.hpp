@@ -10,7 +10,6 @@
 #include "EntityFactory.hpp"
 #include "SpriteManager.hpp"
 #include "components/animation.hpp"
-#include "udp/UDPClient.hpp"
 
 /**
  * @class ClientEntityFactory
@@ -47,22 +46,6 @@ class ClientEntityFactory : public EntityFactory {
         int y,
         float vx,
         float vy
-    );
-    /**
-     * @brief Handles network synchronization for an entity.
-     *
-     * @param reg Reference to the registry.
-     * @param udpClient Reference to the UDP client.
-     * @param entity The entity to be synchronized.
-     * @param entityJson JSON object containing the entity data.
-     * @param isShared Boolean indicating if the entity is shared.
-     */
-    static void handleNetworkSync(
-        Registry &reg,
-        ntw::UDPClient &udpClient,
-        entity_t entity,
-        const nlohmann::json &entityJson,
-        bool isShared
     );
 
     private:

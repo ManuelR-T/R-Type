@@ -16,7 +16,6 @@
 namespace rt {
 enum class UDPCommand : std::uint8_t {
     NONE,
-    NEW_PLAYER,
     NEW_ENTITY,
     MOVE_ENTITY,
 
@@ -28,6 +27,7 @@ enum class UDPCommand : std::uint8_t {
 enum class EntityType : std::uint8_t {
     NONE,
     STATIC,
+    PLAYER,
     MISSILE,
     MISSILE_BALL,
     BYDOS_WAVE,
@@ -45,13 +45,15 @@ struct UDPHeader {
 
 struct UDPBody {
     struct ShareMovement {
-        ecs::component::Position pos;
-        ecs::component::Velocity vel;
+        ecs::component::Position pos = {};
+        ecs::component::Velocity vel = {};
     };
 
     struct NewEntityData {
+        std::size_t playerId = 0;
+        std::size_t playerIndex = 1;
         EntityType type; // ! One byte for the type of entity, depend on factory too
-        ShareMovement moveData;
+        ShareMovement moveData = {};
     };
 
     shared_entity_t sharedEntityId;

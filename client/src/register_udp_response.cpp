@@ -5,6 +5,7 @@
 ** register_udp_response
 */
 
+#include <cstddef>
 #include <string>
 #include "ClientEntityFactory.hpp"
 #include "GameManager.hpp"
@@ -50,6 +51,38 @@ static void handleSharedCreation(
     });
 }
 
+static void handlePlayerCreation(
+    std::size_t userId,
+    ecs::SpriteManager &spriteManager,
+    ntw::UDPClient &udpClient,
+    std::list<std::function<void(ecs::Registry &)>> &_networkCallbacks,
+    const rt::UDPServerPacket &packet
+)
+{
+    auto &[pos, _] = packet.body.b.newEntityData.moveData;
+    auto sharedEntityId = packet.body.sharedEntityId;
+
+    _networkCallbacks.push_back(
+        [pos, sharedEntityId,
+        playerIndex = packet.body.b.newEntityData.playerIndex,
+        playerId = packet.body.b.newEntityData.playerId, &spriteManager, &udpClient, userId](ecs::Registry &reg) {
+            ecs::ClientEntityFactory::createClientEntityFromJSON(
+                reg,
+                spriteManager,
+                udpClient,
+                "assets/player" + std::to_string(playerIndex) + ".json",
+                pos.x,
+                pos.y,
+                sharedEntityId
+            );
+            if (playerId != userId) {
+                reg.removeComponent<ecs::component::Controllable>(reg.getLocalEntity().at(sharedEntityId));
+                reg.removeComponent<ecs::component::ShareMovement>(reg.getLocalEntity().at(sharedEntityId));
+            }
+        }
+    );
+}
+
 void rtc::GameManager::_registerUdpResponse(
     ecs::Registry &reg,
     ecs::SpriteManager &spriteManager,
@@ -60,6 +93,9 @@ void rtc::GameManager::_registerUdpResponse(
         rt::UDPCommand::NEW_ENTITY,
         [this, &spriteManager, &udpClient](const rt::UDPServerPacket &packet) {
             switch (packet.body.b.newEntityData.type) {
+                case rt::EntityType::PLAYER:
+                    handlePlayerCreation(_userId, spriteManager, udpClient, this->_networkCallbacks, packet);
+                    break;
                 case rt::EntityType::MISSILE:
                     handleSharedCreation(
                         "assets/missile.json", spriteManager, udpClient, this->_networkCallbacks, packet
@@ -103,22 +139,4 @@ void rtc::GameManager::_registerUdpResponse(
             // If entity does not exist, maybe server is late or ahead.
         }
     });
-    _udpResponseHandler.registerHandler(
-        rt::UDPCommand::NEW_PLAYER,
-        [this, &spriteManager, &udpClient](const rt::UDPServerPacket &packet) {
-            auto &[pos, _] = packet.body.b.newEntityData.moveData;
-            auto sharedEntityId = packet.body.sharedEntityId;
-
-            _networkCallbacks.push_back([sharedEntityId, pos, &spriteManager, &udpClient](ecs::Registry &reg) {
-                if (reg.getLocalEntity().contains(sharedEntityId)) {
-                    return;
-                }
-                ecs::ClientEntityFactory::createClientEntityFromJSON(
-                    reg, spriteManager, udpClient, "assets/player.json", pos.x, pos.y, sharedEntityId
-                );
-                reg.removeComponent<ecs::component::Controllable>(reg.getLocalEntity().at(sharedEntityId));
-                reg.removeComponent<ecs::component::ShareMovement>(reg.getLocalEntity().at(sharedEntityId));
-            });
-        }
-    );
 }

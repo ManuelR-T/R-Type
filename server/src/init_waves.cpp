@@ -28,7 +28,8 @@ static entity_t spawnRobot(ecs::Registry &reg, std::list<rt::UDPServerPacket> &d
     datasToSend.push_back(rt::UDPServerPacket(
         {.header = {.cmd = rt::UDPCommand::NEW_ENTITY},
          .body =
-             {.sharedEntityId = sharedId, .b = {.newEntityData = {rt::EntityType::ROBOT_GROUND, {{x, y}, {-10, 0}}}}}}
+             {.sharedEntityId = sharedId,
+              .b = {.newEntityData = {.type = rt::EntityType::ROBOT_GROUND, .moveData = {{x, y}, {-10, 0}}}}}}
     ));
     auto e = ecs::ServerEntityFactory::createServerEntityFromJSON(reg, "assets/robotGround.json", x, y, sharedId, -10);
     reg.getComponent<ecs::component::AiActor>(e)->act = [x, &datasToSend](ecs::Registry &reg, entity_t e) {
@@ -45,7 +46,9 @@ static entity_t spawnBydosWave(ecs::Registry &reg, std::list<rt::UDPServerPacket
     auto sharedId = ecs::generateSharedEntityId();
     datasToSend.push_back(rt::UDPServerPacket(
         {.header = {.cmd = rt::UDPCommand::NEW_ENTITY},
-         .body = {.sharedEntityId = sharedId, .b = {.newEntityData = {rt::EntityType::BYDOS_WAVE, {{x, y}, {0, 0}}}}}}
+         .body =
+             {.sharedEntityId = sharedId,
+              .b = {.newEntityData = {.type = rt::EntityType::BYDOS_WAVE, .moveData = {{x, y}, {0, 0}}}}}}
     ));
     auto e = ecs::ServerEntityFactory::createServerEntityFromJSON(reg, "assets/bydosWave.json", x, y, sharedId, -10);
     reg.getComponent<ecs::component::AiActor>(e)->act = [y, &datasToSend](ecs::Registry &reg, entity_t e) {
@@ -83,7 +86,9 @@ void rts::init_waves(ecs::WaveManager &waveManager, std::list<rt::UDPServerPacke
                 {.header = {.cmd = rt::UDPCommand::NEW_ENTITY},
                  .body =
                      {.sharedEntityId = 0,
-                      .b = {.newEntityData = {rt::EntityType::STATIC, {{100.f * i, 100.f * i}, {0}}}}}}
+                      .b =
+                          {.newEntityData = {.type = rt::EntityType::STATIC, .moveData = {{100.f * i, 100.f * i}, {0}}}}
+                     }}
             ));
             return ecs::ServerEntityFactory::createServerEntityFromJSON(
                 reg, "assets/static.json", 100.f * i, 100.f * i
