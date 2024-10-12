@@ -19,8 +19,26 @@
 
 namespace ecs {
 
+/**
+ * @class EntityFactory
+ * @brief A factory class for creating entities from JSON files.
+ */
 class EntityFactory {
     public:
+    /**
+     * @brief Creates a client entity from a JSON file.
+     *
+     * @param reg Reference to the registry.
+     * @param spriteManager Reference to the sprite manager.
+     * @param udpClient Reference to the UDP client.
+     * @param jsonFilePath Path to the JSON file.
+     * @param x X-coordinate of the entity (default is max int).
+     * @param y Y-coordinate of the entity (default is max int).
+     * @param sharedEntity Shared entity identifier (default is max size_t).
+     * @param vx X-velocity of the entity (default is max float).
+     * @param vy Y-velocity of the entity (default is max float).
+     * @return The created entity.
+     */
     static entity_t createClientEntityFromJSON(
         Registry &reg,
         SpriteManager &spriteManager,
@@ -33,6 +51,18 @@ class EntityFactory {
         float vy = std::numeric_limits<float>::max()
     );
 
+    /**
+     * @brief Creates a server entity from a JSON file.
+     *
+     * @param reg Reference to the registry.
+     * @param jsonFilePath Path to the JSON file.
+     * @param x X-coordinate of the entity (default is max int).
+     * @param y Y-coordinate of the entity (default is max int).
+     * @param sharedEntity Shared entity identifier (default is max size_t).
+     * @param vx X-velocity of the entity (default is max float).
+     * @param vy Y-velocity of the entity (default is max float).
+     * @return The created entity.
+     */
     static entity_t createServerEntityFromJSON(
         Registry &reg,
         const std::string &jsonFilePath,
@@ -43,6 +73,17 @@ class EntityFactory {
         float vy = std::numeric_limits<float>::max()
     );
 
+    /**
+     * @brief Adds common components to an entity.
+     *
+     * @param reg Reference to the registry.
+     * @param entity The entity to which components will be added.
+     * @param componentsJson JSON object containing the components.
+     * @param x X-coordinate of the entity.
+     * @param y Y-coordinate of the entity.
+     * @param vx X-velocity of the entity.
+     * @param vy Y-velocity of the entity.
+     */
     static void addCommonComponents(
         Registry &reg,
         entity_t entity,
