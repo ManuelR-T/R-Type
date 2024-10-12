@@ -28,11 +28,7 @@ static void handlePlayerCreation(
 
     networkCallbacks.push_back([playerIndex, sharedEntityId, pos](ecs::Registry &reg) {
         ecs::ServerEntityFactory::createServerEntityFromJSON(
-            reg,
-            "assets/player" + std::to_string(playerIndex) + ".json",
-            pos.x,
-            pos.y,
-            sharedEntityId
+            reg, "assets/player" + std::to_string(playerIndex) + ".json", pos.x, pos.y, sharedEntityId
         );
     });
     datasToSend.push_back({.header = {.cmd = rt::UDPCommand::NEW_ENTITY}, .body = std::move(msg.body)});

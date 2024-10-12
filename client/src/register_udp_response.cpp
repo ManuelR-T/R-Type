@@ -62,25 +62,27 @@ static void handlePlayerCreation(
     auto &[pos, _] = packet.body.b.newEntityData.moveData;
     auto sharedEntityId = packet.body.sharedEntityId;
 
-    _networkCallbacks.push_back(
-        [pos, sharedEntityId,
-        playerIndex = packet.body.b.newEntityData.playerIndex,
-        playerId = packet.body.b.newEntityData.playerId, &spriteManager, &udpClient, userId](ecs::Registry &reg) {
-            ecs::ClientEntityFactory::createClientEntityFromJSON(
-                reg,
-                spriteManager,
-                udpClient,
-                "assets/player" + std::to_string(playerIndex) + ".json",
-                pos.x,
-                pos.y,
-                sharedEntityId
-            );
-            if (playerId != userId) {
-                reg.removeComponent<ecs::component::Controllable>(reg.getLocalEntity().at(sharedEntityId));
-                reg.removeComponent<ecs::component::ShareMovement>(reg.getLocalEntity().at(sharedEntityId));
-            }
+    _networkCallbacks.push_back([pos,
+                                 sharedEntityId,
+                                 playerIndex = packet.body.b.newEntityData.playerIndex,
+                                 playerId = packet.body.b.newEntityData.playerId,
+                                 &spriteManager,
+                                 &udpClient,
+                                 userId](ecs::Registry &reg) {
+        ecs::ClientEntityFactory::createClientEntityFromJSON(
+            reg,
+            spriteManager,
+            udpClient,
+            "assets/player" + std::to_string(playerIndex) + ".json",
+            pos.x,
+            pos.y,
+            sharedEntityId
+        );
+        if (playerId != userId) {
+            reg.removeComponent<ecs::component::Controllable>(reg.getLocalEntity().at(sharedEntityId));
+            reg.removeComponent<ecs::component::ShareMovement>(reg.getLocalEntity().at(sharedEntityId));
         }
-    );
+    });
 }
 
 void rtc::GameManager::_registerUdpResponse(
