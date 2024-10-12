@@ -25,7 +25,9 @@ jobs:
           cmake-build-linux-${{ runner.os }}-
 
     - name: Install apt dependencies
-      run: sudo apt-get install -y flex bison javacc libflac-dev libx11-dev libxext-dev libgl1-mesa-dev libudev-dev libopenal-dev libvorbis-dev libxcursor-dev libxrandr-dev libfreetype6-dev
+      run: |
+        sudo apt update
+        sudo apt-get install -y flex bison javacc libflac-dev libx11-dev libxext-dev libgl1-mesa-dev libudev-dev libopenal-dev libvorbis-dev libxcursor-dev libxrandr-dev libfreetype6-dev
 
     - name: Check compilation (Linux)
       if: matrix.os == 'linux'
@@ -55,7 +57,9 @@ jobs:
 
     - name: Install Mingw-w64 (Windows)
       if: matrix.os == 'windows'
-      run: sudo apt-get install -y mingw-w64 mingw-w64-tools mingw-w64-x86-64-dev
+      run: |
+        sudo apt update
+        sudo apt-get install -y mingw-w64 mingw-w64-tools mingw-w64-x86-64-dev
 
     - name: Cache cross-compilation artifacts (Windows)
       if: matrix.os == 'windows'
