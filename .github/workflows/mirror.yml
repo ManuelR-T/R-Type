@@ -9,7 +9,7 @@ on:
 jobs:
   push_to_miror:
     name: Push to Epitech repo
-    runs-on: ubuntu-22.04 
+    runs-on: ubuntu-24.04
     env:
       MIROR_URL: "git@github.com:EpitechPromo2027/B-CPP-500-PAR-5-1-rtype-thibaud.cathala.git"
     steps:
