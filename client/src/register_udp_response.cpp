@@ -78,6 +78,11 @@ void rtc::GameManager::_registerUdpResponse(
                         "assets/bydosWave.json", spriteManager, udpClient, this->_networkCallbacks, packet
                     );
                     break;
+                case rt::EntityType::ROBOT_GROUND:
+                    handleSharedCreation(
+                        "assets/robotGround.json", spriteManager, udpClient, this->_networkCallbacks, packet
+                    );
+                    break;
                 default:
                     throw eng::TrackedException(
                         "Entity type(" + std::to_string(int(packet.body.b.newEntityData.type)) + ") not handled."

@@ -1,0 +1,89 @@
+{
+    "type": "shared",
+    "components": {
+        "position": {
+            "x": 100.0,
+            "y": 200.0
+        },
+        "velocity": {
+            "vx": 0.0,
+            "vy": 0.0
+        },
+        "sprite": {
+            "texture": "assets/typesheets/r-typesheet7.gif",
+            "initial_frame": {
+                "x": 0,
+                "y": 0,
+                "width": 34,
+                "height": 34
+            }
+        },
+        "drawable": {
+            "size": {
+                "x": 34.0,
+                "y": 34.0
+            },
+            "fill_color": {
+                "r": 255,
+                "g": 0,
+                "b": 0
+            }
+        },
+        "animation": {
+            "frames": {
+                "left": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "width": 34,
+                        "height": 34
+                    },
+                    {
+                        "x": 34,
+                        "y": 0,
+                        "width": 34,
+                        "height": 34
+                    },
+                    {
+                        "x": 68,
+                        "y": 0,
+                        "width": 34,
+                        "height": 34
+                    }
+                ],
+                "right": [
+                    {
+                        "x": 100,
+                        "y": 0,
+                        "width": 34,
+                        "height": 34
+                    },
+                    {
+                        "x": 134,
+                        "y": 0,
+                        "width": 34,
+                        "height": 34
+                    },
+                    {
+                        "x": 168,
+                        "y": 0,
+                        "width": 32,
+                        "height": 34
+                    }
+                ]
+            },
+            "frame_time": 0.2,
+            "update_state": "robotGround",
+            "state": "right"
+        },
+        "hitbox": {
+            "width": 34.0,
+            "height": 34.0
+        },
+        "health": {
+            "maxHp": 1,
+            "currHp": 1
+        },
+        "ai_actor": {}
+    }
+}

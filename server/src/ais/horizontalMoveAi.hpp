@@ -2,14 +2,13 @@
 ** EPITECH PROJECT, 2024
 ** R-Type
 ** File description:
-** waveAi
+** horizontalMoveAi
 */
 
 #pragma once
 
 #include "Registry.hpp"
-#include "entity.hpp"
 
 namespace rts::ais {
-void waveMovement(ecs::Registry &reg, entity_t e, float defaultY);
-} // namespace rts::ais
+void horizontalMoveAi(ecs::Registry &reg, entity_t e, float minX, float maxX);
+}

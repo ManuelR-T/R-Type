@@ -30,7 +30,8 @@ enum class EntityType : std::uint8_t {
     STATIC,
     MISSILE,
     MISSILE_BALL,
-    BYDOS_WAVE
+    BYDOS_WAVE,
+    ROBOT_GROUND,
 };
 
 /**

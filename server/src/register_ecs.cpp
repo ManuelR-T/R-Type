@@ -26,7 +26,6 @@
 #include "components/sprite.hpp"
 #include "components/tag.hpp"
 #include "components/velocity.hpp"
-#include "components/ai_actor.hpp"
 #include "systems/collision.hpp"
 #include "systems/draw.hpp"
 #include "systems/position.hpp"
@@ -45,11 +44,9 @@ static void share_server_movements(ecs::Registry &reg, std::list<rt::UDPServerPa
     auto &velocities = reg.getComponents<ecs::component::Velocity>();
     auto &sharedEntity = reg.getComponents<ecs::component::SharedEntity>();
 
-    ecs::Zipper<
-        ecs::component::Position,
-        ecs::component::Velocity,
-        ecs::component::SharedEntity>
-        zip(positions, velocities, sharedEntity);
+    ecs::Zipper<ecs::component::Position, ecs::component::Velocity, ecs::component::SharedEntity> zip(
+        positions, velocities, sharedEntity
+    );
 
     for (auto [pos, vel, shared_entity] : zip) {
         rt::UDPBody body = {
