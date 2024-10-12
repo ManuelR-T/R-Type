@@ -83,7 +83,7 @@ void rts::init_waves(ecs::WaveManager &waveManager, std::list<rt::UDPServerPacke
                 {.header = {.cmd = rt::UDPCommand::NEW_ENTITY},
                  .body =
                      {.sharedEntityId = 0,
-                      .b = {.newEntityData = {rt::EntityType::STATIC, {{100.f * i + 100, 100.f * i + 100}, {0}}}}}}
+                      .b = {.newEntityData = {rt::EntityType::STATIC, {{100.f * i, 100.f * i}, {0}}}}}}
             ));
             return ecs::ServerEntityFactory::createServerEntityFromJSON(
                 reg, "assets/static.json", 100.f * i, 100.f * i
