@@ -80,6 +80,10 @@
             "width": 32.0,
             "height": 16.0
         },
-        "share_movement": {}
+        "health": {
+            "maxHp": 100,
+            "currHp": 70
+        },
+        "beam": 30
     }
 }

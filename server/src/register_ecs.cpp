@@ -16,6 +16,9 @@
 #include "TickRateManager.hpp"
 #include "Zipper.hpp"
 #include "components/animation.hpp"
+#include "components/beam.hpp"
+#include "components/health.hpp"
+#include "imgui-SFML.h"
 #include "components/controllable.hpp"
 #include "components/drawable.hpp"
 #include "components/health.hpp"
@@ -75,6 +78,8 @@ void rts::registerComponents(ecs::Registry &reg)
     reg.registerComponent<ecs::component::Tag<size_t>>();
     reg.registerComponent<ecs::component::Health>();
     reg.registerComponent<ecs::component::AiActor>();
+    reg.registerComponent<ecs::component::Health>();
+    reg.registerComponent<ecs::component::Beam>();
 }
 
 void rts::registerSystems(

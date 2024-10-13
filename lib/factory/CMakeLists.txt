@@ -3,6 +3,8 @@ add_library(FACTORY STATIC
     systems/control_move.cpp
     systems/control_special.cpp
     systems/draw.cpp
+    systems/draw_player_beam_bar.cpp
+    systems/draw_player_health_bar.cpp
     systems/sprite_system.cpp
     systems/position.cpp
     systems/missiles_stop.cpp
@@ -23,4 +25,4 @@ target_include_directories(FACTORY PUBLIC
     ${CMAKE_SOURCE_DIR}/include
 )
 
-target_link_libraries(FACTORY PUBLIC nlohmann_json ECS NETWORK sfml-system sfml-window sfml-graphics sfml-audio)
+target_link_libraries(FACTORY PUBLIC nlohmann_json ECS NETWORK sfml-system sfml-window sfml-graphics sfml-audio ImGui-SFML::ImGui-SFML)

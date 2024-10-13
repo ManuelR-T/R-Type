@@ -17,6 +17,8 @@
 #include "components/hitbox.hpp"
 #include "components/missile.hpp"
 #include "components/position.hpp"
+#include "components/beam.hpp"
+#include "components/health.hpp"
 #include "components/velocity.hpp"
 #include "entity.hpp"
 #include "udp/UDPClient.hpp"
@@ -126,6 +128,10 @@ void EntityFactory::addCommonComponents(
         }
         reg.addComponent(entity, ecs::component::Position{posJson["x"].get<float>(), posJson["y"].get<float>()});
     }
+    if (componentsJson.contains("beam")) {
+        float beamValue = componentsJson["beam"].get<float>();
+        reg.addComponent(entity, ecs::component::Beam{beamValue});
+    }
 
     if (componentsJson.contains("velocity")) {
         auto velJson = componentsJson["velocity"];
@@ -146,6 +152,12 @@ void EntityFactory::addCommonComponents(
     }
     if (componentsJson.contains("controllable")) {
         reg.addComponent(entity, ecs::component::Controllable{});
+    }
+    if (componentsJson.contains("health")) {
+        auto healthJson = componentsJson["health"];
+        reg.addComponent(
+            entity, ecs::component::Health{healthJson["maxHp"].get<int>(), healthJson["currHp"].get<int>()}
+        );
     }
 
     if (componentsJson.contains("share_movement")) {

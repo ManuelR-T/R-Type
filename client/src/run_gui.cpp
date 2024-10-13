@@ -16,7 +16,7 @@
 static void renderInsideRoom(rtc::RoomManager &roomManager, const sf::Vector2u &windowSize)
 {
     // ! Window
-    ImGui::SetNextWindowSize(windowSize);
+    ImGui::SetNextWindowSize(ImVec2(windowSize.x, windowSize.y));
     ImGui::SetNextWindowPos(ImVec2(0, 0));
     ImGui::Begin(
         roomManager.getCurrentRoom().c_str(),
@@ -84,7 +84,7 @@ static void renderInsideRoom(rtc::RoomManager &roomManager, const sf::Vector2u &
 
 static void unsupportedWindowSize(const sf::Vector2u &windowSize)
 {
-    ImGui::SetNextWindowSize(windowSize);
+    ImGui::SetNextWindowSize(ImVec2(windowSize.x, windowSize.y));
     ImGui::SetNextWindowPos(ImVec2(0, 0));
     ImGui::Begin(
         "Window to small",
@@ -97,9 +97,6 @@ static void unsupportedWindowSize(const sf::Vector2u &windowSize)
 
 void rtc::runGui(const std::shared_ptr<sf::RenderWindow> &window, rtc::RoomManager &roomManager, bool &inLobby)
 {
-    if (!ImGui::SFML::Init(*window)) {
-        throw std::runtime_error("IMGUI Window init failed");
-    }
     sf::Clock dt;
     sf::Vector2u windowSize;
 

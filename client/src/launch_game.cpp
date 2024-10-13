@@ -50,6 +50,9 @@ void rtc::GameManager::_launchGame()
     _window = std::make_shared<sf::RenderWindow>(sf::VideoMode(rt::SCREEN_WIDTH, rt::SCREEN_HEIGHT), "R-Type");
     _window->setFramerateLimit(rt::FPS_LIMIT);
 
+    if (!ImGui::SFML::Init(*_window)) {
+        throw std::runtime_error("IMGUI Window init failed");
+    }
     runGui(_window, _roomManager, _inLobby);
 
     if (_inLobby) {
