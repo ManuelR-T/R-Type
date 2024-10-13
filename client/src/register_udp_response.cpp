@@ -43,7 +43,7 @@ static void handlePlayerCreation(
 )
 {
     _networkCallbacks.push_back([packet, &spriteManager, &udpClient, userId](ecs::Registry &reg) {
-        ecs::ClientEntityFactory::createClientEntityFromJSON(
+        auto entity = ecs::ClientEntityFactory::createClientEntityFromJSON(
             reg,
             spriteManager,
             udpClient,
@@ -52,10 +52,8 @@ static void handlePlayerCreation(
             packet.body.moveData.pos.y,
             packet.sharedEntityId
         );
-        reg.addComponent<ecs::component::Player>(
-            reg.getLocalEntity().at(packet.sharedEntityId),
-            ecs::component::Player{.name = packet.body.playerName, .id = userId}
-        );
+        reg.getComponent<ecs::component::Player>(entity) =
+            ecs::component::Player{.name = packet.body.playerName, .id = userId};
         if (packet.body.playerId != userId) {
             reg.removeComponent<ecs::component::Controllable>(reg.getLocalEntity().at(packet.sharedEntityId));
             reg.removeComponent<ecs::component::ShareMovement>(reg.getLocalEntity().at(packet.sharedEntityId));
