@@ -76,8 +76,11 @@ Download the appropriate zip file for your operating system (e.g., R-Type_Client
 This project is licensed under the MIT License.
 ## Authors / Contacts
 
-[Your Name] – Developer
-Contact: your.email@example.com
+- [Thibaud Cathala](https://github.com/thibaudcathala)
+- [Manuel Tomé](https://github.com/ManuelR-T)
+- [Rahul Chander](https://github.com/RahulCHANDER25)
+- [Nicolas Alexandre](https://github.com/Nicolasalx)
+
 
 ## Useful Links / Quick-Start Information
 
