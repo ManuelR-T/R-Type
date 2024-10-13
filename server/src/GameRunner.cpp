@@ -10,13 +10,10 @@
 #include <string>
 #include "Logger.hpp"
 #include "RTypeServer.hpp"
-#include "RTypeUDPProtol.hpp"
 #include "Registry.hpp"
 
-rts::GameRunner::GameRunner(int port, std::size_t stage) // ! Use the stage argument
-    : _port(port), _udpServer(port),
-      _responseHandler([](const rt::UDPClientPacket &packet) { return packet.header.cmd; }),
-      _window(sf::VideoMode(720, 480), "R-Type") // ! for debug
+rts::GameRunner::GameRunner(int port, std::size_t stage)           // ! Use the stage argument
+    : _udpServer(port), _window(sf::VideoMode(720, 480), "R-Type") // ! for debug
 {
     eng::logWarning("Selected stage: " + std::to_string(stage) + ".");
 

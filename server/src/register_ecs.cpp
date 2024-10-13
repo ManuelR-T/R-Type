@@ -9,6 +9,7 @@
 #include <cstddef>
 #include <cstdio>
 #include <functional>
+#include <vector>
 #include "RTypeServer.hpp"
 #include "RTypeUDPProtol.hpp"
 #include "Registry.hpp"
@@ -41,7 +42,7 @@
 #include "systems/health_mob_check.hpp"
 #include "systems/missiles_stop.hpp"
 
-static void share_server_movements(ecs::Registry &reg, std::list<rt::UDPServerPacket> &datasToSend)
+static void share_server_movements(ecs::Registry &reg, std::list<std::vector<char>> &datasToSend)
 {
     auto &positions = reg.getComponents<ecs::component::Position>();
     auto &velocities = reg.getComponents<ecs::component::Velocity>();
@@ -52,12 +53,10 @@ static void share_server_movements(ecs::Registry &reg, std::list<rt::UDPServerPa
     );
 
     for (auto [pos, vel, shared_entity] : zip) {
-        rt::UDPBody body = {
-            .sharedEntityId = shared_entity.sharedEntityId, .b = {.shareMovement = {.pos = pos, .vel = vel}}
-        };
-        datasToSend.push_back(
-            rt::UDPServerPacket({.header = {.cmd = rt::UDPCommand::MOVE_ENTITY}, .body = std::move(body)})
-        );
+        datasToSend.push_back(rt::UDPPacket<rt::UDPBody::MOVE_ENTITY>({.cmd = rt::UDPCommand::MOVE_ENTITY,
+                                                                       .sharedEntityId = shared_entity.sharedEntityId,
+                                                                       .body = {.pos = pos, .vel = vel}}
+        ).serialize());
     }
 }
 
@@ -89,7 +88,7 @@ void rts::registerSystems(
     float &dt,
     ntw::TickRateManager<rts::TickRate> &tickRateManager,
     ntw::UDPServer &udpServer,
-    std::list<rt::UDPServerPacket> &datasToSend,
+    std::list<std::vector<char>> &datasToSend,
     std::list<std::function<void(ecs::Registry &reg)>> &networkCallbacks,
     ecs::WaveManager &waveManager
 )
@@ -129,7 +128,9 @@ void rts::registerSystems(
         if (tickRateManager.needUpdate(rts::TickRate::SEND_PACKETS, dt)) {
             share_server_movements(reg, datasToSend);
             while (!datasToSend.empty()) {
-                udpServer.sendAll(reinterpret_cast<const char *>(&datasToSend.front()), sizeof(rt::UDPServerPacket));
+                udpServer.sendAll(
+                    reinterpret_cast<const char *>(datasToSend.front().data()), datasToSend.front().size()
+                );
                 datasToSend.pop_front();
             }
         }

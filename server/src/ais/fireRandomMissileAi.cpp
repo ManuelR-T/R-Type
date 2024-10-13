@@ -9,6 +9,8 @@
 
 #include <cstdio>
 #include <cstdlib>
+#include <vector>
+#include "RTypeUDPProtol.hpp"
 #include "ServerEntityFactory.hpp"
 #include "components/hitbox.hpp"
 #include "components/position.hpp"
@@ -28,7 +30,7 @@ static float randomFloatRange(float min, float max)
 entity_t rts::ais::fireRandomMissileAi(
     ecs::Registry &reg,
     entity_t e,
-    std::list<rt::UDPServerPacket> &datasToSend,
+    std::list<std::vector<char>> &datasToSend,
     std::function<bool()> cond,
     std::array<float, 2> randXRange,
     std::array<float, 2> randYRange
@@ -54,14 +56,12 @@ entity_t rts::ais::fireRandomMissileAi(
         reg, "assets/missileBall.json", missilePosX, missilePosY, sharedId, xFactor * 150, yFactor * 150
     );
 
-    datasToSend.push_back(rt::UDPServerPacket(
-        {.header = {.cmd = rt::UDPCommand::NEW_ENTITY},
-         .body =
-             {.sharedEntityId = sharedId,
-              .b =
-                  {.newEntityData =
-                       {.type = rt::EntityType::MISSILE_BALL,
-                        .moveData = {{missilePosX, missilePosY}, {xFactor * 150, yFactor * 150}}}}}}
-    ));
+    datasToSend.push_back(
+        rt::UDPPacket<rt::UDPBody::NEW_ENTITY_MISSILE_BALL>(
+            {.cmd = rt::UDPCommand::NEW_ENTITY_MISSILE_BALL,
+             .sharedEntityId = sharedId,
+             .body = {.moveData = {.pos = {missilePosX, missilePosY}, .vel = {xFactor * 150, yFactor * 150}}}}
+        ).serialize()
+    );
     return rMissile;
 }
