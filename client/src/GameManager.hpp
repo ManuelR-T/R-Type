@@ -16,10 +16,10 @@
 #include "RoomManager.hpp"
 #include "SpriteManager.hpp"
 #include "TCPResponseHandler.hpp"
+#include "imgui.h"
 #include "tcp/TCPClient.hpp"
 #include "udp/UDPClient.hpp"
 #include "shared_entity.hpp"
-
 #include <imgui-SFML.h>
 
 namespace rtc {
@@ -39,6 +39,7 @@ class GameManager {
 
     std::list<std::function<void(ecs::Registry &reg)>> _networkCallbacks;
     std::shared_ptr<sf::RenderWindow> _window;
+    ImFont *_font;
 
     void _registerTcpResponse();
     void _registerUdpResponse(ecs::Registry &reg, ecs::SpriteManager &spriteManager, ntw::UDPClient &udpClient);

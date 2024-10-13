@@ -20,6 +20,7 @@
 #include "SoundManager.hpp"
 #include "SpriteManager.hpp"
 #include "TickRateManager.hpp"
+#include "imgui.h"
 #include "udp/UDPClient.hpp"
 
 static void spawnPlayer(ntw::UDPClient &udp, std::size_t userId, const rtc::RoomManager &roomManager)
@@ -50,9 +51,17 @@ void rtc::GameManager::_launchGame()
     _window = std::make_shared<sf::RenderWindow>(sf::VideoMode(rt::SCREEN_WIDTH, rt::SCREEN_HEIGHT), "R-Type");
     _window->setFramerateLimit(rt::FPS_LIMIT);
 
-    if (!ImGui::SFML::Init(*_window)) {
+    if (!ImGui::SFML::Init(*_window, false)) {
         throw std::runtime_error("IMGUI Window init failed");
     }
+    ImGuiIO &io = ImGui::GetIO();
+    io.Fonts->Clear();
+    io.Fonts->AddFontDefault();
+    _font = io.Fonts->AddFontFromFileTTF("assets/font/DroidSansMono.ttf", 80.f);
+    if (!ImGui::SFML::UpdateFontTexture()) {
+        return;
+    }
+
     runGui(_window, _roomManager, _inLobby);
 
     if (_inLobby) {
