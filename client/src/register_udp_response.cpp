@@ -14,8 +14,10 @@
 #include "SpriteManager.hpp"
 #include "TrackedException.hpp"
 #include "components/controllable.hpp"
+#include "imgui.h"
 #include "udp/UDPClient.hpp"
 #include "components/share_movement.hpp"
+#include <imgui-SFML.h>
 
 static void handleStaticCreation(
     ecs::SpriteManager &spriteManager,
@@ -56,7 +58,8 @@ static void handlePlayerCreation(
     ecs::SpriteManager &spriteManager,
     ntw::UDPClient &udpClient,
     std::list<std::function<void(ecs::Registry &)>> &_networkCallbacks,
-    const rt::UDPServerPacket &packet
+    const rt::UDPServerPacket &packet,
+    ImFont *font
 )
 {
     auto &[pos, _] = packet.body.b.newEntityData.moveData;
@@ -68,7 +71,8 @@ static void handlePlayerCreation(
                                  playerId = packet.body.b.newEntityData.playerId,
                                  &spriteManager,
                                  &udpClient,
-                                 userId](ecs::Registry &reg) {
+                                 userId,
+                                 font](ecs::Registry &reg) {
         ecs::ClientEntityFactory::createClientEntityFromJSON(
             reg,
             spriteManager,
@@ -76,7 +80,10 @@ static void handlePlayerCreation(
             "assets/player" + std::to_string(playerIndex) + ".json",
             pos.x,
             pos.y,
-            sharedEntityId
+            sharedEntityId,
+            0.0f,
+            0.0f,
+            font
         );
         if (playerId != userId) {
             reg.removeComponent<ecs::component::Controllable>(reg.getLocalEntity().at(sharedEntityId));
@@ -96,7 +103,7 @@ void rtc::GameManager::_registerUdpResponse(
         [this, &spriteManager, &udpClient](const rt::UDPServerPacket &packet) {
             switch (packet.body.b.newEntityData.type) {
                 case rt::EntityType::PLAYER:
-                    handlePlayerCreation(_userId, spriteManager, udpClient, this->_networkCallbacks, packet);
+                    handlePlayerCreation(_userId, spriteManager, udpClient, this->_networkCallbacks, packet, _font);
                     break;
                 case rt::EntityType::MISSILE:
                     handleSharedCreation(
