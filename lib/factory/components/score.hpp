@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <memory>
 #include "imgui.h"
 #include <imgui-SFML.h>
 
@@ -19,7 +20,7 @@ namespace ecs::component {
  */
 
 struct Score {
-    ImFont *font;
+    std::shared_ptr<ImFont> font;
     std::string text;
     // sf::Font font;
     // sf::Text text;

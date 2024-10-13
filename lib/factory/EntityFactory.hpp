@@ -51,7 +51,7 @@ class EntityFactory {
         shared_entity_t sharedEntity = std::numeric_limits<size_t>::max(),
         float vx = std::numeric_limits<float>::max(),
         float vy = std::numeric_limits<float>::max(),
-        ImFont *font = nullptr
+        std::shared_ptr<ImFont> font = nullptr
     );
 
     /**
@@ -95,7 +95,7 @@ class EntityFactory {
         int y,
         float vx,
         float vy,
-        ImFont *font = nullptr
+        std::shared_ptr<ImFont> font = nullptr
     );
 };
 
