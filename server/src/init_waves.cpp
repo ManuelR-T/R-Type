@@ -7,6 +7,7 @@
 
 #include <cstdio>
 #include <cstdlib>
+#include <vector>
 #include "RTypeConst.hpp"
 #include "RTypeServer.hpp"
 #include "RTypeUDPProtol.hpp"
@@ -20,17 +21,16 @@
 #include "components/ai_actor.hpp"
 #include "shared_entity.hpp"
 
-static entity_t spawnRobot(ecs::Registry &reg, std::list<rt::UDPServerPacket> &datasToSend, size_t maxMob, size_t i)
+static entity_t spawnRobot(ecs::Registry &reg, std::list<std::vector<char>> &datasToSend, size_t maxMob, size_t i)
 {
     float x = (float)rt::SCREEN_WIDTH * ((float)i / (float)(maxMob + 1));
     float y = (float)rt::SCREEN_HEIGHT * (4.f / 5.f);
     auto sharedId = ecs::generateSharedEntityId();
-    datasToSend.push_back(rt::UDPServerPacket(
-        {.header = {.cmd = rt::UDPCommand::NEW_ENTITY},
-         .body =
-             {.sharedEntityId = sharedId,
-              .b = {.newEntityData = {.type = rt::EntityType::ROBOT_GROUND, .moveData = {{x, y}, {-10, 0}}}}}}
-    ));
+    datasToSend.push_back(rt::UDPPacket<rt::UDPBody::NEW_ENTITY_ROBOT_GROUND>(
+                              {.cmd = rt::UDPCommand::NEW_ENTITY_ROBOT_GROUND,
+                               .sharedEntityId = sharedId,
+                               .body = {.moveData = {.pos = {x, y}, .vel = {-10, 0}}}}
+    ).serialize());
     auto e = ecs::ServerEntityFactory::createServerEntityFromJSON(reg, "assets/robotGround.json", x, y, sharedId, -10);
     reg.getComponent<ecs::component::AiActor>(e)->act = [x, &datasToSend](ecs::Registry &reg, entity_t e) {
         rts::ais::horizontalMoveAi(reg, e, x - 100, x + 100);
@@ -39,17 +39,16 @@ static entity_t spawnRobot(ecs::Registry &reg, std::list<rt::UDPServerPacket> &d
     return e;
 }
 
-static entity_t spawnBydosWave(ecs::Registry &reg, std::list<rt::UDPServerPacket> &datasToSend, size_t maxMob, size_t i)
+static entity_t spawnBydosWave(ecs::Registry &reg, std::list<std::vector<char>> &datasToSend, size_t maxMob, size_t i)
 {
     float x = (float)rt::SCREEN_WIDTH * (4.f / 5.f);
     float y = (float)rt::SCREEN_HEIGHT * ((float)i / (float)(maxMob + 1));
     auto sharedId = ecs::generateSharedEntityId();
-    datasToSend.push_back(rt::UDPServerPacket(
-        {.header = {.cmd = rt::UDPCommand::NEW_ENTITY},
-         .body =
-             {.sharedEntityId = sharedId,
-              .b = {.newEntityData = {.type = rt::EntityType::BYDOS_WAVE, .moveData = {{x, y}, {0, 0}}}}}}
-    ));
+    datasToSend.push_back(rt::UDPPacket<rt::UDPBody::NEW_ENTITY_BYDOS_WAVE>(
+                              {.cmd = rt::UDPCommand::NEW_ENTITY_BYDOS_WAVE,
+                               .sharedEntityId = sharedId,
+                               .body = {.moveData = {.pos = {x, y}}}}
+    ).serialize());
     auto e = ecs::ServerEntityFactory::createServerEntityFromJSON(reg, "assets/bydosWave.json", x, y, sharedId, -10);
     reg.getComponent<ecs::component::AiActor>(e)->act = [y, &datasToSend](ecs::Registry &reg, entity_t e) {
         rts::ais::waveMovement(reg, e, y);
@@ -59,7 +58,7 @@ static entity_t spawnBydosWave(ecs::Registry &reg, std::list<rt::UDPServerPacket
 }
 
 // Create robot and put his ais
-static void waveInit(ecs::WaveManager &waveManager, std::list<rt::UDPServerPacket> &datasToSend, size_t maxMob)
+static void waveInit(ecs::WaveManager &waveManager, std::list<std::vector<char>> &datasToSend, size_t maxMob)
 {
     auto waveId = waveManager.addNewWave();
 
@@ -76,20 +75,17 @@ static void waveInit(ecs::WaveManager &waveManager, std::list<rt::UDPServerPacke
     }
 }
 
-void rts::init_waves(ecs::WaveManager &waveManager, std::list<rt::UDPServerPacket> &datasToSend)
+void rts::init_waves(ecs::WaveManager &waveManager, std::list<std::vector<char>> &datasToSend)
 {
     auto waveId = waveManager.addNewWave();
 
     for (int i = 1; i < 3; ++i) {
         waveManager.addNewMob(waveId, [i, &datasToSend](ecs::Registry &reg) {
-            datasToSend.push_back(rt::UDPServerPacket(
-                {.header = {.cmd = rt::UDPCommand::NEW_ENTITY},
-                 .body =
-                     {.sharedEntityId = 0,
-                      .b =
-                          {.newEntityData = {.type = rt::EntityType::STATIC, .moveData = {{100.f * i, 100.f * i}, {0}}}}
-                     }}
-            ));
+            datasToSend.push_back(rt::UDPPacket<rt::UDPBody::NEW_ENTITY_STATIC>(
+                                      {.cmd = rt::UDPCommand::NEW_ENTITY_STATIC,
+                                       .sharedEntityId = 0,
+                                       .body = {.moveData = {.pos = {100.f * i, 100.f * i}}}}
+            ).serialize());
             return ecs::ServerEntityFactory::createServerEntityFromJSON(
                 reg, "assets/static.json", 100.f * i, 100.f * i
             );

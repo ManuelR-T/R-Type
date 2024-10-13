@@ -11,6 +11,7 @@
 #include "RTypeConst.hpp"
 
 namespace rt {
+
 enum class TCPCommand : std::size_t {
     NONE,
 
@@ -41,9 +42,8 @@ enum class TCPCommand : std::size_t {
     SER_ROOM_IN_GAME,
     SER_ROOM_READY
 };
-} // namespace rt
 
-namespace rt::TCPData {
+namespace TCPData {
 struct CL_NEW_USER {
     std::size_t user_id = 0;
 };
@@ -130,9 +130,7 @@ struct SER_ROOM_IN_GAME {
 struct SER_ROOM_READY {
     int port = 0;
 };
-} // namespace rt::TCPData
-
-namespace rt {
+} // namespace TCPData
 
 template <typename T>
 struct TCPPacket {

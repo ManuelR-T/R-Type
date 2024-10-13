@@ -10,16 +10,14 @@
 #include <functional>
 #include <list>
 #include <memory>
-#include "RTypeUDPProtol.hpp"
 #include "Registry.hpp"
-#include "ResponseHandler.hpp"
 #include "RoomManager.hpp"
 #include "SpriteManager.hpp"
 #include "TCPResponseHandler.hpp"
+#include "UDPResponseHandler.hpp"
 #include "tcp/TCPClient.hpp"
 #include "udp/UDPClient.hpp"
 #include "shared_entity.hpp"
-
 #include <imgui-SFML.h>
 
 namespace rtc {
@@ -35,7 +33,7 @@ class GameManager {
     int _gamePort = 0;
     rtc::RoomManager _roomManager;
     rt::TCPResponseHandler _tcpResponseHandler;
-    ntw::ResponseHandler<rt::UDPCommand, rt::UDPServerPacket> _udpResponseHandler;
+    rt::UDPResponseHandler _udpResponseHandler;
 
     std::list<std::function<void(ecs::Registry &reg)>> _networkCallbacks;
     std::shared_ptr<sf::RenderWindow> _window;
@@ -50,8 +48,7 @@ class GameManager {
     public:
     GameManager(const std::string &ip, int port, const std::string &playerName)
         : _ip(ip), _playerName(playerName), _tcpClient(ip, port), _userId(ecs::generateSharedEntityId()),
-          _roomManager(_tcpClient, _userId, playerName),
-          _udpResponseHandler([](const rt::UDPServerPacket &packet) { return packet.header.cmd; })
+          _roomManager(_tcpClient, _userId, playerName)
     {
     }
 

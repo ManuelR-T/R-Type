@@ -6,6 +6,7 @@
 */
 
 #include <cstddef>
+#include <exception>
 #include <limits>
 #include <string>
 #include <utility>
@@ -13,83 +14,81 @@
 #include "RTypeUDPProtol.hpp"
 #include "Registry.hpp"
 #include "ServerEntityFactory.hpp"
-#include "components/playerId.hpp"
+#include "components/player.hpp"
 #include "components/position.hpp"
 #include "components/velocity.hpp"
 
 static void handlePlayerCreation(
-    std::list<rt::UDPServerPacket> &datasToSend,
+    std::list<std::vector<char>> &datasToSend,
     std::list<std::function<void(ecs::Registry &reg)>> &networkCallbacks,
-    const rt::UDPClientPacket &msg
+    const rt::UDPPacket<rt::UDPBody::NEW_ENTITY_PLAYER> &msg
 )
 {
-    shared_entity_t sharedEntityId = msg.body.sharedEntityId;
-    std::size_t playerIndex = msg.body.b.newEntityData.playerIndex;
-    std::size_t playerId = msg.body.b.newEntityData.playerId;
-    const auto &pos = msg.body.b.newEntityData.moveData.pos;
+    shared_entity_t sharedEntityId = msg.sharedEntityId;
+    std::size_t playerIndex = msg.body.playerIndex;
+    const auto &pos = msg.body.moveData.pos;
 
-    networkCallbacks.push_back([playerIndex, sharedEntityId, pos, playerId](ecs::Registry &reg) {
-        auto e = ecs::ServerEntityFactory::createServerEntityFromJSON(
+    networkCallbacks.push_back([playerIndex, sharedEntityId, pos, playerId = msg.body.playerId](ecs::Registry &reg) {
+        auto entity = ecs::ServerEntityFactory::createServerEntityFromJSON(
             reg, "assets/player" + std::to_string(playerIndex) + ".json", pos.x, pos.y, sharedEntityId
         );
-        reg.getComponent<ecs::component::Player>(e)->playerId = playerId;
+        reg.getComponent<ecs::component::Player>(entity)->id = playerId;
     });
-    datasToSend.push_back({.header = {.cmd = rt::UDPCommand::NEW_ENTITY}, .body = std::move(msg.body)});
+    datasToSend.push_back(std::move(msg).serialize());
 }
 
 static void handleMissileCreation(
-    std::list<rt::UDPServerPacket> &datasToSend,
+    std::list<std::vector<char>> &datasToSend,
     std::list<std::function<void(ecs::Registry &reg)>> &networkCallbacks,
-    const rt::UDPClientPacket &msg
+    const rt::UDPPacket<rt::UDPBody::NEW_ENTITY_MISSILE> &msg
 )
 {
-    const auto &pos = msg.body.b.newEntityData.moveData.pos;
-    const auto &vel = msg.body.b.newEntityData.moveData.vel;
+    const auto &pos = msg.body.moveData.pos;
+    const auto &vel = msg.body.moveData.vel;
 
     networkCallbacks.push_back([pos, vel](ecs::Registry &reg) {
         ecs::ServerEntityFactory::createServerEntityFromJSON(
             reg, "assets/missile.json", pos.x, pos.y, std::numeric_limits<size_t>::max(), vel.vx, vel.vy
         );
     });
-    datasToSend.push_back({.header = {.cmd = rt::UDPCommand::NEW_ENTITY}, .body = std::move(msg.body)});
+    datasToSend.push_back(std::move(msg).serialize());
 }
 
 void rts::registerUdpResponse(
-    ntw::ResponseHandler<rt::UDPCommand, rt::UDPClientPacket> &responseHandler,
-    std::list<rt::UDPServerPacket> &datasToSend,
+    rt::UDPResponseHandler &responseHandler,
+    std::list<std::vector<char>> &datasToSend,
     std::list<std::function<void(ecs::Registry &reg)>> &networkCallbacks
 )
 {
-    responseHandler.registerHandler(rt::UDPCommand::MOVE_ENTITY, [&networkCallbacks](const rt::UDPClientPacket &msg) {
-        networkCallbacks.push_back([msg](ecs::Registry &reg) {
-            try {
-                reg.getComponent<ecs::component::Position>(reg.getLocalEntity().at(msg.body.sharedEntityId)).value() =
-                    msg.body.b.shareMovement.pos;
-                reg.getComponent<ecs::component::Velocity>(reg.getLocalEntity().at(msg.body.sharedEntityId)).value() =
-                    msg.body.b.shareMovement.vel;
-            } catch (...) {
-            }
-        });
-    });
-    responseHandler.registerHandler(
-        rt::UDPCommand::NEW_ENTITY,
-        [&datasToSend, &networkCallbacks](const rt::UDPClientPacket &msg) {
-            datasToSend.push_back(
-                rt::UDPServerPacket({.header = {.cmd = rt::UDPCommand::NEW_ENTITY}, .body = std::move(msg.body)})
-            );
-            switch (msg.body.b.newEntityData.type) {
-                case rt::EntityType::PLAYER:
-                    handlePlayerCreation(datasToSend, networkCallbacks, msg);
-                    break;
-                case rt::EntityType::MISSILE:
-                    handleMissileCreation(datasToSend, networkCallbacks, msg);
-                    break;
-                default:
-                    throw eng::TrackedException(
-                        "Entity type(" + std::to_string(int(msg.body.b.newEntityData.type)) + ") not handled."
-                    );
-                    break;
-            }
+    responseHandler.registerHandler<rt::UDPBody::NEW_ENTITY_PLAYER>(
+        rt::UDPCommand::NEW_ENTITY_PLAYER,
+        [&datasToSend, &networkCallbacks](const rt::UDPPacket<rt::UDPBody::NEW_ENTITY_PLAYER> &msg) {
+            datasToSend.push_back(std::move(msg).serialize());
+            handlePlayerCreation(datasToSend, networkCallbacks, msg);
+        }
+    );
+    responseHandler.registerHandler<rt::UDPBody::NEW_ENTITY_MISSILE>(
+        rt::UDPCommand::NEW_ENTITY_MISSILE,
+        [&datasToSend, &networkCallbacks](const rt::UDPPacket<rt::UDPBody::NEW_ENTITY_MISSILE> &msg) {
+            datasToSend.push_back(std::move(msg).serialize());
+            handleMissileCreation(datasToSend, networkCallbacks, msg);
+        }
+    );
+    responseHandler.registerHandler<rt::UDPBody::MOVE_ENTITY>(
+        rt::UDPCommand::MOVE_ENTITY,
+        [&networkCallbacks](const rt::UDPPacket<rt::UDPBody::MOVE_ENTITY> &msg) {
+            networkCallbacks.push_back([msg](ecs::Registry &reg) {
+                try {
+                    reg.getComponent<ecs::component::Position>(reg.getLocalEntity().at(msg.sharedEntityId)).value() =
+                        msg.body.pos;
+                    reg.getComponent<ecs::component::Velocity>(reg.getLocalEntity().at(msg.sharedEntityId)).value() =
+                        msg.body.vel;
+                } catch (const std::exception &e) {
+                    // auto currentTime = std::chrono::system_clock::now().time_since_epoch();
+                    // auto currentTimeMs = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime).count();
+                    // eng::logWarning(std::to_string(currentTimeMs) + ": " + e.what());
+                }
+            });
         }
     );
 }

@@ -16,7 +16,7 @@
 #include "components/health.hpp"
 #include "components/hitbox.hpp"
 #include "components/missile.hpp"
-#include "components/playerId.hpp"
+#include "components/player.hpp"
 #include "components/position.hpp"
 #include "components/velocity.hpp"
 #include "entity.hpp"

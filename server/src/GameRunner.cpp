@@ -5,23 +5,19 @@
 ** game_runner
 */
 
+#include "GameRunner.hpp"
 #include <cstddef>
 #include <string>
-
-#include "GameRunner.hpp"
 #include "IndexedZipper.hpp"
 #include "Logger.hpp"
 #include "RTypeServer.hpp"
 #include "RTypeUDPProtol.hpp"
 #include "Registry.hpp"
-#include "components/playerId.hpp"
+#include "components/player.hpp"
 #include "components/shared_entity.hpp"
 
-using namespace ecs;
-
 rts::GameRunner::GameRunner(int port, std::size_t stage) // ! Use the stage argument
-    : _port(port), _udpServer(port),
-      _responseHandler([](const rt::UDPClientPacket &packet) { return packet.header.cmd; })
+    : _udpServer(port)
 {
     eng::logWarning("Selected stage: " + std::to_string(stage) + ".");
 
@@ -41,15 +37,15 @@ rts::GameRunner::GameRunner(int port, std::size_t stage) // ! Use the stage argu
 void rts::GameRunner::killPlayer(size_t playerId)
 {
     _networkCallbacks.push_back([playerId, this](ecs::Registry &reg) {
-        ecs::IndexedZipper<component::Player, component::SharedEntity> zip(
-            reg.getComponents<component::Player>(), reg.getComponents<component::SharedEntity>()
+        ecs::IndexedZipper<ecs::component::Player, ecs::component::SharedEntity> zip(
+            reg.getComponents<ecs::component::Player>(), reg.getComponents<ecs::component::SharedEntity>()
         );
 
         for (auto [e, player, shared] : zip) {
-            if (player.playerId == playerId) {
-                _datasToSend.push_back(rt::UDPServerPacket(
-                    {.header = {.cmd = rt::UDPCommand::DEL_ENTITY}, .body = {.sharedEntityId = shared.sharedEntityId}}
-                ));
+            if (player.id == playerId) {
+                _datasToSend.push_back(rt::UDPPacket<rt::UDPBody::DEL_ENTITY>({.cmd = rt::UDPCommand::DEL_ENTITY,
+                                                                               .sharedEntityId = shared.sharedEntityId})
+                                           .serialize());
                 reg.killEntity(e);
                 return;
             }

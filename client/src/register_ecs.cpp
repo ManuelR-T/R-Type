@@ -17,7 +17,7 @@
 #include "components/hitbox.hpp"
 #include "components/missile.hpp"
 #include "components/parallax.hpp"
-#include "components/playerId.hpp"
+#include "components/player.hpp"
 #include "components/position.hpp"
 #include "components/sprite.hpp"
 #include "components/velocity.hpp"
