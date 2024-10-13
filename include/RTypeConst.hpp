@@ -42,6 +42,11 @@ constexpr unsigned int MIN_SCREEN_HEIGHT = 1080 * 0.2;
 constexpr std::size_t TCP_MAGIC = 0x5443503e; // '<RT-TCP>'
 
 /**
+ * @brief A magic number used for TCP communication.
+ */
+constexpr std::size_t UDP_MAGIC = 0x5544503e; // '<RT-UDP>'
+
+/**
  * @brief The maximum size for a room name.
  */
 constexpr std::size_t MAX_ROOM_NAME_SIZE = 32;
