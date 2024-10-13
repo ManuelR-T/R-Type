@@ -22,7 +22,6 @@ void ecs::systems::drawScore(Registry &reg, sf::RenderWindow &window, const sf::
     for (auto [score] : zip) {
         score.text.setFont(score.font);
         score.text.setPosition(sf::Vector2f(windowSize.x * 0.9, windowSize.y * 0.1));
-        const sf::Vector2f posText = score.text.getPosition();
         score.text.setCharacterSize(windowSize.y * 0.05);
         score.text.setString(std::to_string(score.value));
         window.draw(score.text);
