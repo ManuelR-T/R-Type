@@ -7,7 +7,8 @@
 
 #pragma once
 
-#include <SFML/Graphics.hpp>
+#include "imgui.h"
+#include <imgui-SFML.h>
 
 namespace ecs::component {
 
@@ -18,8 +19,10 @@ namespace ecs::component {
  */
 
 struct Score {
-    sf::Font font;
-    sf::Text text;
+    ImFont *font;
+    std::string text;
+    // sf::Font font;
+    // sf::Text text;
     int value;
 };
 

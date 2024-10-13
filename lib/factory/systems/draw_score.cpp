@@ -12,6 +12,7 @@
 #include "components/score.hpp"
 #include "imgui.h"
 #include "imgui-SFML.h"
+#include <cmath>
 
 void ecs::systems::drawScore(Registry &reg, sf::RenderWindow &window, const sf::Vector2u &windowSize)
 {
@@ -20,10 +21,14 @@ void ecs::systems::drawScore(Registry &reg, sf::RenderWindow &window, const sf::
     Zipper<ecs::component::Score> zip(scores);
 
     for (auto [score] : zip) {
-        score.text.setFont(score.font);
-        score.text.setPosition(sf::Vector2f(windowSize.x * 0.9, windowSize.y * 0.1));
-        score.text.setCharacterSize(windowSize.y * 0.05);
-        score.text.setString(std::to_string(score.value));
-        window.draw(score.text);
+        if (score.font != nullptr) {
+            ImGui::GetBackgroundDrawList()->AddText(
+                score.font,
+                (windowSize.y * 0.05),
+                ImVec2(windowSize.x * 0.85, windowSize.y * 0.05),
+                IM_COL32(255, 255, 255, 255),
+                std::to_string(static_cast<int>(std::stof(score.text))).c_str()
+            );
+        }
     }
 }

@@ -21,9 +21,11 @@
 #include "components/score.hpp"
 #include "components/velocity.hpp"
 #include "entity.hpp"
+#include "imgui.h"
 #include "udp/UDPClient.hpp"
 #include "components/share_movement.hpp"
 #include "shared_entity.hpp"
+#include <imgui-SFML.h>
 
 namespace ecs {
 
@@ -36,7 +38,8 @@ entity_t EntityFactory::createClientEntityFromJSON(
     int y,
     shared_entity_t sharedEntity,
     float vx,
-    float vy
+    float vy,
+    ImFont *font
 )
 {
     std::ifstream file(jsonFilePath);
@@ -64,7 +67,9 @@ entity_t EntityFactory::createClientEntityFromJSON(
         entity = reg.spawnEntity();
     }
 
-    ClientEntityFactory::addComponents(reg, spriteManager, entity, entityJson["components"], isShared, x, y, vx, vy);
+    ClientEntityFactory::addComponents(
+        reg, spriteManager, entity, entityJson["components"], isShared, x, y, vx, vy, font
+    );
 
     return entity;
 }
@@ -115,7 +120,8 @@ void EntityFactory::addCommonComponents(
     int x,
     int y,
     float vx,
-    float vy
+    float vy,
+    ImFont *font
 )
 {
     if (componentsJson.contains("position")) {
@@ -170,12 +176,8 @@ void EntityFactory::addCommonComponents(
     if (componentsJson.contains("score")) {
         float scoreValue = componentsJson["score"].get<float>();
         ecs::component::Score score;
-        sf::Font font;
-        if (!font.loadFromFile("assets/font/DroidSansMono.ttf")) {
-            return;
-        }
         score.font = font;
-        score.text.setString(std::to_string(scoreValue));
+        score.text = std::to_string(scoreValue);
         reg.addComponent(entity, ecs::component::Score{score});
     }
 }

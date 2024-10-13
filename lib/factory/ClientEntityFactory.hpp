@@ -45,7 +45,8 @@ class ClientEntityFactory : public EntityFactory {
         int x,
         int y,
         float vx,
-        float vy
+        float vy,
+        ImFont *font
     );
 
     private:

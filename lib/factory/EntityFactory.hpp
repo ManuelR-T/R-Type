@@ -14,8 +14,10 @@
 #include "Registry.hpp"
 #include "SpriteManager.hpp"
 #include "entity.hpp"
+#include "imgui.h"
 #include "udp/UDPClient.hpp"
 #include "shared_entity.hpp"
+#include <imgui-SFML.h>
 
 namespace ecs {
 
@@ -48,7 +50,8 @@ class EntityFactory {
         int y = std::numeric_limits<int>::max(),
         shared_entity_t sharedEntity = std::numeric_limits<size_t>::max(),
         float vx = std::numeric_limits<float>::max(),
-        float vy = std::numeric_limits<float>::max()
+        float vy = std::numeric_limits<float>::max(),
+        ImFont *font = nullptr
     );
 
     /**
@@ -91,7 +94,8 @@ class EntityFactory {
         int x,
         int y,
         float vx,
-        float vy
+        float vy,
+        ImFont *font = nullptr
     );
 };
 
