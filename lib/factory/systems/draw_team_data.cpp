@@ -62,7 +62,9 @@ void ecs::systems::drawTeamData(Registry &reg, const sf::Vector2u &windowSize)
         };
         ImGui::GetBackgroundDrawList()->AddText(ImVec2(pos.x, pos.y - 20), IM_COL32(255, 255, 255, 255), "PLAYER NAME");
         drawBar("health", health.currHp, pos, windowSize);
-        drawBar("beam", beam.power, sf::Vector2u{pos.x, pos.y + static_cast<unsigned int>(windowSize.y * 0.03)}, windowSize);
+        drawBar(
+            "beam", beam.power, sf::Vector2u{pos.x, pos.y + static_cast<unsigned int>(windowSize.y * 0.03)}, windowSize
+        );
         ++i;
     }
 }
