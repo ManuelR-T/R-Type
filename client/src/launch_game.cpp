@@ -24,24 +24,18 @@
 
 static void spawnPlayer(ntw::UDPClient &udp, std::size_t userId, const rtc::RoomManager &roomManager)
 {
-    std::size_t playerIndex = 1;
+    rt::UDPPacket<rt::UDPBody::NEW_ENTITY_PLAYER> msg = {
+        .cmd = rt::UDPCommand::NEW_ENTITY_PLAYER, .sharedEntityId = ecs::generateSharedEntityId()
+    };
+    msg.body.playerIndex = 1;
     for (const auto &[id, _] : roomManager.getCurrentRoomPlayer()) {
         if (id == userId) {
             break;
         }
-        ++playerIndex;
+        ++msg.body.playerIndex;
     }
-    rt::UDPClientPacket msg = {
-        .header = {.cmd = rt::UDPCommand::NEW_ENTITY},
-        .body =
-            {.sharedEntityId = ecs::generateSharedEntityId(),
-             .b =
-                 {.newEntityData =
-                      {.playerId = userId,
-                       .playerIndex = playerIndex,
-                       .type = rt::EntityType::PLAYER,
-                       .moveData = {.pos = {.x = 100, .y = 150 + (50 * float(playerIndex))}}}}}
-    };
+    msg.body.playerId = userId;
+    msg.body.moveData = {.pos = {.x = 100, .y = 150 + (50 * float(msg.body.playerIndex))}};
     udp.send(reinterpret_cast<const char *>(&msg), sizeof(msg));
 }
 

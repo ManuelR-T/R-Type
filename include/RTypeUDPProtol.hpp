@@ -9,6 +9,9 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <cstring>
+#include <vector>
+#include "RTypeConst.hpp"
 #include "components/position.hpp"
 #include "components/velocity.hpp"
 #include "shared_entity.hpp"
@@ -16,7 +19,14 @@
 namespace rt {
 enum class UDPCommand : std::uint8_t {
     NONE,
-    NEW_ENTITY,
+
+    NEW_ENTITY_STATIC,
+    NEW_ENTITY_PLAYER,
+    NEW_ENTITY_MISSILE,
+    NEW_ENTITY_MISSILE_BALL,
+    NEW_ENTITY_BYDOS_WAVE,
+    NEW_ENTITY_ROBOT_GROUND,
+
     MOVE_ENTITY,
 
     MOD_ENTITY,
@@ -24,60 +34,61 @@ enum class UDPCommand : std::uint8_t {
     DEL_ENTITY
 };
 
-enum class EntityType : std::uint8_t {
-    NONE,
-    STATIC,
-    PLAYER,
-    MISSILE,
-    MISSILE_BALL,
-    BYDOS_WAVE,
-    ROBOT_GROUND,
+namespace UDPBody {
+
+struct MOVE_ENTITY {
+    ecs::component::Position pos{};
+    ecs::component::Velocity vel{};
 };
+
+struct NEW_ENTITY_STATIC {
+    MOVE_ENTITY moveData{};
+};
+
+struct NEW_ENTITY_PLAYER {
+    std::size_t playerId = 0;
+    std::size_t playerIndex = 1;
+    MOVE_ENTITY moveData{};
+};
+
+struct NEW_ENTITY_MISSILE {
+    MOVE_ENTITY moveData{};
+};
+
+struct NEW_ENTITY_MISSILE_BALL {
+    MOVE_ENTITY moveData{};
+};
+
+struct NEW_ENTITY_BYDOS_WAVE {
+    MOVE_ENTITY moveData{};
+};
+
+struct NEW_ENTITY_ROBOT_GROUND {
+    MOVE_ENTITY moveData{};
+};
+
+} // namespace UDPBody
 
 /**
  * ! Later on we could have a timestamp member variable
  *   or an id to check late packets
  */
-struct UDPHeader {
-    std::size_t magic = 0x42424242;
+template <typename T>
+struct UDPPacket {
+    std::size_t magic = rt::UDP_MAGIC;
+    std::size_t size = sizeof(*this);
     UDPCommand cmd;
-};
-
-struct UDPBody {
-    struct ShareMovement {
-        ecs::component::Position pos = {};
-        ecs::component::Velocity vel = {};
-    };
-
-    struct NewEntityData {
-        std::size_t playerId = 0;
-        std::size_t playerIndex = 1;
-        EntityType type; // ! One byte for the type of entity, depend on factory too
-        ShareMovement moveData = {};
-    };
-
     shared_entity_t sharedEntityId;
 
-    union {
-        ShareMovement shareMovement;
-        NewEntityData newEntityData;
-    } b = {};
-};
+    T body{};
 
-struct UDPServerPacket {
-    UDPHeader header;
+    std::vector<char> serialize() const
+    {
+        std::vector<char> buff(this->size);
 
-    /*
-     * Actually the same as UDPClientPacket because later on we will have pointer
-     * and size to send multiple datas at the same time
-     */
-    UDPBody body;
-};
-
-struct UDPClientPacket {
-    UDPHeader header;
-
-    UDPBody body;
+        std::memcpy(buff.data(), this, size);
+        return buff;
+    }
 };
 
 } // namespace rt
