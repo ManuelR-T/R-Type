@@ -6,6 +6,7 @@
 */
 
 #include <cstddef>
+#include <cstdio>
 #include <string>
 #include "ClientEntityFactory.hpp"
 #include "GameManager.hpp"
@@ -14,6 +15,7 @@
 #include "SpriteManager.hpp"
 #include "TrackedException.hpp"
 #include "components/controllable.hpp"
+#include "components/playerId.hpp"
 #include "udp/UDPClient.hpp"
 #include "components/share_movement.hpp"
 
@@ -69,7 +71,7 @@ static void handlePlayerCreation(
                                  &spriteManager,
                                  &udpClient,
                                  userId](ecs::Registry &reg) {
-        ecs::ClientEntityFactory::createClientEntityFromJSON(
+        auto e = ecs::ClientEntityFactory::createClientEntityFromJSON(
             reg,
             spriteManager,
             udpClient,
@@ -78,6 +80,7 @@ static void handlePlayerCreation(
             pos.y,
             sharedEntityId
         );
+        reg.getComponent<ecs::component::Player>(e)->playerId = userId;
         if (playerId != userId) {
             reg.removeComponent<ecs::component::Controllable>(reg.getLocalEntity().at(sharedEntityId));
             reg.removeComponent<ecs::component::ShareMovement>(reg.getLocalEntity().at(sharedEntityId));
@@ -139,6 +142,17 @@ void rtc::GameManager::_registerUdpResponse(
                 packet.body.b.shareMovement.vel;
         } catch (...) {
             // If entity does not exist, maybe server is late or ahead.
+        }
+    });
+
+    _udpResponseHandler.registerHandler(rt::UDPCommand::DEL_ENTITY, [this](const rt::UDPServerPacket &packet) {
+        auto &sharedEntityId = packet.body.sharedEntityId;
+
+        try {
+            _networkCallbacks.push_back([sharedEntityId](ecs::Registry &reg) {
+                reg.killEntity(reg.getLocalEntity().at(sharedEntityId));
+            });
+        } catch (...) {
         }
     });
 }

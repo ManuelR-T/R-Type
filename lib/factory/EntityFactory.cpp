@@ -16,6 +16,7 @@
 #include "components/health.hpp"
 #include "components/hitbox.hpp"
 #include "components/missile.hpp"
+#include "components/playerId.hpp"
 #include "components/position.hpp"
 #include "components/velocity.hpp"
 #include "entity.hpp"
@@ -161,6 +162,9 @@ void EntityFactory::addCommonComponents(
         reg.addComponent(
             entity, ecs::component::Health{healthJson["maxHp"].get<int>(), healthJson["currHp"].get<int>()}
         );
+    }
+    if (componentsJson.contains("player")) {
+        reg.addComponent(entity, ecs::component::Player{});
     }
 }
 

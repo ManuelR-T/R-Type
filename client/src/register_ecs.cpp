@@ -17,6 +17,7 @@
 #include "components/hitbox.hpp"
 #include "components/missile.hpp"
 #include "components/parallax.hpp"
+#include "components/playerId.hpp"
 #include "components/position.hpp"
 #include "components/sprite.hpp"
 #include "components/velocity.hpp"
@@ -50,6 +51,7 @@ void rtc::registerComponents(ecs::Registry &reg)
     reg.registerComponent<ecs::component::Health>();
     reg.registerComponent<ecs::component::SoundEmitter>();
     reg.registerComponent<ecs::component::MusicComponent>();
+    reg.registerComponent<ecs::component::Player>();
 }
 
 void rtc::registerSystems(

@@ -5,18 +5,23 @@
 ** game_runner
 */
 
-#include "GameRunner.hpp"
 #include <cstddef>
 #include <string>
+
+#include "GameRunner.hpp"
+#include "IndexedZipper.hpp"
 #include "Logger.hpp"
 #include "RTypeServer.hpp"
 #include "RTypeUDPProtol.hpp"
 #include "Registry.hpp"
+#include "components/playerId.hpp"
+#include "components/shared_entity.hpp"
+
+using namespace ecs;
 
 rts::GameRunner::GameRunner(int port, std::size_t stage) // ! Use the stage argument
     : _port(port), _udpServer(port),
-      _responseHandler([](const rt::UDPClientPacket &packet) { return packet.header.cmd; }),
-      _window(sf::VideoMode(720, 480), "R-Type") // ! for debug
+      _responseHandler([](const rt::UDPClientPacket &packet) { return packet.header.cmd; })
 {
     eng::logWarning("Selected stage: " + std::to_string(stage) + ".");
 
@@ -26,12 +31,36 @@ rts::GameRunner::GameRunner(int port, std::size_t stage) // ! Use the stage argu
     });
     _udpServer.run();
 
-    _window.setFramerateLimit(60); // ! for debug
     rts::registerComponents(_reg);
     rts::registerSystems(
         _reg, _window, _dt, _tickRateManager, _udpServer, _datasToSend, _networkCallbacks, _waveManager
     );
     rts::init_waves(_waveManager, _datasToSend);
+}
+
+void rts::GameRunner::killPlayer(size_t playerId)
+{
+    _networkCallbacks.push_back([playerId, this](ecs::Registry &reg) {
+        ecs::IndexedZipper<component::Player, component::SharedEntity> zip(
+            reg.getComponents<component::Player>(), reg.getComponents<component::SharedEntity>()
+        );
+
+        for (auto [e, player, shared] : zip) {
+            if (player.playerId == playerId) {
+                _datasToSend.push_back(rt::UDPServerPacket(
+                    {.header = {.cmd = rt::UDPCommand::DEL_ENTITY}, .body = {.sharedEntityId = shared.sharedEntityId}}
+                ));
+                reg.killEntity(e);
+                return;
+            }
+        }
+    });
+}
+
+void rts::GameRunner::addWindow(sf::VideoMode &&videomode, const std::string &title)
+{
+    _window.create(videomode, title);
+    _window.setFramerateLimit(60); // ! for debug
 }
 
 void rts::GameRunner::runGame(bool &stopGame)

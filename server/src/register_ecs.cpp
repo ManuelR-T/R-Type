@@ -22,6 +22,7 @@
 #include "components/hitbox.hpp"
 #include "components/missile.hpp"
 #include "components/parallax.hpp"
+#include "components/playerId.hpp"
 #include "components/position.hpp"
 #include "components/sprite.hpp"
 #include "components/tag.hpp"
@@ -75,6 +76,7 @@ void rts::registerComponents(ecs::Registry &reg)
     reg.registerComponent<ecs::component::Tag<size_t>>();
     reg.registerComponent<ecs::component::Health>();
     reg.registerComponent<ecs::component::AiActor>();
+    reg.registerComponent<ecs::component::Player>();
 }
 
 void rts::registerSystems(
