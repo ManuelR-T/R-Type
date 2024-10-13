@@ -7,7 +7,6 @@
 
 #include <cstddef>
 #include <exception>
-#include <iostream>
 #include <string>
 #include "ClientEntityFactory.hpp"
 #include "GameManager.hpp"
