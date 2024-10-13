@@ -7,9 +7,7 @@
 
 #include "draw_score.hpp"
 #include <cmath>
-#include <iostream>
 #include "Zipper.hpp"
-#include "components/controllable.hpp"
 #include "components/score.hpp"
 #include "imgui.h"
 #include "imgui-SFML.h"

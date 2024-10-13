@@ -23,7 +23,6 @@
 #include "components/score.hpp"
 #include "components/sprite.hpp"
 #include "components/velocity.hpp"
-#include "imgui.h"
 #include "systems/collision.hpp"
 #include "systems/draw.hpp"
 #include "systems/parallax.hpp"

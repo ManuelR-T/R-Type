@@ -6,12 +6,11 @@
 */
 
 #include "draw_team_data.hpp"
-#include <iostream>
 #include "Zipper.hpp"
 #include "components/beam.hpp"
-#include "components/controllable.hpp"
 #include "components/health.hpp"
-#include "imgui-SFML.h"
+#include "components/player.hpp"
+#include "imgui.h"
 
 static void drawBar(
     const std::string &componentType,
@@ -45,22 +44,23 @@ static void drawBar(
     );
 }
 
-// => !reg.hasComponent<component::Parallax>(i)
-
 void ecs::systems::drawTeamData(Registry &reg, const sf::Vector2u &windowSize)
 {
     auto &healths = reg.getComponents<ecs::component::Health>();
     auto &beams = reg.getComponents<ecs::component::Beam>();
+    auto &player = reg.getComponents<ecs::component::Player>();
 
-    Zipper<ecs::component::Health, ecs::component::Beam> zip(healths, beams);
+    Zipper<ecs::component::Player, ecs::component::Health, ecs::component::Beam> zip(player, healths, beams);
 
     int i = 0;
-    for (auto [health, beam] : zip) {
+    for (auto [player, health, beam] : zip) {
         sf::Vector2u pos = {
             static_cast<unsigned int>(windowSize.x * 0.01f),
             static_cast<unsigned int>((windowSize.y * 0.13f) + (i * (windowSize.y * 0.08)))
         };
-        ImGui::GetBackgroundDrawList()->AddText(ImVec2(pos.x, pos.y - 20), IM_COL32(255, 255, 255, 255), "PLAYER NAME");
+        ImGui::GetBackgroundDrawList()->AddText(
+            ImVec2(pos.x, pos.y - 20), IM_COL32(255, 255, 255, 255), player.name.c_str()
+        );
         drawBar("health", health.currHp, pos, windowSize);
         drawBar(
             "beam", beam.power, sf::Vector2u{pos.x, pos.y + static_cast<unsigned int>(windowSize.y * 0.03)}, windowSize

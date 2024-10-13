@@ -6,12 +6,9 @@
 */
 
 #include "draw_player_beam_bar.hpp"
-#include <iostream>
 #include "Zipper.hpp"
 #include "components/beam.hpp"
-#include "components/controllable.hpp"
 #include "imgui.h"
-#include "imgui-SFML.h"
 
 static void drawBar(int percentageBar, const sf::Vector2u &windowSize)
 {

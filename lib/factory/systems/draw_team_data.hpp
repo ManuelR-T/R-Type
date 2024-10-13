@@ -9,7 +9,6 @@
 
 #include <SFML/Graphics.hpp>
 #include "Registry.hpp"
-#include "imgui.h"
 
 namespace ecs::systems {
 

@@ -6,14 +6,13 @@
 */
 
 #include "draw_player_health_bar.hpp"
-#include <iostream>
 #include "Zipper.hpp"
 #include "components/controllable.hpp"
 #include "components/health.hpp"
+#include "components/player.hpp"
 #include "imgui.h"
-#include "imgui-SFML.h"
 
-static void drawBar(int percentageBar, const sf::Vector2u &windowSize)
+static void drawBar(int percentageBar, const sf::Vector2u &windowSize, const std::string &playerName)
 {
     sf::Vector2u pos =
         sf::Vector2u{static_cast<unsigned int>(windowSize.x * 0.01f), static_cast<unsigned int>(windowSize.y * 0.05f)};
@@ -32,18 +31,21 @@ static void drawBar(int percentageBar, const sf::Vector2u &windowSize)
         rect2Pos, ImVec2(rect2Pos.x + rect2Size.x, rect2Pos.y + rect2Size.y), IM_COL32(0, 153, 0, 255), 10.f
     );
     ImGui::GetBackgroundDrawList()->AddText(
-        ImVec2(rect2Pos.x, rect2Pos.y - 20), IM_COL32(255, 255, 255, 255), "PLAYER NAME"
+        ImVec2(rect2Pos.x, rect2Pos.y - 20), IM_COL32(255, 255, 255, 255), playerName.c_str()
     );
 }
 
 void ecs::systems::drawPlayerHealthBar(Registry &reg, const sf::Vector2u &windowSize)
 {
+    auto &player = reg.getComponents<ecs::component::Player>();
     auto &healths = reg.getComponents<ecs::component::Health>();
     auto &controllables = reg.getComponents<ecs::component::Controllable>();
 
-    Zipper<ecs::component::Health, ecs::component::Controllable> zip(healths, controllables);
+    Zipper<ecs::component::Player, ecs::component::Health, ecs::component::Controllable> zip(
+        player, healths, controllables
+    );
 
-    for (auto [health, _] : zip) {
-        drawBar(health.currHp, windowSize);
+    for (auto [player, health, _] : zip) {
+        drawBar(health.currHp, windowSize, player.name);
     }
 }
