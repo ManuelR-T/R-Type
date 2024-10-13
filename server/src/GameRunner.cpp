@@ -12,9 +12,8 @@
 #include "RTypeServer.hpp"
 #include "Registry.hpp"
 
-rts::GameRunner::GameRunner(int port, std::size_t stage) // ! Use the stage argument
-    : _udpServer(port),
-      _window(sf::VideoMode(720, 480), "R-Type") // ! for debug
+rts::GameRunner::GameRunner(int port, std::size_t stage)           // ! Use the stage argument
+    : _udpServer(port), _window(sf::VideoMode(720, 480), "R-Type") // ! for debug
 {
     eng::logWarning("Selected stage: " + std::to_string(stage) + ".");
 
