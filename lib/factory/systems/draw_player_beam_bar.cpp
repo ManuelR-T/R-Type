@@ -9,6 +9,7 @@
 #include "Zipper.hpp"
 #include "components/beam.hpp"
 #include "imgui.h"
+#include "components/self_player.hpp"
 
 static void drawBar(int percentageBar, const sf::Vector2u &windowSize)
 {
@@ -34,10 +35,11 @@ static void drawBar(int percentageBar, const sf::Vector2u &windowSize)
 void ecs::systems::drawPlayerBeamBar(Registry &reg, const sf::Vector2u &windowSize)
 {
     auto &beams = reg.getComponents<ecs::component::Beam>();
+    auto &selfPlayer = reg.getComponents<ecs::component::SelfPlayer>();
 
-    Zipper<ecs::component::Beam> zip(beams);
+    Zipper<ecs::component::Beam, ecs::component::SelfPlayer> zip(beams, selfPlayer);
 
-    for (auto [beam] : zip) {
+    for (auto [beam, _] : zip) {
         drawBar(beam.power, windowSize);
     }
 }

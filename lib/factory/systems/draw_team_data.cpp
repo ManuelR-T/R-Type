@@ -11,6 +11,7 @@
 #include "components/health.hpp"
 #include "components/player.hpp"
 #include "imgui.h"
+#include "components/ally_player.hpp"
 
 static void drawBar(
     const std::string &componentType,
@@ -49,11 +50,14 @@ void ecs::systems::drawTeamData(Registry &reg, const sf::Vector2u &windowSize)
     auto &healths = reg.getComponents<ecs::component::Health>();
     auto &beams = reg.getComponents<ecs::component::Beam>();
     auto &player = reg.getComponents<ecs::component::Player>();
+    auto &allyPlayer = reg.getComponents<ecs::component::AllyPlayer>();
 
-    Zipper<ecs::component::Player, ecs::component::Health, ecs::component::Beam> zip(player, healths, beams);
+    Zipper<ecs::component::Player, ecs::component::Health, ecs::component::Beam, ecs::component::AllyPlayer> zip(
+        player, healths, beams, allyPlayer
+    );
 
     int i = 0;
-    for (auto [player, health, beam] : zip) {
+    for (auto [player, health, beam, _] : zip) {
         sf::Vector2u pos = {
             static_cast<unsigned int>(windowSize.x * 0.01f),
             static_cast<unsigned int>((windowSize.y * 0.13f) + (i * (windowSize.y * 0.08)))

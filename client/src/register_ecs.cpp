@@ -27,7 +27,9 @@
 #include "systems/draw.hpp"
 #include "systems/parallax.hpp"
 #include "systems/position.hpp"
+#include "components/ally_player.hpp"
 #include "components/music_component.hpp"
+#include "components/self_player.hpp"
 #include "components/share_movement.hpp"
 #include "components/sound_emitter.hpp"
 #include "imgui-SFML.h"
@@ -61,6 +63,8 @@ void rtc::registerComponents(ecs::Registry &reg)
     reg.registerComponent<ecs::component::Beam>();
     reg.registerComponent<ecs::component::Score>();
     reg.registerComponent<ecs::component::Player>();
+    reg.registerComponent<ecs::component::SelfPlayer>();
+    reg.registerComponent<ecs::component::AllyPlayer>();
 }
 
 void rtc::registerSystems(

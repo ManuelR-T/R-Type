@@ -7,10 +7,10 @@
 
 #include "draw_player_health_bar.hpp"
 #include "Zipper.hpp"
-#include "components/controllable.hpp"
 #include "components/health.hpp"
 #include "components/player.hpp"
 #include "imgui.h"
+#include "components/self_player.hpp"
 
 static void drawBar(int percentageBar, const sf::Vector2u &windowSize, const std::string &playerName)
 {
@@ -39,11 +39,9 @@ void ecs::systems::drawPlayerHealthBar(Registry &reg, const sf::Vector2u &window
 {
     auto &player = reg.getComponents<ecs::component::Player>();
     auto &healths = reg.getComponents<ecs::component::Health>();
-    auto &controllables = reg.getComponents<ecs::component::Controllable>();
+    auto &selfPlayer = reg.getComponents<ecs::component::SelfPlayer>();
 
-    Zipper<ecs::component::Player, ecs::component::Health, ecs::component::Controllable> zip(
-        player, healths, controllables
-    );
+    Zipper<ecs::component::Player, ecs::component::Health, ecs::component::SelfPlayer> zip(player, healths, selfPlayer);
 
     for (auto [player, health, _] : zip) {
         drawBar(health.currHp, windowSize, player.name);

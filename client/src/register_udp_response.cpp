@@ -17,6 +17,8 @@
 #include "components/player.hpp"
 #include "imgui.h"
 #include "udp/UDPClient.hpp"
+#include "components/ally_player.hpp"
+#include "components/self_player.hpp"
 #include "components/share_movement.hpp"
 #include <imgui-SFML.h>
 
@@ -60,7 +62,10 @@ static void handlePlayerCreation(
         );
         reg.getComponent<ecs::component::Player>(entity) =
             ecs::component::Player{.name = packet.body.playerName, .id = userId};
-        if (packet.body.playerId != userId) {
+        if (packet.body.playerId == userId) {
+            reg.addComponent<ecs::component::SelfPlayer>(entity, ecs::component::SelfPlayer{});
+        } else {
+            reg.addComponent<ecs::component::AllyPlayer>(entity, ecs::component::AllyPlayer{});
             reg.removeComponent<ecs::component::Controllable>(reg.getLocalEntity().at(packet.sharedEntityId));
             reg.removeComponent<ecs::component::ShareMovement>(reg.getLocalEntity().at(packet.sharedEntityId));
         }

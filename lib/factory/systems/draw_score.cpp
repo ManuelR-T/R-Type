@@ -10,15 +10,17 @@
 #include "Zipper.hpp"
 #include "components/score.hpp"
 #include "imgui.h"
+#include "components/self_player.hpp"
 #include "imgui-SFML.h"
 
 void ecs::systems::drawScore(Registry &reg, sf::RenderWindow &window, const sf::Vector2u &windowSize)
 {
-    auto &scores = reg.getComponents<ecs::component::Score>();
+    auto &score = reg.getComponents<ecs::component::Score>();
+    auto &selfPlayer = reg.getComponents<ecs::component::SelfPlayer>();
 
-    Zipper<ecs::component::Score> zip(scores);
+    Zipper<ecs::component::Score, ecs::component::SelfPlayer> zip(score, selfPlayer);
 
-    for (auto [score] : zip) {
+    for (auto [score, _] : zip) {
         if (score.font != nullptr) {
             ImGui::GetBackgroundDrawList()->AddText(
                 score.font.get(),
