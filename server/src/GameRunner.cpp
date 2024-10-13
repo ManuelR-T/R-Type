@@ -8,12 +8,16 @@
 #include "GameRunner.hpp"
 #include <cstddef>
 #include <string>
+#include "IndexedZipper.hpp"
 #include "Logger.hpp"
 #include "RTypeServer.hpp"
+#include "RTypeUDPProtol.hpp"
 #include "Registry.hpp"
+#include "components/player.hpp"
+#include "components/shared_entity.hpp"
 
-rts::GameRunner::GameRunner(int port, std::size_t stage)           // ! Use the stage argument
-    : _udpServer(port), _window(sf::VideoMode(720, 480), "R-Type") // ! for debug
+rts::GameRunner::GameRunner(int port, std::size_t stage) // ! Use the stage argument
+    : _udpServer(port)
 {
     eng::logWarning("Selected stage: " + std::to_string(stage) + ".");
 
@@ -23,12 +27,36 @@ rts::GameRunner::GameRunner(int port, std::size_t stage)           // ! Use the 
     });
     _udpServer.run();
 
-    _window.setFramerateLimit(60); // ! for debug
     rts::registerComponents(_reg);
     rts::registerSystems(
         _reg, _window, _dt, _tickRateManager, _udpServer, _datasToSend, _networkCallbacks, _waveManager
     );
     rts::init_waves(_waveManager, _datasToSend);
+}
+
+void rts::GameRunner::killPlayer(size_t playerId)
+{
+    _networkCallbacks.push_back([playerId, this](ecs::Registry &reg) {
+        ecs::IndexedZipper<ecs::component::Player, ecs::component::SharedEntity> zip(
+            reg.getComponents<ecs::component::Player>(), reg.getComponents<ecs::component::SharedEntity>()
+        );
+
+        for (auto [e, player, shared] : zip) {
+            if (player.id == playerId) {
+                _datasToSend.push_back(rt::UDPPacket<rt::UDPBody::DEL_ENTITY>({.cmd = rt::UDPCommand::DEL_ENTITY,
+                                                                               .sharedEntityId = shared.sharedEntityId})
+                                           .serialize());
+                reg.killEntity(e);
+                return;
+            }
+        }
+    });
+}
+
+void rts::GameRunner::addWindow(sf::VideoMode &&videomode, const std::string &title)
+{
+    _window.create(videomode, title);
+    _window.setFramerateLimit(60); // ! for debug
 }
 
 void rts::GameRunner::runGame(bool &stopGame)

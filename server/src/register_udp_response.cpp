@@ -14,6 +14,7 @@
 #include "RTypeUDPProtol.hpp"
 #include "Registry.hpp"
 #include "ServerEntityFactory.hpp"
+#include "components/player.hpp"
 #include "components/position.hpp"
 #include "components/velocity.hpp"
 
@@ -27,10 +28,11 @@ static void handlePlayerCreation(
     std::size_t playerIndex = msg.body.playerIndex;
     const auto &pos = msg.body.moveData.pos;
 
-    networkCallbacks.push_back([playerIndex, sharedEntityId, pos](ecs::Registry &reg) {
-        ecs::ServerEntityFactory::createServerEntityFromJSON(
+    networkCallbacks.push_back([playerIndex, sharedEntityId, pos, playerId = msg.body.playerId](ecs::Registry &reg) {
+        auto entity = ecs::ServerEntityFactory::createServerEntityFromJSON(
             reg, "assets/player" + std::to_string(playerIndex) + ".json", pos.x, pos.y, sharedEntityId
         );
+        reg.getComponent<ecs::component::Player>(entity)->id = playerId;
     });
     datasToSend.push_back(std::move(msg).serialize());
 }

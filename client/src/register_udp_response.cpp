@@ -46,7 +46,7 @@ static void handlePlayerCreation(
 )
 {
     _networkCallbacks.push_back([packet, &spriteManager, &udpClient, userId, font](ecs::Registry &reg) {
-        ecs::ClientEntityFactory::createClientEntityFromJSON(
+        auto entity = ecs::ClientEntityFactory::createClientEntityFromJSON(
             reg,
             spriteManager,
             udpClient,
@@ -58,9 +58,8 @@ static void handlePlayerCreation(
             0.0f,
             font
         );
-        reg.addComponent<ecs::component::Player>(
-            reg.getLocalEntity().at(packet.sharedEntityId), ecs::component::Player{.name = packet.body.playerName}
-        );
+        reg.getComponent<ecs::component::Player>(entity) =
+            ecs::component::Player{.name = packet.body.playerName, .id = userId};
         if (packet.body.playerId != userId) {
             reg.removeComponent<ecs::component::Controllable>(reg.getLocalEntity().at(packet.sharedEntityId));
             reg.removeComponent<ecs::component::ShareMovement>(reg.getLocalEntity().at(packet.sharedEntityId));
@@ -150,6 +149,17 @@ void rtc::GameManager::_registerUdpResponse(
                 // auto currentTime = std::chrono::system_clock::now().time_since_epoch();
                 // auto currentTimeMs = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime).count();
                 // eng::logWarning(std::to_string(currentTimeMs) + ": " + e.what());
+            }
+        }
+    );
+    _udpResponseHandler.registerHandler<rt::UDPBody::DEL_ENTITY>(
+        rt::UDPCommand::DEL_ENTITY,
+        [this](const rt::UDPPacket<rt::UDPBody::DEL_ENTITY> &packet) {
+            try {
+                _networkCallbacks.push_back([sharedEntityId = packet.sharedEntityId](ecs::Registry &reg) {
+                    reg.killEntity(reg.getLocalEntity().at(sharedEntityId));
+                });
+            } catch (...) {
             }
         }
     );

@@ -85,6 +85,8 @@
             "currHp": 1
         },
         "beam": 30,
-        "score": 29320
+        "score": 29320,
+        "share_movement": {},
+        "player": {}
     }
 }

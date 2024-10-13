@@ -12,6 +12,7 @@
 #include <map>
 #include <string>
 #include <utility>
+#include "GameRunner.hpp"
 #include "tcp/TCPServer.hpp"
 
 namespace rts {
@@ -26,6 +27,7 @@ class RoomManager {
         std::map<std::size_t, PlayerLobby> player{};
         std::size_t stage = 1;
         std::unique_ptr<std::thread> game{};
+        std::shared_ptr<GameRunner> gameRunner = nullptr;
         bool stopGame = false;
     };
 

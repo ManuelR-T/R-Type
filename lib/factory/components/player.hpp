@@ -20,6 +20,7 @@ namespace ecs::component {
  */
 struct Player {
     std::string name;
+    std::size_t id = 0;
 };
 
 } // namespace ecs::component

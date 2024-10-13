@@ -17,6 +17,7 @@
 #include "components/health.hpp"
 #include "components/hitbox.hpp"
 #include "components/missile.hpp"
+#include "components/player.hpp"
 #include "components/position.hpp"
 #include "components/score.hpp"
 #include "components/velocity.hpp"
@@ -179,6 +180,9 @@ void EntityFactory::addCommonComponents(
         score.font = font;
         score.text = std::to_string(scoreValue);
         reg.addComponent(entity, ecs::component::Score{score});
+    }
+    if (componentsJson.contains("player")) {
+        reg.addComponent(entity, ecs::component::Player{});
     }
 }
 
