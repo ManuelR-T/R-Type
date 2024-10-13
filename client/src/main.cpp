@@ -12,6 +12,8 @@
 #include "InputManager.hpp"
 #include "RTypeClient.hpp"
 #include "Registry.hpp"
+#include <imgui-SFML.h>
+#include "imgui.h"
 
 void rtc::run(ecs::Registry &reg, const std::shared_ptr<sf::RenderWindow> &window, float &dt, ecs::InputManager &input)
 {
@@ -27,7 +29,11 @@ void rtc::run(ecs::Registry &reg, const std::shared_ptr<sf::RenderWindow> &windo
             }
             input.update(event);
         }
+        window->clear();
+        ImGui::SFML::Update(*window, clock.restart());
         reg.runSystems();
+        ImGui::SFML::Render(*window);
+        window->display();
     }
 }
 

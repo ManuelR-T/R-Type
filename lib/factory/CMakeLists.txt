@@ -4,6 +4,8 @@ add_library(FACTORY STATIC
     systems/control_special.cpp
     systems/draw.cpp
     systems/draw_player_beam_bar.cpp
+    systems/draw_team_data.cpp
+    systems/draw_score.cpp
     systems/draw_player_health_bar.cpp
     systems/sprite_system.cpp
     systems/position.cpp

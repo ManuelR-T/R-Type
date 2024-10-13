@@ -19,6 +19,7 @@
 #include "components/missile.hpp"
 #include "components/parallax.hpp"
 #include "components/position.hpp"
+#include "components/score.hpp"
 #include "components/sprite.hpp"
 #include "components/velocity.hpp"
 #include "imgui.h"
@@ -34,6 +35,8 @@
 #include "systems/control_special.hpp"
 #include "systems/draw_player_beam_bar.hpp"
 #include "systems/draw_player_health_bar.hpp"
+#include "systems/draw_score.hpp"
+#include "systems/draw_team_data.hpp"
 #include "systems/health_check.hpp"
 #include "systems/missiles_stop.hpp"
 #include "systems/share_movement.hpp"
@@ -55,8 +58,8 @@ void rtc::registerComponents(ecs::Registry &reg)
     reg.registerComponent<ecs::component::Health>();
     reg.registerComponent<ecs::component::SoundEmitter>();
     reg.registerComponent<ecs::component::MusicComponent>();
-    reg.registerComponent<ecs::component::Health>();
     reg.registerComponent<ecs::component::Beam>();
+    reg.registerComponent<ecs::component::Score>();
 }
 
 void rtc::registerSystems(
@@ -101,4 +104,6 @@ void rtc::registerSystems(
     });
     reg.addSystem([&reg, &window]() { ecs::systems::drawPlayerBeamBar(reg, window.getSize()); });
     reg.addSystem([&reg, &window]() { ecs::systems::drawPlayerHealthBar(reg, window.getSize()); });
+    reg.addSystem([&reg, &window]() { ecs::systems::drawScore(reg, window, window.getSize()); });
+    reg.addSystem([&reg, &window]() { ecs::systems::drawTeamData(reg, window.getSize()); });
 }

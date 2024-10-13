@@ -40,11 +40,10 @@ static void drawBar(int percentageBar, const sf::Vector2u &windowSize)
 void ecs::systems::drawPlayerBeamBar(Registry &reg, const sf::Vector2u &windowSize)
 {
     auto &beams = reg.getComponents<ecs::component::Beam>();
-    auto &controllables = reg.getComponents<ecs::component::Controllable>();
 
-    Zipper<ecs::component::Beam, ecs::component::Controllable> zip(beams, controllables);
+    Zipper<ecs::component::Beam> zip(beams);
 
-    for (auto [beam, _] : zip) {
+    for (auto [beam] : zip) {
         drawBar(beam.power, windowSize);
     }
 }

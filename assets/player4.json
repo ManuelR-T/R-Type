@@ -80,6 +80,12 @@
             "width": 32.0,
             "height": 16.0
         },
-        "share_movement": {}
+        "share_movement": {},
+        "health": {
+            "maxHp": 1,
+            "currHp": 1
+        },
+        "beam": 30,
+        "score": 29320
     }
 }
