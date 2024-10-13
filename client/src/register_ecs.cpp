@@ -95,7 +95,7 @@ void rtc::registerSystems(
     reg.addSystem([&reg]() { ecs::systems::healthCheck(reg); });
     reg.addSystem([&reg]() { ecs::systems::parallax(reg); });
     reg.addSystem([&reg, &dt, &spriteManager]() { ecs::systems::spriteSystem(reg, dt, spriteManager); });
-    reg.addSystem([&reg, &window, &dt]() { ecs::systems::draw(reg, window); });
+    reg.addSystem([&reg, &window]() { ecs::systems::draw(reg, window); });
     reg.addSystem([&_networkCallbacks, &tickRateManager, &dt, &reg]() {
         if (tickRateManager.needUpdate(rtc::TickRate::CALL_NETWORK_CALLBACKS, dt)) {
             while (!_networkCallbacks.empty()) {
