@@ -7,6 +7,7 @@
 
 #include <cstddef>
 #include <exception>
+#include <iostream>
 #include <string>
 #include "ClientEntityFactory.hpp"
 #include "GameManager.hpp"
@@ -14,6 +15,7 @@
 #include "Registry.hpp"
 #include "SpriteManager.hpp"
 #include "components/controllable.hpp"
+#include "components/player.hpp"
 #include "udp/UDPClient.hpp"
 #include "components/share_movement.hpp"
 
@@ -50,6 +52,9 @@ static void handlePlayerCreation(
             packet.body.moveData.pos.x,
             packet.body.moveData.pos.y,
             packet.sharedEntityId
+        );
+        reg.addComponent<ecs::component::Player>(
+            reg.getLocalEntity().at(packet.sharedEntityId), ecs::component::Player{.name = packet.body.playerName}
         );
         if (packet.body.playerId != userId) {
             reg.removeComponent<ecs::component::Controllable>(reg.getLocalEntity().at(packet.sharedEntityId));

@@ -48,6 +48,7 @@ struct NEW_ENTITY_STATIC {
 struct NEW_ENTITY_PLAYER {
     std::size_t playerId = 0;
     std::size_t playerIndex = 1;
+    char playerName[rt::MAX_USER_NAME_SIZE + 1] = {0};
     MOVE_ENTITY moveData{};
 };
 

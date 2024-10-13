@@ -28,8 +28,9 @@ static void spawnPlayer(ntw::UDPClient &udp, std::size_t userId, const rtc::Room
         .cmd = rt::UDPCommand::NEW_ENTITY_PLAYER, .sharedEntityId = ecs::generateSharedEntityId()
     };
     msg.body.playerIndex = 1;
-    for (const auto &[id, _] : roomManager.getCurrentRoomPlayer()) {
+    for (const auto &[id, player] : roomManager.getCurrentRoomPlayer()) {
         if (id == userId) {
+            player.name.copy(msg.body.playerName, sizeof(msg.body.playerName) - 1);
             break;
         }
         ++msg.body.playerIndex;
