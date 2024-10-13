@@ -14,8 +14,8 @@
 #include "Registry.hpp"
 #include "SpriteManager.hpp"
 #include "components/controllable.hpp"
-#include "imgui.h"
 #include "components/player.hpp"
+#include "imgui.h"
 #include "udp/UDPClient.hpp"
 #include "components/share_movement.hpp"
 #include <imgui-SFML.h>
