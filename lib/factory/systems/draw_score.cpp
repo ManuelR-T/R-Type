@@ -23,7 +23,7 @@ void ecs::systems::drawScore(Registry &reg, sf::RenderWindow &window, const sf::
     for (auto [score] : zip) {
         if (score.font != nullptr) {
             ImGui::GetBackgroundDrawList()->AddText(
-                score.font,
+                score.font.get(),
                 (windowSize.y * 0.05),
                 ImVec2(windowSize.x * 0.85, windowSize.y * 0.05),
                 IM_COL32(255, 255, 255, 255),

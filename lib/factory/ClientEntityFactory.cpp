@@ -85,7 +85,7 @@ void ClientEntityFactory::addComponents(
     int y,
     float vx,
     float vy,
-    ImFont *font
+    std::shared_ptr<ImFont> font
 )
 {
     addCommonComponents(reg, entity, componentsJson, x, y, vx, vy, font);

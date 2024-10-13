@@ -38,7 +38,7 @@ class GameManager {
 
     std::list<std::function<void(ecs::Registry &reg)>> _networkCallbacks;
     std::shared_ptr<sf::RenderWindow> _window;
-    ImFont *_font;
+    std::shared_ptr<ImFont> _font;
 
     void _registerTcpResponse();
     void _registerUdpResponse(ecs::Registry &reg, ecs::SpriteManager &spriteManager, ntw::UDPClient &udpClient);

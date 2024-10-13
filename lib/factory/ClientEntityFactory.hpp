@@ -46,7 +46,7 @@ class ClientEntityFactory : public EntityFactory {
         int y,
         float vx,
         float vy,
-        ImFont *font
+        std::shared_ptr<ImFont> font
     );
 
     private:

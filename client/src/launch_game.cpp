@@ -52,7 +52,12 @@ void rtc::GameManager::_launchGame()
     ImGuiIO &io = ImGui::GetIO();
     io.Fonts->Clear();
     io.Fonts->AddFontDefault();
-    _font = io.Fonts->AddFontFromFileTTF("assets/font/DroidSansMono.ttf", 80.f);
+
+    ImFont *rawFont = io.Fonts->AddFontFromFileTTF("assets/font/DroidSansMono.ttf", 80.f);
+    if (rawFont == nullptr) {
+        throw std::runtime_error("Failed to load font from assets/font/DroidSansMono.ttf");
+    }
+    _font = std::shared_ptr<ImFont>(rawFont, [](ImFont *) {});
     if (!ImGui::SFML::UpdateFontTexture()) {
         return;
     }

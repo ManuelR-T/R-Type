@@ -39,7 +39,7 @@ entity_t EntityFactory::createClientEntityFromJSON(
     shared_entity_t sharedEntity,
     float vx,
     float vy,
-    ImFont *font
+    std::shared_ptr<ImFont> font
 )
 {
     std::ifstream file(jsonFilePath);
@@ -121,7 +121,7 @@ void EntityFactory::addCommonComponents(
     int y,
     float vx,
     float vy,
-    ImFont *font
+    std::shared_ptr<ImFont> font
 )
 {
     if (componentsJson.contains("position")) {
