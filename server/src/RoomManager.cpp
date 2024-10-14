@@ -7,6 +7,8 @@
 
 #include "RoomManager.hpp"
 #include <cstddef>
+#include <future>
+#include <memory>
 #include "GameRunner.hpp"
 #include "RTypeTCPProtol.hpp"
 
@@ -91,17 +93,20 @@ void rts::RoomManager::playerReady(const std::string &roomName, std::size_t play
 
     std::promise<bool> serverReady;
     std::future<bool> server = serverReady.get_future();
-
+    std::future<bool> udpClient = _rooms.at(roomName).clientReady.get_future();
+    _rooms.at(roomName).gameRunner = std::make_shared<rts::GameRunner>(_nextPort, _rooms.at(roomName).stage);
     _rooms.at(roomName).game = std::make_unique<std::thread>(
-        [](int port, std::size_t stage, bool &stopGame, std::promise<bool> serverReady) {
-            rts::GameRunner gameRunner(port, stage);
+        [gameRunner = _rooms.at(roomName).gameRunner](
+            bool &stopGame, std::promise<bool> serverReady, std::future<bool> udpClient
+        ) {
             serverReady.set_value(true);
-            gameRunner.runGame(stopGame);
+            udpClient.wait();
+            gameRunner->addWindow(sf::VideoMode(720, 480), "R-Type");
+            gameRunner->runGame(stopGame);
         },
-        _nextPort,
-        _rooms.at(roomName).stage,
         std::ref(_rooms.at(roomName).stopGame),
-        std::move(serverReady)
+        std::move(serverReady),
+        std::move(udpClient)
     );
     server.wait();
 
@@ -166,9 +171,31 @@ void rts::RoomManager::playerDisconnected(std::size_t playerId, ntw::TCPServer &
     for (const auto &[roomName, room] : this->_rooms) {
         for (const auto &[id, _] : room.player) {
             if (playerId == id) {
+                room.gameRunner->killPlayer(playerId);
                 this->leaveRoom(roomName, id, tcpServer);
                 return;
             }
         }
+    }
+}
+
+void rts::RoomManager::udpPlayerReady(const std::string &roomName, std::size_t playerId, ntw::TCPServer &tcpServer)
+{
+    rt::TCPPacket<rt::TCPData::SER_ALL_UDP_CONNECTION_READY> packet{
+        .cmd = rt::TCPCommand::SER_ALL_UDP_CONNECTION_READY
+    };
+    bool allPlayerReady = true;
+
+    _rooms.at(roomName).player.at(playerId).udpReady = true;
+    for (const auto &[_, player] : _rooms.at(roomName).player) {
+        if (!player.udpReady) {
+            allPlayerReady = false;
+        }
+    }
+    if (allPlayerReady) {
+        for (const auto &[id, _] : _rooms.at(roomName).player) {
+            tcpServer.sendToUser(id, reinterpret_cast<const char *>(&packet), sizeof(packet));
+        }
+        _rooms.at(roomName).clientReady.set_value(true);
     }
 }

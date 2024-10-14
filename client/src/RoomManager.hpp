@@ -56,6 +56,7 @@ class RoomManager {
     void askToLeaveRoom();
     void askToBeReady();
     void askToBeNotReady();
+    void UDPConnectionReady();
 };
 
 } // namespace rtc

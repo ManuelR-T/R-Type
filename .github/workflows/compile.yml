@@ -1,4 +1,4 @@
-name: compile
+name: Compilation (Linux & Windows)
 on:
   workflow_call
 

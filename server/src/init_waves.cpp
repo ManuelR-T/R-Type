@@ -5,6 +5,7 @@
 ** init_waves
 */
 
+#include <cstddef>
 #include <cstdio>
 #include <cstdlib>
 #include <vector>
@@ -23,8 +24,8 @@
 
 static entity_t spawnRobot(ecs::Registry &reg, std::list<std::vector<char>> &datasToSend, size_t maxMob, size_t i)
 {
-    float x = (float)rt::SCREEN_WIDTH * ((float)i / (float)(maxMob + 1));
-    float y = (float)rt::SCREEN_HEIGHT * (4.f / 5.f);
+    float x = float(rt::SCREEN_WIDTH) * (float(i) / float(maxMob + 1));
+    float y = float(rt::SCREEN_HEIGHT) * (4.f / 5.f);
     auto sharedId = ecs::generateSharedEntityId();
     datasToSend.push_back(rt::UDPPacket<rt::UDPBody::NEW_ENTITY_ROBOT_GROUND>(
                               {.cmd = rt::UDPCommand::NEW_ENTITY_ROBOT_GROUND,
@@ -41,8 +42,8 @@ static entity_t spawnRobot(ecs::Registry &reg, std::list<std::vector<char>> &dat
 
 static entity_t spawnBydosWave(ecs::Registry &reg, std::list<std::vector<char>> &datasToSend, size_t maxMob, size_t i)
 {
-    float x = (float)rt::SCREEN_WIDTH * (4.f / 5.f);
-    float y = (float)rt::SCREEN_HEIGHT * ((float)i / (float)(maxMob + 1));
+    float x = float(rt::SCREEN_WIDTH) * (4.f / 5.f);
+    float y = float(rt::SCREEN_HEIGHT) * (float(i) / float(maxMob + 1));
     auto sharedId = ecs::generateSharedEntityId();
     datasToSend.push_back(rt::UDPPacket<rt::UDPBody::NEW_ENTITY_BYDOS_WAVE>(
                               {.cmd = rt::UDPCommand::NEW_ENTITY_BYDOS_WAVE,
@@ -79,16 +80,18 @@ void rts::init_waves(ecs::WaveManager &waveManager, std::list<std::vector<char>>
 {
     auto waveId = waveManager.addNewWave();
 
-    for (int i = 1; i < 3; ++i) {
-        waveManager.addNewMob(waveId, [i, &datasToSend](ecs::Registry &reg) {
+    for (std::size_t i = 0; i < 3; ++i) {
+        waveManager.addNewMob(waveId, [i, &datasToSend](ecs::Registry &reg) -> entity_t {
+            shared_entity_t sharedEntityId = ecs::generateSharedEntityId();
+            entity_t entity = ecs::ServerEntityFactory::createServerEntityFromJSON(
+                reg, "assets/static.json", 100.f * (i + 1), 100.f * (i + 1), sharedEntityId
+            );
             datasToSend.push_back(rt::UDPPacket<rt::UDPBody::NEW_ENTITY_STATIC>(
                                       {.cmd = rt::UDPCommand::NEW_ENTITY_STATIC,
-                                       .sharedEntityId = 0,
+                                       .sharedEntityId = sharedEntityId,
                                        .body = {.moveData = {.pos = {100.f * i, 100.f * i}}}}
             ).serialize());
-            return ecs::ServerEntityFactory::createServerEntityFromJSON(
-                reg, "assets/static.json", 100.f * i, 100.f * i
-            );
+            return entity;
         });
     }
     waveInit(waveManager, datasToSend, 5);

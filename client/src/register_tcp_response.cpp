@@ -81,4 +81,10 @@ void rtc::GameManager::_registerTcpResponse()
             _roomManager.getRooms().at(packet.data.room_name).joinable = false;
         }
     );
+    _tcpResponseHandler.registerHandler<rt::TCPData::SER_ALL_UDP_CONNECTION_READY>(
+        rt::TCPCommand::SER_ALL_UDP_CONNECTION_READY,
+        [this](const rt::TCPPacket<rt::TCPData::SER_ALL_UDP_CONNECTION_READY> &) {
+            this->_allUDPClientReady.set_value(true);
+        }
+    );
 }

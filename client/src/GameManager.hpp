@@ -15,6 +15,7 @@
 #include "SpriteManager.hpp"
 #include "TCPResponseHandler.hpp"
 #include "UDPResponseHandler.hpp"
+#include "imgui.h"
 #include "tcp/TCPClient.hpp"
 #include "udp/UDPClient.hpp"
 #include "shared_entity.hpp"
@@ -34,9 +35,11 @@ class GameManager {
     rtc::RoomManager _roomManager;
     rt::TCPResponseHandler _tcpResponseHandler;
     rt::UDPResponseHandler _udpResponseHandler;
+    std::promise<bool> _allUDPClientReady{};
 
     std::list<std::function<void(ecs::Registry &reg)>> _networkCallbacks;
     std::shared_ptr<sf::RenderWindow> _window;
+    std::shared_ptr<ImFont> _font;
 
     void _registerTcpResponse();
     void _registerUdpResponse(ecs::Registry &reg, ecs::SpriteManager &spriteManager, ntw::UDPClient &udpClient);

@@ -92,3 +92,12 @@ void rtc::RoomManager::askToBeNotReady()
     _currentRoom.copy(packet.data.room_name, sizeof(packet.data.room_name) - 1);
     _tcpClient.send(reinterpret_cast<const char *>(&packet), sizeof(packet));
 }
+
+void rtc::RoomManager::UDPConnectionReady()
+{
+    rt::TCPPacket<rt::TCPData::CL_UDP_CONNECTION_READY> packet{.cmd = rt::TCPCommand::CL_UDP_CONNECTION_READY};
+
+    packet.data.user_id = _userId;
+    _currentRoom.copy(packet.data.room_name, sizeof(packet.data.room_name) - 1);
+    _tcpClient.send(reinterpret_cast<const char *>(&packet), sizeof(packet));
+}

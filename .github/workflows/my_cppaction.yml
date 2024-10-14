@@ -1,4 +1,4 @@
-name: my_cppaction
+name: Compile & mirror
 
 env:
   MIRROR_URL: "git@github.com:EpitechPromo2027/B-CPP-500-PAR-5-1-rtype-thibaud.cathala.git"

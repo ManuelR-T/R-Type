@@ -71,4 +71,10 @@ void rts::registerTcpResponse(
             roomManager.sendListRoom(packet.data.user_id, tcpServer);
         }
     );
+    responseHandler.registerHandler<rt::TCPData::CL_UDP_CONNECTION_READY>(
+        rt::TCPCommand::CL_UDP_CONNECTION_READY,
+        [&roomManager, &tcpServer](const rt::TCPPacket<rt::TCPData::CL_UDP_CONNECTION_READY> &packet) {
+            roomManager.udpPlayerReady(packet.data.room_name, packet.data.user_id, tcpServer);
+        }
+    );
 }

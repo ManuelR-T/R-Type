@@ -12,13 +12,12 @@
 namespace ecs::component {
 
 /**
- * @struct player
- * @brief Component that store information on players.
+ * @struct SelfPlayer
+ * @brief Component that mark etity as SelfPlayer.
  *
- * The `player` component marks an entity as player.
- * It contain.
+ * The `SelfPlayer` component marks an entity as SelfPlayer.
  */
-struct Player {
+struct SelfPlayer {
     std::string name;
     std::size_t id = 0;
 };

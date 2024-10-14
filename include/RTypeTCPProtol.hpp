@@ -40,7 +40,10 @@ enum class TCPCommand : std::size_t {
     SER_ROOM_CONTENT, // send room content (one by one)
 
     SER_ROOM_IN_GAME,
-    SER_ROOM_READY
+    SER_ROOM_READY,
+
+    CL_UDP_CONNECTION_READY,
+    SER_ALL_UDP_CONNECTION_READY
 };
 
 namespace TCPData {
@@ -130,6 +133,14 @@ struct SER_ROOM_IN_GAME {
 struct SER_ROOM_READY {
     int port = 0;
 };
+
+struct CL_UDP_CONNECTION_READY {
+    char room_name[rt::MAX_ROOM_NAME_SIZE + 1] = {0};
+    std::size_t user_id = 0;
+};
+
+struct SER_ALL_UDP_CONNECTION_READY {};
+
 } // namespace TCPData
 
 template <typename T>

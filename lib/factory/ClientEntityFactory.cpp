@@ -11,6 +11,7 @@
 #include "components/parallax.hpp"
 #include "components/sprite.hpp"
 #include "components/velocity.hpp"
+#include "imgui.h"
 #include "components/music_component.hpp"
 #include "components/sound_emitter.hpp"
 
@@ -83,10 +84,11 @@ void ClientEntityFactory::addComponents(
     int x,
     int y,
     float vx,
-    float vy
+    float vy,
+    std::shared_ptr<ImFont> font
 )
 {
-    addCommonComponents(reg, entity, componentsJson, x, y, vx, vy);
+    addCommonComponents(reg, entity, componentsJson, x, y, vx, vy, font);
 
     if (componentsJson.contains("sprite")) {
         auto spriteJson = componentsJson["sprite"];

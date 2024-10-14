@@ -1,9 +1,13 @@
 {
-    "type": "local",
+    "type": "shared",
     "components": {
         "position": {
             "x": 100.0,
             "y": 200.0
+        },
+        "velocity": {
+            "vx": 0.0,
+            "vy": 0.0
         },
         "sprite": {
             "texture": "assets/typesheets/r-typesheet5.gif",

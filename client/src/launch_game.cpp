@@ -20,6 +20,7 @@
 #include "SoundManager.hpp"
 #include "SpriteManager.hpp"
 #include "TickRateManager.hpp"
+#include "imgui.h"
 #include "udp/UDPClient.hpp"
 
 static void spawnPlayer(ntw::UDPClient &udp, std::size_t userId, const rtc::RoomManager &roomManager)
@@ -45,6 +46,22 @@ void rtc::GameManager::_launchGame()
     _window = std::make_shared<sf::RenderWindow>(sf::VideoMode(rt::SCREEN_WIDTH, rt::SCREEN_HEIGHT), "R-Type");
     _window->setFramerateLimit(rt::FPS_LIMIT);
 
+    if (!ImGui::SFML::Init(*_window, false)) {
+        throw std::runtime_error("IMGUI Window init failed");
+    }
+    ImGuiIO &io = ImGui::GetIO();
+    io.Fonts->Clear();
+    io.Fonts->AddFontDefault();
+
+    ImFont *rawFont = io.Fonts->AddFontFromFileTTF("assets/font/DroidSansMono.ttf", 80.f);
+    if (rawFont == nullptr) {
+        throw std::runtime_error("Failed to load font from assets/font/DroidSansMono.ttf");
+    }
+    _font = std::shared_ptr<ImFont>(rawFont, [](ImFont *) {});
+    if (!ImGui::SFML::UpdateFontTexture()) {
+        return;
+    }
+
     runGui(_window, _roomManager, _inLobby);
 
     if (_inLobby) {
@@ -67,6 +84,10 @@ void rtc::GameManager::_launchGame()
     rtc::registerSystems(reg, *_window, dt, udpClient, inputManager, tickRateManager, spriteManager, _networkCallbacks);
 
     _setupUdpConnection(reg, spriteManager, udpClient);
+
+    std::future<bool> otherPlayer = _allUDPClientReady.get_future();
+    _roomManager.UDPConnectionReady();
+    otherPlayer.wait();
 
     spawnPlayer(udpClient, _userId, this->_roomManager);
     ecs::ClientEntityFactory::createClientEntityFromJSON(reg, spriteManager, udpClient, "assets/bg.json");

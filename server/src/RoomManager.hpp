@@ -12,6 +12,7 @@
 #include <map>
 #include <string>
 #include <utility>
+#include "GameRunner.hpp"
 #include "tcp/TCPServer.hpp"
 
 namespace rts {
@@ -20,12 +21,15 @@ class RoomManager {
     struct PlayerLobby {
         std::string name;
         bool ready = false;
+        bool udpReady = false;
     };
 
     struct Room {
         std::map<std::size_t, PlayerLobby> player{};
         std::size_t stage = 1;
         std::unique_ptr<std::thread> game{};
+        std::shared_ptr<GameRunner> gameRunner = nullptr;
+        std::promise<bool> clientReady{};
         bool stopGame = false;
     };
 
@@ -57,5 +61,6 @@ class RoomManager {
     void playerNotReady(const std::string &roomName, std::size_t playerId, ntw::TCPServer &tcpServer);
     void sendListRoom(std::size_t playerId, ntw::TCPServer &tcpServer);
     void playerDisconnected(std::size_t playerId, ntw::TCPServer &tcpServer);
+    void udpPlayerReady(const std::string &roomName, std::size_t playerId, ntw::TCPServer &tcpServer);
 };
 } // namespace rts

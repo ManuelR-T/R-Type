@@ -12,16 +12,21 @@
 #include "Registry.hpp"
 #include "ServerEntityFactory.hpp"
 #include "SpriteManager.hpp"
+#include "components/beam.hpp"
 #include "components/controllable.hpp"
 #include "components/health.hpp"
 #include "components/hitbox.hpp"
 #include "components/missile.hpp"
+#include "components/player.hpp"
 #include "components/position.hpp"
+#include "components/score.hpp"
 #include "components/velocity.hpp"
 #include "entity.hpp"
+#include "imgui.h"
 #include "udp/UDPClient.hpp"
 #include "components/share_movement.hpp"
 #include "shared_entity.hpp"
+#include <imgui-SFML.h>
 
 namespace ecs {
 
@@ -34,7 +39,8 @@ entity_t EntityFactory::createClientEntityFromJSON(
     int y,
     shared_entity_t sharedEntity,
     float vx,
-    float vy
+    float vy,
+    std::shared_ptr<ImFont> font
 )
 {
     std::ifstream file(jsonFilePath);
@@ -62,7 +68,9 @@ entity_t EntityFactory::createClientEntityFromJSON(
         entity = reg.spawnEntity();
     }
 
-    ClientEntityFactory::addComponents(reg, spriteManager, entity, entityJson["components"], isShared, x, y, vx, vy);
+    ClientEntityFactory::addComponents(
+        reg, spriteManager, entity, entityJson["components"], isShared, x, y, vx, vy, font
+    );
 
     return entity;
 }
@@ -113,7 +121,8 @@ void EntityFactory::addCommonComponents(
     int x,
     int y,
     float vx,
-    float vy
+    float vy,
+    std::shared_ptr<ImFont> font
 )
 {
     if (componentsJson.contains("position")) {
@@ -126,7 +135,6 @@ void EntityFactory::addCommonComponents(
         }
         reg.addComponent(entity, ecs::component::Position{posJson["x"].get<float>(), posJson["y"].get<float>()});
     }
-
     if (componentsJson.contains("velocity")) {
         auto velJson = componentsJson["velocity"];
         if (vx != std::numeric_limits<float>::max()) {
@@ -161,6 +169,20 @@ void EntityFactory::addCommonComponents(
         reg.addComponent(
             entity, ecs::component::Health{healthJson["maxHp"].get<int>(), healthJson["currHp"].get<int>()}
         );
+    }
+    if (componentsJson.contains("beam")) {
+        float beamValue = componentsJson["beam"].get<float>();
+        reg.addComponent(entity, ecs::component::Beam{beamValue});
+    }
+    if (componentsJson.contains("score")) {
+        float scoreValue = componentsJson["score"].get<float>();
+        ecs::component::Score score;
+        score.font = font;
+        score.text = std::to_string(scoreValue);
+        reg.addComponent(entity, ecs::component::Score{score});
+    }
+    if (componentsJson.contains("player")) {
+        reg.addComponent(entity, ecs::component::Player{});
     }
 }
 

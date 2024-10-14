@@ -15,47 +15,41 @@
 #include "SpriteManager.hpp"
 #include "components/controllable.hpp"
 #include "components/player.hpp"
+#include "imgui.h"
 #include "udp/UDPClient.hpp"
+#include "components/ally_player.hpp"
+#include "components/self_player.hpp"
 #include "components/share_movement.hpp"
-
-static void handleStaticCreation(
-    ecs::SpriteManager &spriteManager,
-    ntw::UDPClient &udpClient,
-    std::list<std::function<void(ecs::Registry &)>> &_networkCallbacks,
-    const rt::UDPPacket<rt::UDPBody::NEW_ENTITY_STATIC> &packet
-)
-{
-    auto &[pos, _] = packet.body.moveData;
-
-    _networkCallbacks.push_back([pos, &spriteManager, &udpClient](ecs::Registry &reg) {
-        ecs::ClientEntityFactory::createClientEntityFromJSON(
-            reg, spriteManager, udpClient, "assets/static.json", pos.x, pos.y
-        );
-    });
-}
+#include <imgui-SFML.h>
 
 static void handlePlayerCreation(
     std::size_t userId,
     ecs::SpriteManager &spriteManager,
     ntw::UDPClient &udpClient,
     std::list<std::function<void(ecs::Registry &)>> &_networkCallbacks,
-    const rt::UDPPacket<rt::UDPBody::NEW_ENTITY_PLAYER> &packet
+    const rt::UDPPacket<rt::UDPBody::NEW_ENTITY_PLAYER> &packet,
+    std::shared_ptr<ImFont> font
 )
 {
-    _networkCallbacks.push_back([packet, &spriteManager, &udpClient, userId](ecs::Registry &reg) {
-        ecs::ClientEntityFactory::createClientEntityFromJSON(
+    _networkCallbacks.push_back([packet, &spriteManager, &udpClient, userId, font](ecs::Registry &reg) {
+        auto entity = ecs::ClientEntityFactory::createClientEntityFromJSON(
             reg,
             spriteManager,
             udpClient,
             "assets/player" + std::to_string(packet.body.playerIndex) + ".json",
             packet.body.moveData.pos.x,
             packet.body.moveData.pos.y,
-            packet.sharedEntityId
+            packet.sharedEntityId,
+            0.0f,
+            0.0f,
+            font
         );
-        reg.addComponent<ecs::component::Player>(
-            reg.getLocalEntity().at(packet.sharedEntityId), ecs::component::Player{.name = packet.body.playerName}
-        );
-        if (packet.body.playerId != userId) {
+        reg.getComponent<ecs::component::Player>(entity) =
+            ecs::component::Player{.name = packet.body.playerName, .id = userId};
+        if (packet.body.playerId == userId) {
+            reg.addComponent<ecs::component::SelfPlayer>(entity, ecs::component::SelfPlayer{});
+        } else {
+            reg.addComponent<ecs::component::AllyPlayer>(entity, ecs::component::AllyPlayer{});
             reg.removeComponent<ecs::component::Controllable>(reg.getLocalEntity().at(packet.sharedEntityId));
             reg.removeComponent<ecs::component::ShareMovement>(reg.getLocalEntity().at(packet.sharedEntityId));
         }
@@ -90,13 +84,15 @@ void rtc::GameManager::_registerUdpResponse(
     _udpResponseHandler.registerHandler<rt::UDPBody::NEW_ENTITY_STATIC>(
         rt::UDPCommand::NEW_ENTITY_STATIC,
         [this, &spriteManager, &udpClient](const rt::UDPPacket<rt::UDPBody::NEW_ENTITY_STATIC> &packet) {
-            handleStaticCreation(spriteManager, udpClient, this->_networkCallbacks, packet);
+            handleSharedCreation<rt::UDPBody::NEW_ENTITY_STATIC>(
+                "assets/static.json", spriteManager, udpClient, this->_networkCallbacks, packet
+            );
         }
     );
     _udpResponseHandler.registerHandler<rt::UDPBody::NEW_ENTITY_PLAYER>(
         rt::UDPCommand::NEW_ENTITY_PLAYER,
         [this, &spriteManager, &udpClient](const rt::UDPPacket<rt::UDPBody::NEW_ENTITY_PLAYER> &packet) {
-            handlePlayerCreation(_userId, spriteManager, udpClient, this->_networkCallbacks, packet);
+            handlePlayerCreation(_userId, spriteManager, udpClient, this->_networkCallbacks, packet, _font);
         }
     );
     _udpResponseHandler.registerHandler<rt::UDPBody::NEW_ENTITY_MISSILE>(
@@ -144,6 +140,17 @@ void rtc::GameManager::_registerUdpResponse(
                 // auto currentTime = std::chrono::system_clock::now().time_since_epoch();
                 // auto currentTimeMs = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime).count();
                 // eng::logWarning(std::to_string(currentTimeMs) + ": " + e.what());
+            }
+        }
+    );
+    _udpResponseHandler.registerHandler<rt::UDPBody::DEL_ENTITY>(
+        rt::UDPCommand::DEL_ENTITY,
+        [this](const rt::UDPPacket<rt::UDPBody::DEL_ENTITY> &packet) {
+            try {
+                _networkCallbacks.push_back([sharedEntityId = packet.sharedEntityId](ecs::Registry &reg) {
+                    reg.killEntity(reg.getLocalEntity().at(sharedEntityId));
+                });
+            } catch (...) {
             }
         }
     );

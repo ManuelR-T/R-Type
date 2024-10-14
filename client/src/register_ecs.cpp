@@ -11,6 +11,7 @@
 #include "SpriteManager.hpp"
 #include "TickRateManager.hpp"
 #include "components/animation.hpp"
+#include "components/beam.hpp"
 #include "components/controllable.hpp"
 #include "components/drawable.hpp"
 #include "components/health.hpp"
@@ -19,17 +20,25 @@
 #include "components/parallax.hpp"
 #include "components/player.hpp"
 #include "components/position.hpp"
+#include "components/score.hpp"
 #include "components/sprite.hpp"
 #include "components/velocity.hpp"
 #include "systems/collision.hpp"
 #include "systems/draw.hpp"
 #include "systems/parallax.hpp"
 #include "systems/position.hpp"
+#include "components/ally_player.hpp"
 #include "components/music_component.hpp"
+#include "components/self_player.hpp"
 #include "components/share_movement.hpp"
 #include "components/sound_emitter.hpp"
+#include "imgui-SFML.h"
 #include "systems/control_move.hpp"
 #include "systems/control_special.hpp"
+#include "systems/draw_player_beam_bar.hpp"
+#include "systems/draw_player_health_bar.hpp"
+#include "systems/draw_score.hpp"
+#include "systems/draw_team_data.hpp"
 #include "systems/health_check.hpp"
 #include "systems/missiles_stop.hpp"
 #include "systems/share_movement.hpp"
@@ -51,7 +60,11 @@ void rtc::registerComponents(ecs::Registry &reg)
     reg.registerComponent<ecs::component::Health>();
     reg.registerComponent<ecs::component::SoundEmitter>();
     reg.registerComponent<ecs::component::MusicComponent>();
+    reg.registerComponent<ecs::component::Beam>();
+    reg.registerComponent<ecs::component::Score>();
     reg.registerComponent<ecs::component::Player>();
+    reg.registerComponent<ecs::component::SelfPlayer>();
+    reg.registerComponent<ecs::component::AllyPlayer>();
 }
 
 void rtc::registerSystems(
@@ -85,11 +98,7 @@ void rtc::registerSystems(
     reg.addSystem([&reg]() { ecs::systems::healthCheck(reg); });
     reg.addSystem([&reg]() { ecs::systems::parallax(reg); });
     reg.addSystem([&reg, &dt, &spriteManager]() { ecs::systems::spriteSystem(reg, dt, spriteManager); });
-    reg.addSystem([&reg, &window]() {
-        window.clear();
-        ecs::systems::draw(reg, window);
-        window.display();
-    });
+    reg.addSystem([&reg, &window]() { ecs::systems::draw(reg, window); });
     reg.addSystem([&_networkCallbacks, &tickRateManager, &dt, &reg]() {
         if (tickRateManager.needUpdate(rtc::TickRate::CALL_NETWORK_CALLBACKS, dt)) {
             while (!_networkCallbacks.empty()) {
@@ -98,4 +107,8 @@ void rtc::registerSystems(
             }
         }
     });
+    reg.addSystem([&reg, &window]() { ecs::systems::drawPlayerBeamBar(reg, window.getSize()); });
+    reg.addSystem([&reg, &window]() { ecs::systems::drawPlayerHealthBar(reg, window.getSize()); });
+    reg.addSystem([&reg, &window]() { ecs::systems::drawScore(reg, window, window.getSize()); });
+    reg.addSystem([&reg, &window]() { ecs::systems::drawTeamData(reg, window.getSize()); });
 }

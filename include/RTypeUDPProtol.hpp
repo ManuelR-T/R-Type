@@ -68,6 +68,8 @@ struct NEW_ENTITY_ROBOT_GROUND {
     MOVE_ENTITY moveData{};
 };
 
+struct DEL_ENTITY {};
+
 } // namespace UDPBody
 
 /**

@@ -17,13 +17,16 @@
 #include "TickRateManager.hpp"
 #include "Zipper.hpp"
 #include "components/animation.hpp"
+#include "components/beam.hpp"
 #include "components/controllable.hpp"
 #include "components/drawable.hpp"
 #include "components/health.hpp"
 #include "components/hitbox.hpp"
 #include "components/missile.hpp"
 #include "components/parallax.hpp"
+#include "components/player.hpp"
 #include "components/position.hpp"
+#include "components/score.hpp"
 #include "components/sprite.hpp"
 #include "components/tag.hpp"
 #include "components/velocity.hpp"
@@ -34,6 +37,7 @@
 #include "components/ai_actor.hpp"
 #include "components/share_movement.hpp"
 #include "components/shared_entity.hpp"
+#include "imgui-SFML.h"
 #include "systems/ai_act.hpp"
 #include "systems/health_check.hpp"
 #include "systems/health_mob_check.hpp"
@@ -74,6 +78,10 @@ void rts::registerComponents(ecs::Registry &reg)
     reg.registerComponent<ecs::component::Tag<size_t>>();
     reg.registerComponent<ecs::component::Health>();
     reg.registerComponent<ecs::component::AiActor>();
+    reg.registerComponent<ecs::component::Health>();
+    reg.registerComponent<ecs::component::Beam>();
+    reg.registerComponent<ecs::component::Score>();
+    reg.registerComponent<ecs::component::Player>();
 }
 
 void rts::registerSystems(
