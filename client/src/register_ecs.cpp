@@ -28,11 +28,12 @@
 #include "systems/parallax.hpp"
 #include "systems/position.hpp"
 #include "components/ally_player.hpp"
+#include "components/client_share_movement.hpp"
 #include "components/music_component.hpp"
 #include "components/self_player.hpp"
-#include "components/share_movement.hpp"
 #include "components/sound_emitter.hpp"
 #include "imgui-SFML.h"
+#include "systems/client_share_movement.hpp"
 #include "systems/control_move.hpp"
 #include "systems/control_special.hpp"
 #include "systems/draw_player_beam_bar.hpp"
@@ -41,7 +42,6 @@
 #include "systems/draw_team_data.hpp"
 #include "systems/health_check.hpp"
 #include "systems/missiles_stop.hpp"
-#include "systems/share_movement.hpp"
 #include "systems/sprite_system.hpp"
 
 void rtc::registerComponents(ecs::Registry &reg)
@@ -53,7 +53,7 @@ void rtc::registerComponents(ecs::Registry &reg)
     reg.registerComponent<ecs::component::Animation>();
     reg.registerComponent<ecs::component::Controllable>();
     reg.registerComponent<ecs::component::Hitbox>();
-    reg.registerComponent<ecs::component::ShareMovement>();
+    reg.registerComponent<ecs::component::ClientShareMovement>();
     reg.registerComponent<ecs::component::SharedEntity>();
     reg.registerComponent<ecs::component::Missile>();
     reg.registerComponent<ecs::component::Parallax>();
@@ -78,7 +78,9 @@ void rtc::registerSystems(
     std::list<std::function<void(ecs::Registry &reg)>> &_networkCallbacks
 )
 {
-    tickRateManager.addTickRate(rtc::TickRate::MOVEMENT, rtc::CLIENT_TICKRATE.at(rtc::TickRate::MOVEMENT));
+    tickRateManager.addTickRate(
+        rtc::TickRate::ENTITY_MOVEMENT, rtc::CLIENT_TICKRATE.at(rtc::TickRate::ENTITY_MOVEMENT)
+    );
     tickRateManager.addTickRate(
         rtc::TickRate::CALL_NETWORK_CALLBACKS, rtc::CLIENT_TICKRATE.at(rtc::TickRate::CALL_NETWORK_CALLBACKS)
     );
@@ -89,16 +91,16 @@ void rtc::registerSystems(
     });
     reg.addSystem([&reg, &dt]() { ecs::systems::position(reg, dt); });
     reg.addSystem([&reg]() { ecs::systems::collision(reg); });
-    reg.addSystem([&reg, &udpClient, &tickRateManager, &dt]() {
-        if (tickRateManager.needUpdate(rtc::TickRate::MOVEMENT, dt)) {
-            ecs::systems::shareMovement(reg, udpClient);
-        }
-    });
     reg.addSystem([&reg]() { ecs::systems::missilesStop(reg); });
     reg.addSystem([&reg]() { ecs::systems::healthCheck(reg); });
     reg.addSystem([&reg]() { ecs::systems::parallax(reg); });
     reg.addSystem([&reg, &dt, &spriteManager]() { ecs::systems::spriteSystem(reg, dt, spriteManager); });
     reg.addSystem([&reg, &window]() { ecs::systems::draw(reg, window); });
+    reg.addSystem([&reg, &udpClient, &tickRateManager, &dt]() {
+        if (tickRateManager.needUpdate(rtc::TickRate::ENTITY_MOVEMENT, dt)) {
+            ecs::systems::clientShareMovement(reg, udpClient);
+        }
+    });
     reg.addSystem([&_networkCallbacks, &tickRateManager, &dt, &reg]() {
         if (tickRateManager.needUpdate(rtc::TickRate::CALL_NETWORK_CALLBACKS, dt)) {
             while (!_networkCallbacks.empty()) {

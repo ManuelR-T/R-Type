@@ -8,6 +8,7 @@
 #include "ServerEntityFactory.hpp"
 #include "components/drawable.hpp"
 #include "components/ai_actor.hpp"
+#include "components/server_share_movement.hpp"
 
 namespace ecs {
 
@@ -40,6 +41,9 @@ void ServerEntityFactory::addComponents(
     }
     if (componentsJson.contains("ai_actor")) {
         reg.addComponent(entity, ecs::component::AiActor{});
+    }
+    if (componentsJson.contains("server_share_movement")) {
+        reg.addComponent(entity, ecs::component::ServerShareMovement{});
     }
 }
 

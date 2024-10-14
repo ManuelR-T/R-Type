@@ -24,7 +24,6 @@
 #include "entity.hpp"
 #include "imgui.h"
 #include "udp/UDPClient.hpp"
-#include "components/share_movement.hpp"
 #include "shared_entity.hpp"
 #include <imgui-SFML.h>
 
@@ -155,11 +154,6 @@ void EntityFactory::addCommonComponents(
     if (componentsJson.contains("controllable")) {
         reg.addComponent(entity, ecs::component::Controllable{});
     }
-
-    if (componentsJson.contains("share_movement")) {
-        reg.addComponent(entity, ecs::component::ShareMovement{});
-    }
-
     if (componentsJson.contains("missile")) {
         reg.addComponent(entity, ecs::component::Missile{});
     }

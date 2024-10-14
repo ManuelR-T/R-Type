@@ -81,12 +81,13 @@
             "height": 16.0
         },
         "health": {
-            "maxHp": 1,
-            "currHp": 1
+            "maxHp": 100,
+            "currHp": 100
         },
         "beam": 30,
         "score": 29320,
-        "share_movement": {},
+        "client_share_movement": {},
+        "server_share_movement": {},
         "player": {}
     }
 }

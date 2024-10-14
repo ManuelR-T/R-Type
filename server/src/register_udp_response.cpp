@@ -63,14 +63,12 @@ void rts::registerUdpResponse(
     responseHandler.registerHandler<rt::UDPBody::NEW_ENTITY_PLAYER>(
         rt::UDPCommand::NEW_ENTITY_PLAYER,
         [&datasToSend, &networkCallbacks](const rt::UDPPacket<rt::UDPBody::NEW_ENTITY_PLAYER> &msg) {
-            datasToSend.push_back(std::move(msg).serialize());
             handlePlayerCreation(datasToSend, networkCallbacks, msg);
         }
     );
     responseHandler.registerHandler<rt::UDPBody::NEW_ENTITY_MISSILE>(
         rt::UDPCommand::NEW_ENTITY_MISSILE,
         [&datasToSend, &networkCallbacks](const rt::UDPPacket<rt::UDPBody::NEW_ENTITY_MISSILE> &msg) {
-            datasToSend.push_back(std::move(msg).serialize());
             handleMissileCreation(datasToSend, networkCallbacks, msg);
         }
     );

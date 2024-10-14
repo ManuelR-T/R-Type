@@ -10,7 +10,8 @@ add_library(FACTORY STATIC
     systems/sprite_system.cpp
     systems/position.cpp
     systems/missiles_stop.cpp
-    systems/share_movement.cpp
+    systems/client_share_movement.cpp
+    systems/server_share_movement.cpp
     systems/health_check.cpp
     systems/health_mob_check.cpp
     systems/parallax.cpp

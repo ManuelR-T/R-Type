@@ -159,6 +159,6 @@
             "width": 16.0,
             "height": 16.0
         },
-        "share_movement": {}
+        "server_share_movement": {}
     }
 }

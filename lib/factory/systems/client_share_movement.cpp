@@ -5,7 +5,7 @@
 ** position
 */
 
-#include "components/share_movement.hpp"
+#include "components/client_share_movement.hpp"
 #include "RTypeUDPProtol.hpp"
 #include "Registry.hpp"
 #include "Zipper.hpp"
@@ -16,15 +16,15 @@
 
 namespace ecs::systems {
 
-void shareMovement(Registry &reg, ntw::UDPClient &udpClient)
+void clientShareMovement(Registry &reg, ntw::UDPClient &udpClient)
 {
-    auto &sharedMov = reg.getComponents<ecs::component::ShareMovement>();
+    auto &sharedMov = reg.getComponents<ecs::component::ClientShareMovement>();
     auto &positions = reg.getComponents<ecs::component::Position>();
     auto &velocitys = reg.getComponents<ecs::component::Velocity>();
     auto &sharedEntity = reg.getComponents<ecs::component::SharedEntity>();
 
     Zipper<
-        ecs::component::ShareMovement,
+        ecs::component::ClientShareMovement,
         ecs::component::Position,
         ecs::component::Velocity,
         ecs::component::SharedEntity>

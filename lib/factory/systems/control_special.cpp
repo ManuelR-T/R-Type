@@ -46,7 +46,7 @@ void ecs::systems::controlSpecial(
     for (auto [_, pos] : zipControl) {
         if (input.isKeyPressed(sf::Keyboard::Space)) {
             auto now = std::chrono::high_resolution_clock::now();
-            if (std::chrono::duration_cast<std::chrono::milliseconds>(now - lastTime).count() < 500) {
+            if (std::chrono::duration_cast<std::chrono::milliseconds>(now - lastTime).count() < 250) {
                 continue;
             }
             lastTime = now;

@@ -92,6 +92,7 @@
         "health": {
             "maxHp": 1,
             "currHp": 1
-        }
+        },
+        "server_share_movement": {}
     }
 }

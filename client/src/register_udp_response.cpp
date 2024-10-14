@@ -18,8 +18,8 @@
 #include "imgui.h"
 #include "udp/UDPClient.hpp"
 #include "components/ally_player.hpp"
+#include "components/client_share_movement.hpp"
 #include "components/self_player.hpp"
-#include "components/share_movement.hpp"
 #include <imgui-SFML.h>
 
 static void handlePlayerCreation(
@@ -51,7 +51,7 @@ static void handlePlayerCreation(
         } else {
             reg.addComponent<ecs::component::AllyPlayer>(entity, ecs::component::AllyPlayer{});
             reg.removeComponent<ecs::component::Controllable>(reg.getLocalEntity().at(packet.sharedEntityId));
-            reg.removeComponent<ecs::component::ShareMovement>(reg.getLocalEntity().at(packet.sharedEntityId));
+            reg.removeComponent<ecs::component::ClientShareMovement>(reg.getLocalEntity().at(packet.sharedEntityId));
         }
     });
 }
@@ -131,6 +131,9 @@ void rtc::GameManager::_registerUdpResponse(
         rt::UDPCommand::MOVE_ENTITY,
         [&reg](const rt::UDPPacket<rt::UDPBody::MOVE_ENTITY> &packet) {
             try {
+                if (reg.hasComponent<ecs::component::SelfPlayer>(reg.getLocalEntity().at(packet.sharedEntityId))) {
+                    return;
+                }
                 reg.getComponent<ecs::component::Position>(reg.getLocalEntity().at(packet.sharedEntityId)).value() =
                     packet.body.pos;
                 reg.getComponent<ecs::component::Velocity>(reg.getLocalEntity().at(packet.sharedEntityId)).value() =

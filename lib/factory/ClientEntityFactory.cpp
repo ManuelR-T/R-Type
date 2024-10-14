@@ -12,6 +12,7 @@
 #include "components/sprite.hpp"
 #include "components/velocity.hpp"
 #include "imgui.h"
+#include "components/client_share_movement.hpp"
 #include "components/music_component.hpp"
 #include "components/sound_emitter.hpp"
 
@@ -177,6 +178,9 @@ void ClientEntityFactory::addComponents(
         musicComp.loop = musicJson["loop"].get<bool>();
         musicComp.isPlaying = musicJson["is_playing"].get<bool>();
         reg.addComponent(entity, std::move(musicComp));
+    }
+    if (componentsJson.contains("client_share_movement")) {
+        reg.addComponent(entity, ecs::component::ClientShareMovement{});
     }
 }
 

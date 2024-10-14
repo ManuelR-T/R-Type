@@ -93,6 +93,7 @@
             "maxHp": 1,
             "currHp": 1
         },
-        "ai_actor": {}
+        "ai_actor": {},
+        "server_share_movement": {}
     }
 }

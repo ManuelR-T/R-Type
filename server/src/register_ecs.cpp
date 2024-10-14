@@ -11,11 +11,9 @@
 #include <functional>
 #include <vector>
 #include "RTypeServer.hpp"
-#include "RTypeUDPProtol.hpp"
 #include "Registry.hpp"
 #include "ServerTickRate.hpp"
 #include "TickRateManager.hpp"
-#include "Zipper.hpp"
 #include "components/animation.hpp"
 #include "components/beam.hpp"
 #include "components/controllable.hpp"
@@ -35,31 +33,14 @@
 #include "systems/position.hpp"
 #include "udp/UDPServer.hpp"
 #include "components/ai_actor.hpp"
-#include "components/share_movement.hpp"
+#include "components/server_share_movement.hpp"
 #include "components/shared_entity.hpp"
 #include "imgui-SFML.h"
 #include "systems/ai_act.hpp"
 #include "systems/health_check.hpp"
 #include "systems/health_mob_check.hpp"
 #include "systems/missiles_stop.hpp"
-
-static void share_server_movements(ecs::Registry &reg, std::list<std::vector<char>> &datasToSend)
-{
-    auto &positions = reg.getComponents<ecs::component::Position>();
-    auto &velocities = reg.getComponents<ecs::component::Velocity>();
-    auto &sharedEntity = reg.getComponents<ecs::component::SharedEntity>();
-
-    ecs::Zipper<ecs::component::Position, ecs::component::Velocity, ecs::component::SharedEntity> zip(
-        positions, velocities, sharedEntity
-    );
-
-    for (auto [pos, vel, shared_entity] : zip) {
-        datasToSend.push_back(rt::UDPPacket<rt::UDPBody::MOVE_ENTITY>({.cmd = rt::UDPCommand::MOVE_ENTITY,
-                                                                       .sharedEntityId = shared_entity.sharedEntityId,
-                                                                       .body = {.pos = pos, .vel = vel}}
-        ).serialize());
-    }
-}
+#include "systems/server_share_movement.hpp"
 
 void rts::registerComponents(ecs::Registry &reg)
 {
@@ -71,7 +52,7 @@ void rts::registerComponents(ecs::Registry &reg)
     reg.registerComponent<ecs::component::Parallax>();
     reg.registerComponent<ecs::component::Controllable>();
     reg.registerComponent<ecs::component::Hitbox>();
-    reg.registerComponent<ecs::component::ShareMovement>();
+    reg.registerComponent<ecs::component::ServerShareMovement>();
     reg.registerComponent<ecs::component::SharedEntity>();
     reg.registerComponent<ecs::component::Missile>();
     reg.registerComponent<ecs::component::AiActor>();
@@ -97,6 +78,9 @@ void rts::registerSystems(
 {
     tickRateManager.addTickRate(rts::TickRate::SEND_PACKETS, rts::SERVER_TICKRATE.at(rts::TickRate::SEND_PACKETS));
     tickRateManager.addTickRate(rts::TickRate::AI_ACTING, rts::SERVER_TICKRATE.at(rts::TickRate::AI_ACTING));
+    tickRateManager.addTickRate(
+        rts::TickRate::ENTITY_MOVEMENT, rts::SERVER_TICKRATE.at(rts::TickRate::ENTITY_MOVEMENT)
+    );
 
     reg.addSystem([&networkCallbacks, &reg]() {
         while (!networkCallbacks.empty()) {
@@ -126,9 +110,13 @@ void rts::registerSystems(
         ecs::systems::draw(reg, window);
         window.display();
     });
-    reg.addSystem([&datasToSend, &udpServer, &tickRateManager, &dt, &reg]() {
+    reg.addSystem([&datasToSend, &tickRateManager, &dt, &reg]() {
+        if (tickRateManager.needUpdate(rts::TickRate::ENTITY_MOVEMENT, dt)) {
+            ecs::systems::serverShareMovement(reg, datasToSend);
+        }
+    });
+    reg.addSystem([&datasToSend, &udpServer, &tickRateManager, &dt]() {
         if (tickRateManager.needUpdate(rts::TickRate::SEND_PACKETS, dt)) {
-            share_server_movements(reg, datasToSend);
             while (!datasToSend.empty()) {
                 udpServer.sendAll(
                     reinterpret_cast<const char *>(datasToSend.front().data()), datasToSend.front().size()

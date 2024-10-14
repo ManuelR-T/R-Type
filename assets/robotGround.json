@@ -81,9 +81,10 @@
             "height": 34.0
         },
         "health": {
-            "maxHp": 1,
-            "currHp": 1
+            "maxHp": 2,
+            "currHp": 2
         },
-        "ai_actor": {}
+        "ai_actor": {},
+        "server_share_movement": {}
     }
 }
