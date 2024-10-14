@@ -1,0 +1,33 @@
+{
+    "type": "local",
+    "components": {
+        "position": {
+            "x": 0.0,
+            "y": 0.0
+        },
+        "velocity": {
+            "vx": -40.0,
+            "vy": 0.0
+        },
+        "sprite": {
+            "texture": "assets/background/ruins.png",
+            "initial_frame": {
+                "x": 0,
+                "y": 0,
+                "width": 1450,
+                "height": 170
+            },
+            "width": 3000,
+            "height": 585
+        },
+        "parallax": {
+            "layer": 5,
+            "repeat_x": -2200,
+            "respawn_x": 0
+        },
+        "hitbox": {
+            "width": 1920,
+            "height": 32.0
+        }
+    }
+}

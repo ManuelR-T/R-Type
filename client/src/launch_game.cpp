@@ -90,6 +90,8 @@ void rtc::GameManager::_launchGame()
     otherPlayer.wait();
 
     spawnPlayer(udpClient, _userId, this->_roomManager);
+    ecs::ClientEntityFactory::createClientEntityFromJSON(reg, spriteManager, udpClient, "assets/ruins.json");
+
     ecs::ClientEntityFactory::createClientEntityFromJSON(reg, spriteManager, udpClient, "assets/bg.json");
     ecs::ClientEntityFactory::createClientEntityFromJSON(reg, spriteManager, udpClient, "assets/earth.json", 500, 123);
     ecs::ClientEntityFactory::createClientEntityFromJSON(
