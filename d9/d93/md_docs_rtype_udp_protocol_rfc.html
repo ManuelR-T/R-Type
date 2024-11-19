@@ -72,7 +72,7 @@ $(function() {
   <div class="headertitle"><div class="title">RFC: UDP Protocol for Multiplayer Game Communication </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h1><a class="anchor" id="autotoc_md51"></a>
+<div class="textblock"><h1><a class="anchor" id="autotoc_md52"></a>
 Table of Contents</h1>
 <ul>
 <li>1. Introduction</li>
@@ -111,10 +111,10 @@ Table of Contents</h1>
 <li>8. Error handling</li>
 <li>9. Conclusion</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md52"></a>
+<h1><a class="anchor" id="autotoc_md53"></a>
 1. Introduction</h1>
 <p>This RFC describes the UDP protocol for real-time communications in a multiplayer game. The protocol is optimized for an environment where speed and low latency are crucial. UDP is chosen for its simplicity and low overhead, allowing for rapid transmission of game data between clients and the server, even at the expense of strict reliability.</p>
-<h1><a class="anchor" id="autotoc_md53"></a>
+<h1><a class="anchor" id="autotoc_md54"></a>
 2. Objectives</h1>
 <p>The main objectives of the protocol are:</p>
 <ul>
@@ -123,10 +123,10 @@ Table of Contents</h1>
 <li>To manage real-time events such as movements, creation, and deletion of entities.</li>
 <li>To tolerate packet loss without causing critical malfunctions in the game.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md54"></a>
+<h1><a class="anchor" id="autotoc_md55"></a>
 3. Package structure</h1>
 <p>The UDP packets used in this protocol follow a fixed structure in the header, with a variable body depending on the type of command.</p>
-<h2><a class="anchor" id="autotoc_md55"></a>
+<h2><a class="anchor" id="autotoc_md56"></a>
 3.1 En-tête des paquets</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -141,10 +141,10 @@ Table of Contents</h1>
 <td class="markdownTableBodyNone"><code>sharedEntityId</code>   </td><td class="markdownTableBodyNone">4 bytes   </td><td class="markdownTableBodyNone">Unique identifier of the entity or client associated with the message.   </td></tr>
 </table>
 <p>This header is essential for identifying the nature of the packet, the size of the transported data, and the specific command associated with it.</p>
-<h2><a class="anchor" id="autotoc_md56"></a>
+<h2><a class="anchor" id="autotoc_md57"></a>
 3.2 Packet Body</h2>
 <p>The packet body contains data specific to the command defined in the <code>cmd</code> field. The structure of the data in the body varies depending on the type of command and can include information about game entities, such as their positions, velocities, or other attributes.</p>
-<h1><a class="anchor" id="autotoc_md57"></a>
+<h1><a class="anchor" id="autotoc_md58"></a>
 4. UDP Command (&lt;tt&gt;UDPCommand&lt;/tt&gt;)</h1>
 <p>Packets contain a <code>cmd</code> field that specifies the command being sent. The available command types in the UDP protocol for this game are listed below:</p>
 <table class="markdownTable">
@@ -177,9 +177,9 @@ Table of Contents</h1>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>END_GAME</code>   </td><td class="markdownTableBodyNone">0x0E   </td><td class="markdownTableBodyNone">End the game and indicate if the player has won.   </td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md58"></a>
+<h2><a class="anchor" id="autotoc_md59"></a>
 4.1 Command Descriptions</h2>
-<h3><a class="anchor" id="autotoc_md59"></a>
+<h3><a class="anchor" id="autotoc_md60"></a>
 4.1.1 &lt;tt&gt;NEW_ENTITY_PLAYER&lt;/tt&gt;</h3>
 <ul>
 <li><b>Command ID</b>: 1</li>
@@ -193,7 +193,7 @@ Table of Contents</h1>
 <div class="line">    <a class="code hl_struct" href="../../db/d8f/structecs_1_1component_1_1Position.html">ecs::component::Position</a> pos{};</div>
 <div class="line">};</div>
 <div class="ttc" id="astructecs_1_1component_1_1Position_html"><div class="ttname"><a href="../../db/d8f/structecs_1_1component_1_1Position.html">ecs::component::Position</a></div><div class="ttdoc">Represents a position component for an entity.</div><div class="ttdef"><b>Definition:</b> position.hpp:18</div></div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md60"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md61"></a>
 4.1.2 &lt;tt&gt;NEW_ENTITY_PLAYER&lt;/tt&gt;</h3>
 <ul>
 <li><b>Command ID</b>: 2</li>
@@ -212,7 +212,7 @@ Table of Contents</h1>
 <div class="line">    <span class="keywordtype">char</span> playerName[MAX_USER_NAME_SIZE + 1];</div>
 <div class="line">    MOVE_ENTITY moveData;</div>
 <div class="line">};</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md61"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md62"></a>
 4.1.3 &lt;tt&gt;NEW_ENTITY_MISSILE&lt;/tt&gt;</h3>
 <ul>
 <li><b>Command ID</b>: 3</li>
@@ -230,7 +230,7 @@ Table of Contents</h1>
 <div class="line">    <span class="keywordtype">int</span> chargeLevel = 0;</div>
 <div class="line">};</div>
 <div class="ttc" id="astructecs_1_1component_1_1Velocity_html"><div class="ttname"><a href="../../d1/d4c/structecs_1_1component_1_1Velocity.html">ecs::component::Velocity</a></div><div class="ttdoc">Represents a velocity component for an entity.</div><div class="ttdef"><b>Definition:</b> velocity.hpp:18</div></div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md62"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md63"></a>
 4.1.4 &lt;tt&gt;NEW_ENTITY_MISSILE_BALL&lt;/tt&gt;</h3>
 <ul>
 <li><b>Command ID</b>: 4</li>
@@ -245,7 +245,7 @@ Table of Contents</h1>
 <div class="line">    <a class="code hl_struct" href="../../db/d8f/structecs_1_1component_1_1Position.html">ecs::component::Position</a> pos{};</div>
 <div class="line">    <a class="code hl_struct" href="../../d1/d4c/structecs_1_1component_1_1Velocity.html">ecs::component::Velocity</a> vel{};</div>
 <div class="line">};</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md63"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md64"></a>
 4.1.5 &lt;tt&gt;NEW_ENTITY_BYDOS_WAVE&lt;/tt&gt;</h3>
 <ul>
 <li><b>Command ID</b>: 5</li>
@@ -258,7 +258,7 @@ Table of Contents</h1>
 <div class="fragment"><div class="line"><span class="keyword">struct </span>NEW_ENTITY_BYDOS_WAVE {</div>
 <div class="line">    <a class="code hl_struct" href="../../db/d8f/structecs_1_1component_1_1Position.html">ecs::component::Position</a> pos{};</div>
 <div class="line">};</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md64"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md65"></a>
 4.1.6 &lt;tt&gt;NEW_ENTITY_ROBOT_GROUND&lt;/tt&gt;</h3>
 <ul>
 <li><b>Command ID</b>: 6</li>
@@ -273,7 +273,7 @@ Table of Contents</h1>
 <div class="line">    <a class="code hl_struct" href="../../db/d8f/structecs_1_1component_1_1Position.html">ecs::component::Position</a> pos{};</div>
 <div class="line">    <a class="code hl_struct" href="../../d1/d4c/structecs_1_1component_1_1Velocity.html">ecs::component::Velocity</a> vel{};</div>
 <div class="line">};</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md65"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md66"></a>
 4.1.7 &lt;tt&gt;NEW_ENTITY_DOBKERATOPS&lt;/tt&gt;</h3>
 <ul>
 <li><b>Command ID</b>: 7</li>
@@ -288,7 +288,7 @@ Table of Contents</h1>
 <div class="line">    <a class="code hl_struct" href="../../db/d8f/structecs_1_1component_1_1Position.html">ecs::component::Position</a> pos{};</div>
 <div class="line">    <span class="keywordtype">int</span> stage = 1;</div>
 <div class="line">};</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md66"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md67"></a>
 4.1.8 &lt;tt&gt;NEW_ENTITY_DOBKERATOPS_PART&lt;/tt&gt;</h3>
 <ul>
 <li><b>Command ID</b>: 8</li>
@@ -303,7 +303,7 @@ Table of Contents</h1>
 <div class="line">    <a class="code hl_struct" href="../../db/d8f/structecs_1_1component_1_1Position.html">ecs::component::Position</a> pos{};</div>
 <div class="line">    <span class="keywordtype">int</span> partIndex = 0;</div>
 <div class="line">};</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md67"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md68"></a>
 4.1.9 &lt;tt&gt;NEW_ENTITY_BOSS_PARASITE&lt;/tt&gt;</h3>
 <ul>
 <li><b>Command ID</b>: 9</li>
@@ -316,7 +316,7 @@ Table of Contents</h1>
 <div class="fragment"><div class="line"><span class="keyword">struct </span>NEW_ENTITY_BOSS_PARASITE {</div>
 <div class="line">    <a class="code hl_struct" href="../../db/d8f/structecs_1_1component_1_1Position.html">ecs::component::Position</a> pos{};</div>
 <div class="line">};</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md68"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md69"></a>
 4.1.10 &lt;tt&gt;NEW_ENTITY_BLOB&lt;/tt&gt;</h3>
 <ul>
 <li><b>Command ID</b>: 10</li>
@@ -329,7 +329,7 @@ Table of Contents</h1>
 <div class="fragment"><div class="line"><span class="keyword">struct </span>NEW_ENTITY_BLOB {</div>
 <div class="line">    <a class="code hl_struct" href="../../db/d8f/structecs_1_1component_1_1Position.html">ecs::component::Position</a> pos{};</div>
 <div class="line">};</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md69"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md70"></a>
 4.1.11 &lt;tt&gt;TAKE_DAMAGE&lt;/tt&gt;</h3>
 <ul>
 <li><b>Command ID</b>: 11</li>
@@ -342,7 +342,7 @@ Table of Contents</h1>
 <div class="fragment"><div class="line"><span class="keyword">struct </span>TAKE_DAMAGE {</div>
 <div class="line">    <span class="keywordtype">int</span> damage = 1;</div>
 <div class="line">};</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md70"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md71"></a>
 4.1.12 &lt;tt&gt;MOVE_ENTITY&lt;/tt&gt;</h3>
 <ul>
 <li><b>Command ID</b>: 7</li>
@@ -357,7 +357,7 @@ Table of Contents</h1>
 <div class="line">    <a class="code hl_struct" href="../../db/d8f/structecs_1_1component_1_1Position.html">ecs::component::Position</a> pos;</div>
 <div class="line">    <a class="code hl_struct" href="../../d1/d4c/structecs_1_1component_1_1Velocity.html">ecs::component::Velocity</a> vel;</div>
 <div class="line">};</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md71"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md72"></a>
 4.1.13 &lt;tt&gt;CHANGE_ANIMATION_STATE&lt;/tt&gt;</h3>
 <ul>
 <li><b>Command ID</b>: 13</li>
@@ -370,7 +370,7 @@ Table of Contents</h1>
 <div class="fragment"><div class="line"><span class="keyword">struct </span>CHANGE_ANIMATION_STATE {</div>
 <div class="line">    <span class="keywordtype">char</span> newState[32] = {0};</div>
 <div class="line">};</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md72"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md73"></a>
 4.1.14 &lt;tt&gt;DEL_ENTITY&lt;/tt&gt;</h3>
 <ul>
 <li><b>Command ID</b>: 10</li>
@@ -384,7 +384,7 @@ Table of Contents</h1>
 <div class="line">    <a class="code hl_typedef" href="../../df/dc5/shared__entity_8hpp.html#a0cc2c6dd78eb754a763a3ae66802fd56">shared_entity_t</a> sharedEntityId; <span class="comment">// Unique ID of the entity to delete</span></div>
 <div class="line">};</div>
 <div class="ttc" id="ashared__entity_8hpp_html_a0cc2c6dd78eb754a763a3ae66802fd56"><div class="ttname"><a href="../../df/dc5/shared__entity_8hpp.html#a0cc2c6dd78eb754a763a3ae66802fd56">shared_entity_t</a></div><div class="ttdeci">std::size_t shared_entity_t</div><div class="ttdoc">Alias for the shared entity identifier type.</div><div class="ttdef"><b>Definition:</b> shared_entity.hpp:18</div></div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md73"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md74"></a>
 4.1.15 &lt;tt&gt;PING&lt;/tt&gt;</h3>
 <ul>
 <li><b>Command ID</b>: 15</li>
@@ -397,7 +397,7 @@ Table of Contents</h1>
 <div class="fragment"><div class="line"><span class="keyword">struct </span>PING {</div>
 <div class="line">    <span class="keywordtype">long</span> sendTime = 0;</div>
 <div class="line">};</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md74"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md75"></a>
 4.1.16 &lt;tt&gt;END_GAME&lt;/tt&gt;</h3>
 <ul>
 <li><b>Command ID</b>: 16</li>
@@ -410,24 +410,24 @@ Table of Contents</h1>
 <div class="fragment"><div class="line"><span class="keyword">struct </span>END_GAME {</div>
 <div class="line">    <span class="keywordtype">bool</span> win = <span class="keyword">false</span>;</div>
 <div class="line">};</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md75"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md76"></a>
 5. Package Integrity</h2>
 <p>All UDP packets can be verified via a crc32 field that must be calculated from the packet's header and body. This allows for the detection of potential errors in data transmission.</p>
-<h2><a class="anchor" id="autotoc_md76"></a>
+<h2><a class="anchor" id="autotoc_md77"></a>
 6. Packet Loss Management</h2>
 <p>Since UDP does not guarantee packet delivery, the protocol implements mechanisms that are tolerant to data loss. Entity updates are periodically retransmitted, allowing clients to correct their local state in case of packet loss.</p>
-<h2><a class="anchor" id="autotoc_md77"></a>
+<h2><a class="anchor" id="autotoc_md78"></a>
 7. Usage Scenarios</h2>
-<h3><a class="anchor" id="autotoc_md78"></a>
+<h3><a class="anchor" id="autotoc_md79"></a>
 7.1 Creating a Player Entity</h3>
 <p>The server sends a packet with the NEW_ENTITY_PLAYER command to create a new player entity. The client receives the packet and updates its game state with the new entity.</p>
-<h3><a class="anchor" id="autotoc_md79"></a>
+<h3><a class="anchor" id="autotoc_md80"></a>
 7.2 Updating an Entities Position</h3>
 <p>A MOVE_ENTITY packet is sent to update the position and velocity of an entity. The receiving client or server applies the new coordinates and velocity to the affected entity.</p>
-<h3><a class="anchor" id="autotoc_md80"></a>
+<h3><a class="anchor" id="autotoc_md81"></a>
 7.3 Deleting an Entity</h3>
 <p>The server sends a DEL_ENTITY command to indicate that an entity has been removed from the game. The client receives the packet and removes the corresponding entity from its game state.</p>
-<h2><a class="anchor" id="autotoc_md81"></a>
+<h2><a class="anchor" id="autotoc_md82"></a>
 8. Error Handling</h2>
 <p>In the event of receiving an invalid packet (e.g., wrong magic number or size), the protocol must log the error and discard the packet. Additionally, the system should be able to handle exceptions when processing packets without crashing the game.</p>
 <p>Example Error Handling</p>
@@ -440,7 +440,7 @@ Table of Contents</h1>
 <div class="line">    <span class="keywordflow">return</span>; <span class="comment">// Ignore the packet</span></div>
 <div class="line">}</div>
 <div class="ttc" id="anamespaceeng_html_ac95e1dcef5dafb5bda9e0b4e87021b27"><div class="ttname"><a href="../../d5/d87/namespaceeng.html#ac95e1dcef5dafb5bda9e0b4e87021b27">eng::logWarning</a></div><div class="ttdeci">void logWarning(const std::string &amp;msg, std::source_location info=std::source_location::current())</div><div class="ttdoc">Logs a warning message with source location.</div><div class="ttdef"><b>Definition:</b> Logger.cpp:68</div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md82"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md83"></a>
 9. Conclusion</h2>
 <p>This UDP protocol for multiplayer games provides an efficient, low-latency solution for synchronizing game states between multiple clients and a central server. It allows for great flexibility in managing game entities while tolerating packet loss. </p>
 </div></div><!-- contents -->

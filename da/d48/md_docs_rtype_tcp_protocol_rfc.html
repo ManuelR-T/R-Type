@@ -72,7 +72,7 @@ $(function() {
   <div class="headertitle"><div class="title">RType TCP Protocol </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h2><a class="anchor" id="autotoc_md29"></a>
+<div class="textblock"><h2><a class="anchor" id="autotoc_md30"></a>
 Table of Contents</h2>
 <ol type="1">
 <li>Introduction</li>
@@ -102,13 +102,13 @@ Table of Contents</h2>
 <li>Error Handling</li>
 </ol>
 <hr  />
-<h2><a class="anchor" id="autotoc_md31"></a>
+<h2><a class="anchor" id="autotoc_md32"></a>
 1. Introduction</h2>
 <p>The RType TCP Protocol (RT-TCP) is a custom TCP-based protocol designed to facilitate communication between a server and multiple clients in a multiplayer game system. This protocol is used to manage room creation, user interactions, and game status updates within a game server context. The protocol defines a set of commands exchanged over TCP to coordinate room-based sessions, track user readiness, and manage the transition to game states.</p>
 <p>This protocol is independent of any specific platform or programming language, making it suitable for cross-platform multiplayer applications.</p>
-<h2><a class="anchor" id="autotoc_md32"></a>
+<h2><a class="anchor" id="autotoc_md33"></a>
 2. Message Format</h2>
-<h3><a class="anchor" id="autotoc_md33"></a>
+<h3><a class="anchor" id="autotoc_md34"></a>
 2.1 TCP Packet Structure</h3>
 <p>Each message sent between the server and client is encapsulated in a TCP packet, which follows a consistent structure:</p>
 <table class="markdownTable">
@@ -129,14 +129,14 @@ Table of Contents</h2>
 <li><b>cmd</b>: The command type, which specifies the purpose of the packet and what data follows.</li>
 <li><b>data</b>: A structured payload associated with the command, containing relevant information (e.g., user ID, room name).</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md34"></a>
+<h2><a class="anchor" id="autotoc_md35"></a>
 3. Commands Overview</h2>
 <p>Commands in RType TCP are divided into two categories:</p>
 <ol type="1">
 <li><b>Client-to-Server (CL)</b>: Commands sent by the client to initiate actions.</li>
 <li><b>Server-to-Client (SER)</b>: Commands sent by the server in response to client actions or to propagate game state updates.</li>
 </ol>
-<h3><a class="anchor" id="autotoc_md35"></a>
+<h3><a class="anchor" id="autotoc_md36"></a>
 3.1 Client-to-Server Commands</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -160,7 +160,7 @@ Table of Contents</h2>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>CL_UDP_CONNECTION_READY</code>   </td><td class="markdownTableBodyNone">18   </td><td class="markdownTableBodyNone">Notifies readiness for UDP connection setup   </td></tr>
 </table>
-<h3><a class="anchor" id="autotoc_md36"></a>
+<h3><a class="anchor" id="autotoc_md37"></a>
 3.2 Server-to-Client Commands</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -188,10 +188,10 @@ Table of Contents</h2>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>SER_ALL_UDP_CONNECTION_READY</code>   </td><td class="markdownTableBodyNone">20   </td><td class="markdownTableBodyNone">Notifies that all users are ready for UDP connections   </td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md37"></a>
+<h2><a class="anchor" id="autotoc_md38"></a>
 4. Command and Data Definitions</h2>
 <p>The following sections define each command and the associated data structure.</p>
-<h3><a class="anchor" id="autotoc_md38"></a>
+<h3><a class="anchor" id="autotoc_md39"></a>
 4.1 Command: CL_NEW_USER</h3>
 <ul>
 <li><b>Command ID</b>: 1</li>
@@ -204,7 +204,7 @@ Table of Contents</h2>
 <div class="fragment"><div class="line"><span class="keyword">struct </span>CL_NEW_USER {</div>
 <div class="line">    std::size_t user_id = 0;</div>
 <div class="line">};</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md39"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md40"></a>
 4.2 Command: CL_CREATE_ROOM / SER_ROOM_CREATED</h3>
 <ul>
 <li><b>Command ID</b>: 2 (Client), 3 (Server)</li>
@@ -223,7 +223,7 @@ Table of Contents</h2>
 <div class="line">    <span class="keywordtype">char</span> room_name[rt::MAX_ROOM_NAME_SIZE + 1] = {0};</div>
 <div class="line">    std::size_t stage = 1;</div>
 <div class="line">};</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md40"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md41"></a>
 4.3 Command: CL_DELETE_ROOM / SER_ROOM_DELETED</h3>
 <ul>
 <li><b>Command ID</b>: 4 (Client), 5 (Server)</li>
@@ -239,7 +239,7 @@ Table of Contents</h2>
 </div><!-- fragment --><div class="fragment"><div class="line"><span class="keyword">struct </span>SER_ROOM_DELETED {</div>
 <div class="line">    <span class="keywordtype">char</span> room_name[rt::MAX_ROOM_NAME_SIZE + 1] = {0};</div>
 <div class="line">};</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md41"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md42"></a>
 4.4 Command: CL_JOIN_ROOM / SER_ROOM_JOINED</h3>
 <ul>
 <li><b>Command ID</b>: 6 (Client), 7 (Server)</li>
@@ -261,7 +261,7 @@ Table of Contents</h2>
 <div class="line">    <span class="keywordtype">char</span> user_name[rt::MAX_USER_NAME_SIZE + 1] = {0};</div>
 <div class="line">    std::size_t user_id = 0;</div>
 <div class="line">};</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md42"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md43"></a>
 4.5 Command: CL_LEAVE_ROOM / SER_ROOM_LEAVED</h3>
 <ul>
 <li><b>Command ID</b>: 8 (Client), 9 (Server)</li>
@@ -279,7 +279,7 @@ Table of Contents</h2>
 </div><!-- fragment --><div class="fragment"><div class="line"><span class="keyword">struct </span>SER_ROOM_LEAVED {</div>
 <div class="line">    <span class="keywordtype">char</span> room_name[rt::MAX_ROOM_NAME_SIZE + 1] = {0};</div>
 <div class="line">};</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md43"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md44"></a>
 4.6 Command: CL_READY / SER_READY</h3>
 <ul>
 <li><b>Command ID</b>: 10 (Client), 11 (Server)</li>
@@ -296,7 +296,7 @@ Table of Contents</h2>
 </div><!-- fragment --><div class="fragment"><div class="line"><span class="keyword">struct </span>SER_READY {</div>
 <div class="line">    std::size_t user_id = 0;</div>
 <div class="line">};</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md44"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md45"></a>
 4.7 Command: CL_NOT_READY / SER_NOT_READY</h3>
 <ul>
 <li><b>Command ID</b>: 12 (Client), 13 (Server)</li>
@@ -313,7 +313,7 @@ Table of Contents</h2>
 </div><!-- fragment --><div class="fragment"><div class="line"><span class="keyword">struct </span>SER_NOT_READY {</div>
 <div class="line">    std::size_t user_id = 0;</div>
 <div class="line">};</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md45"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md46"></a>
 4.8 Command: CL_ROOM_LIST / SER_ROOM_LIST / SER_ROOM_CONTENT</h3>
 <ul>
 <li><b>Command ID</b>: 14 (Client), 15 (Server), 16 (Server)</li>
@@ -335,7 +335,7 @@ Table of Contents</h2>
 <div class="line">    <span class="keywordtype">char</span> user_name[rt::MAX_USER_NAME_SIZE + 1] = {0};</div>
 <div class="line">    <span class="keywordtype">bool</span> is_ready = <span class="keyword">false</span>;</div>
 <div class="line">};</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md46"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md47"></a>
 4.9 Command: SER_ROOM_IN_GAME</h3>
 <ul>
 <li><b>Command ID</b>: 17</li>
@@ -348,7 +348,7 @@ Table of Contents</h2>
 <div class="fragment"><div class="line"><span class="keyword">struct </span>SER_ROOM_IN_GAME {</div>
 <div class="line">    <span class="keywordtype">char</span> room_name[rt::MAX_ROOM_NAME_SIZE + 1] = {0};</div>
 <div class="line">};</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md47"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md48"></a>
 4.10 Command: SER_ROOM_READY</h3>
 <ul>
 <li><b>Command ID</b>: 19</li>
@@ -361,7 +361,7 @@ Table of Contents</h2>
 <div class="fragment"><div class="line"><span class="keyword">struct </span>SER_ROOM_READY {</div>
 <div class="line">    <span class="keywordtype">bool</span> is_ready = <span class="keyword">false</span>;</div>
 <div class="line">};</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md48"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md49"></a>
 4.11 Command: CL_UDP_CONNECTION_READY / SER_ALL_UDP_CONNECTION_READY</h3>
 <ul>
 <li><b>Command ID</b>: 18 (Client), 20 (Server)</li>
@@ -376,7 +376,7 @@ Table of Contents</h2>
 <div class="line">    std::size_t user_id = 0;</div>
 <div class="line">};</div>
 </div><!-- fragment --><div class="fragment"><div class="line"><span class="keyword">struct </span>SER_ALL_UDP_CONNECTION_READY {};</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md49"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md50"></a>
 5. Error Handling</h2>
 <p>Any malformed packets or invalid commands will ignored by the server. </p>
 </div></div><!-- contents -->
